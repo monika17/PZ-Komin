@@ -1,0 +1,182 @@
+- lista zarejestrowanych uzytkownikow (SQL)
+	- id kontaktu
+	- nazwa kontaktu
+		format: [A-Z][A-Za-z_0-9]*
+	- haslo (md5?)
+	- nazwa listy kontaktow
+	- status
+- baza wiadomosci oczekujacych na dostarczenie (SQL)
+	- id wiadomosci
+	- ref: id kontaktu lub grupy docelowej
+	- czy do grupy?
+	- ref: id kontaktu - pochodzenie wiadomosci
+	- tresc wiadomosci
+	- data/czas wyslania wiadomosci
+	- wiadomosci do grupy maja byc usuwane wraz z usunieciem grupy (trigger)
+- lista kontaktow (SQL)
+	- id kontaktu na liscie (w zasadzie tylko porzadkowy)
+	- ref: id kontaktu
+- lista grup (SQL)
+	- id grupy
+	- nazwa grupy
+		format: [A-Z][A-Za-z_0-9]*
+	- nazwa listy kontaktow (lista uczestnikow)
+- baza plikow grup (SQL) (tylkko grup bo miedzy kontaktami bedzie "jak nie odbierzesz w jakims czasie to nie dostaniesz")
+	- id pliku
+	- ref: id grupy
+	- ref: id kontaktu pochodzenia pliku
+	- sciezka do pliku na serwerze
+	- rozmiar pliku
+	- data/czas wyslania na serwer (tj. data zakonczenia uploadu na serwer - pojawienia sie wpisu w bazie)
+	
+####################################################################################################
+####################################################################################################
+####################################################################################################
+
+naglowek transmitowanych danych (czytaj: nasz protokol)
+sender : contact_id
+target : contact_id
+command : uint32
+job_id : uint32 (for differing separate requests)
+content : uint32 (bit vector)
+content_length : uint32 (in bytes)
+part : int32 (-1 if not parted)
+data : block<byte,content_length> (block<type, size>)
+
+content field bits:
+bt0 - has contact password
+bt1 - has contact status
+bt2 - has contact id
+bt3 - has text message
+bt4 - has audio message
+bt5 - has audio/video message
+bt6 - has contact name
+bt7 - has group name
+bt8 - has file data
+bt9 - has error text
+bt10 - has SMS data (?)
+
+command field values
+0 - NOP (no operation)
+	command source: client/server
+		content bits: 00000000000
+		responese:
+			<none>
+1 - LOGIN
+	command source: client
+		content bits: 00001000011
+		responses from server:
+			cmd=6,content=00001000110 (successed)
+			cmd=8,content=01001000000 (failed)
+				error texts:
+					U¿ytkownik nie istnieje
+					U¿ytkownik ju¿ jest zalogowany
+					B³êdne has³o
+					Nieprawid³owe dane ¿¹dania
+2 - LOGOUT
+	command source: client
+		content bits: 00000000100
+		responses from server:
+			cmd=6,content=00000000110 (successed)
+			cmd=8,content=01000000100 (failed)
+				error texts:
+					U¿ytkownik nie jest zalogowany
+	command source: server
+		content bits: 01000000100
+		responses:
+			<none>
+3 - SET_STATUS
+	command source: client
+		content bits: 00000000110
+		responses from server:
+			cmd=6,content=00000000110 (successed)
+			cmd=8,content=01000000100 (failed)
+				error texts:
+					U¿ytkownik nie jest zalogowany
+					Nieprawid³owe dane ¿¹dania
+	command source: server (status change notification)
+		content bits: 00001000010
+		responses:
+			<none>
+4 - SET_PASSWORD
+	command source: client
+		content bits: 00000000101
+		responses from server:
+			cmd=6,content=00000000100 (successed)
+			cmd=8,content=01000000100 (failed)
+				error texts:
+					U¿ytkownik nie jest zalogowany
+					Nieprawid³owe dane ¿¹dania
+5 - CREATE_CONTACT
+	command source: client
+		content bits: 00001000001
+		responses from server:
+			cmd=6,content=00001000110 (successed)
+			cmd=8,content=01001000000 (failed)
+				error texts:
+					U¿ytkownik ju¿ istnieje
+					Nieprawid³owe dane ¿¹dania
+6 - ACCEPT (also CONFIRM)
+	command source: client
+		content bits: 00??0??0100
+			bt8 - accept file transfer
+			bt7 - accept joining group
+			bt5 - accept audio/video call
+			bt4 - accept audio call
+		responses:
+			<none>
+	command source: server
+		content bits: 00???000???
+			bt8+bt7+bt2 - server accepts arrival of group-destined file
+			bt2+bt1 - status change/logout confirmation
+			bt2 - password change confirmation
+			bt6+bt2+bt1 - contact create/login confirmation
+			...
+		responses:
+			<none>
+7 - DENY
+	command source: client
+		content bits: 00??0??0100
+		responses:
+			<none>
+8 - ERROR
+	command source: server
+		content bits: ?1?????????
+		responses from client:
+			<none>
+			<next attempt>
+9 - ADD_CONTACT_TO_LIST
+	command source: client
+		content bits: 000?1000100
+			bt7 - add to group => client confirmation required
+		responses from server:
+			cmd=6,content=00001000100 (successed - add to contact private list)
+			cmd=8,content=010?1000100 (failed)
+				error texts:
+					U¿ytkownik nie istnieje
+					Nieprawid³owe dane ¿¹dania
+					<bt7=1 only>
+					U¿ytkownik nie jest zalogowany
+					Grupa nie istnieje
+					Nie nale¿ysz do tej grupy
+		responses from client:
+			<bt7=1 only>
+			cmd=6,content=00011000000 (successed - contact accepted joining group)
+			cmd=7,content=00011000000 (failed - contact denied joining group)
+10 - REMOVE_CONTACT_FROM_LIST
+11 - PING_CONTACT (request)
+12 - PING_CONTACT (answer)
+13 - SEND_MESSAGE
+14 - PING_MESSAGES (check are there any messages destined for specified contact)
+15 - REQUEST_AUDIO_CALL
+16 - REQUEST_VIDEO_CALL
+17 - CLOSE_CALL
+18 - SWITCH_TO_AUDIO_CALL
+19 - SWITCH_TO_VIDEO_CALL
+20 - REQUEST_FILE_TRANSFER
+21 - TIMEOUT_FILE_TRANSFER
+22 - FINISH_FILE_TRANSFER
+23 - CREATE_GROUP
+24 - JOIN_GROUP
+25 - LEAVE_GROUP
+26 - CLOSE_GROUP

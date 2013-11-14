@@ -1,0 +1,43 @@
+- okno tworzenia konta
+- nazwa uzytkownika
+- status uzytkownika
+- ekran logowania (widoczny jako jedyny gdy niezalogowany)
+- guzik "wyloguj"
+- lista kontaktow
+	- status+nazwa kontaktu
+	- guzik "rozpocznij rozmowe" (tekstowa)
+	- guzik "rozpocznij rozmowe" (audio)
+	- guzik "rozpocznij rozmowe" (wideo+audio)
+	- guzik "utworz grupe"
+	- guzik "dodaj do grupy" (opcja kontaktu)
+	- guzik "dolacz do grupy"
+	- guzik "opusc grupe" (opcja uzytkownika)
+	- guzik "zamknij grupe"
+	- guzik "wyslij plik" (opcja kontaktu i grupy)
+	- guzik "archiwum" (opcja uzytkownika - archiwum ogolne, opcja kontaktu - archiwum otwarte poczatkowo na rozmowach kontaktu)
+	? guzik "wyslij sms"
+	- eksport/import listy kontaktow
+- okno rozmowy
+	- obszar wiadomosci
+		- w postaci listy
+		- 1 pole listy zawiera
+			- wiadomosc
+			- date/czas odebrania wiadomosci
+			- nazwe mowiacej osoby (przy pierwszej wiadomosci z rzedu)
+		- kopiuj/wklej
+	- pasek tytulu: nazwa kontaktu/grupy
+	- lista czlonkow grupy (albo caly czas widoczna albo np. po kliknieciu w nazwe grupy; podobna do listy kontaktow)
+	- obszar komunikacji audio
+		- lista uczestnikow
+			- nazwa, status
+			- glosniczek do sterowania glosnoscia/wyciszania kontaktu
+		- guzik do blokowania wlasnego mikrofonu
+	- obszar komunikacji wideo
+		- okienka wideo ukladane w grida
+		- sklad okienka
+			- nazwa, status
+			- status blokad audio/wideo
+			- glosniczek do sterowania glosnoscia/wyciszania kontaktu
+			- obszar wideo
+		- guzik do blokowania wlasnego mikrofonu
+		- guzik do blokowania wlasnej kamerki
