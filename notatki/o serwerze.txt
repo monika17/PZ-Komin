@@ -34,8 +34,9 @@
 ####################################################################################################
 
 naglowek transmitowanych danych (czytaj: nasz protokol)
-sender : contact_id
-target : contact_id
+sender : contact_id (0 is server)
+target : contact_id (0 is server)
+is_target_a_group : boolean
 command : uint32
 job_id : uint32 (for differing separate requests)
 content : uint32 (bit vector)
@@ -148,12 +149,13 @@ command field values
 9 - ADD_CONTACT_TO_LIST
 	command source: client
 		content bits: 000?1000100
-			bt7 - add to group => client confirmation required
+			bt7 - add to group => contact confirmation required
 		responses from server:
 			cmd=6,content=00001000100 (successed - add to contact private list)
 			cmd=8,content=010?1000100 (failed)
 				error texts:
 					U¿ytkownik nie istnieje
+					U¿ytkownik ju¿ znajduje siê na liœcie kontaktów
 					Nieprawid³owe dane ¿¹dania
 					<bt7=1 only>
 					U¿ytkownik nie jest zalogowany
@@ -163,11 +165,58 @@ command field values
 			<bt7=1 only>
 			cmd=6,content=00011000000 (successed - contact accepted joining group)
 			cmd=7,content=00011000000 (failed - contact denied joining group)
+	command source: server (contact joined group)
+		content bits: 00011000000
+		responses:
+			<none>
 10 - REMOVE_CONTACT_FROM_LIST
+	command source: client
+		content bits: 000?1000100
+			bt7 - remove from group (kick) => contact notification required
+		responses from server:
+			cmd=6,content=00001000100 (successed - remove from contact private list)
+			cmd=8,content=010?1000100 (failed)
+				error texts:
+					U¿ytkownik nie istnieje
+					U¿ytkownik nie znajduje siê na liœcie kontaktów
+					Nieprawid³owe dane ¿¹dania
+					<bt7=1 only>
+					Grupa nie istnieje
+					Nie nale¿ysz do grupy
+	command source: server (contact left from group)
+		content bits: 00011000000
+		responses:
+			<none>
 11 - PING_CONTACT (request)
+	command source: server
+		content bits: 00000000100
+		responses from client:
+			cmd=12,content=00011??1110
+				bt5+bt4 - client capabilities
+	command source: client
+		content bits: 00001000000
+		responses from client:
+			cmd=12,content=00011??1010
+				bt5+bt4 - client capabilities
 12 - PING_CONTACT (answer)
+	command source: client
+		content bits: 00011??1?10
+			bt5+bt4 - client capabilities
+			bt2 - set to 1 only in response to server ping
+		responses:
+			<none>
 13 - SEND_MESSAGE
-14 - PING_MESSAGES (check are there any messages destined for specified contact)
+	command source: client/server
+		content bits: ?0?00???100
+			note: message destination is determined by header fields
+		responses:
+			<none>
+14 - PING_MESSAGES (check are there any messages destined for specified contact; used during login)
+	command source: client
+		content bits: 00000000100
+		responses:
+			cmd=13 chain
+			cmd=7,content=00000000100 (successed - no messages)
 15 - REQUEST_AUDIO_CALL
 16 - REQUEST_VIDEO_CALL
 17 - CLOSE_CALL
