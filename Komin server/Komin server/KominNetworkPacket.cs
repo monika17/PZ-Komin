@@ -28,6 +28,7 @@ namespace Komin
         private string group_name;
         private uint file_id;
         private string filename;
+        private uint filesize;
         private byte[] filedata;
         private string error_text;
         /*private string sms_number;
@@ -54,6 +55,7 @@ namespace Komin
             group_name = "";
             file_id = 0;
             filename = "";
+            filesize = 0;
             filedata = new byte[0];
             error_text = "";
             /*sms_number = "";
@@ -260,6 +262,7 @@ namespace Komin
             //file_id : uint
             //filename_length : uint
             //filename_chars : char[length]
+            //filesize : uint
             //filedata_length : uint
             //filedata : byte[filedata_length]
             if ((content & ((uint)KominProtocolContentTypes.FileData)) != 0)
@@ -271,6 +274,8 @@ namespace Komin
                 offset += sizeof(uint);
                 Buffer.BlockCopy(text, 0, data, offset, text.Length);
                 offset += text.Length;
+                Buffer.BlockCopy(UIntToByteArray(filesize), 0, data, offset, sizeof(uint));
+                offset += sizeof(uint);
                 if (filedata == null)
                     filedata = new byte[0];
                 Buffer.BlockCopy(UIntToByteArray((uint)filedata.Length), 0, data, offset, sizeof(uint));
@@ -398,6 +403,7 @@ namespace Komin
             //file_id : uint
             //filename_length : uint
             //filename_chars : char[length]
+            //filesize : uint
             //filedata_length : uint
             //filedata : byte[filedata_length]
             if ((content & ((uint)KominProtocolContentTypes.FileData)) != 0)
@@ -408,6 +414,8 @@ namespace Komin
                 offset += sizeof(uint);
                 filename = ByteArrayToString(new ArraySegment<byte>(data, offset, text_length).Array);
                 offset += text_length;
+                filesize = ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                offset += sizeof(uint);
                 int filedata_length = (int)ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
                 offset += sizeof(uint);
                 filedata = new ArraySegment<byte>(data, offset, filedata_length).Array;
@@ -481,10 +489,11 @@ namespace Komin
                 case KominProtocolContentTypes.FileData:
                     file_id = (uint)args[0];
                     filename = (string)args[1];
-                    if (args[2] == null)
-                        args[2] = new byte[0];
-                    filedata = (byte[])((byte[])args[2]).Clone();
-                    content_length += (uint)(sizeof(uint) * 3 + filename.Length * sizeof(char) + filedata.Length);
+                    filesize = (uint)args[2];
+                    if (args[3] == null)
+                        args[3] = new byte[0];
+                    filedata = (byte[])((byte[])args[3]).Clone();
+                    content_length += (uint)(sizeof(uint) * 4 + filename.Length * sizeof(char) + filedata.Length);
                     break;
                 case KominProtocolContentTypes.ErrorTextData:
                     error_text = (string)args[0];
@@ -498,6 +507,68 @@ namespace Komin
                     content_length += (uint)(9 * sizeof(char) + sizeof(uint) + sms_text.Length * sizeof(char));
                     break;*/
             }
+        }
+
+        public object[] GetContent(KominProtocolContentTypes type)
+        {
+            if ((content & (uint)type) == 0)
+                return null;
+
+            object[] ret = null;
+
+            switch (type)
+            {
+                case KominProtocolContentTypes.PasswordData:
+                    ret = new object[1];
+                    ret[0] = password;
+                    break;
+                case KominProtocolContentTypes.StatusData:
+                    ret = new object[1];
+                    ret[0] = status;
+                    break;
+                case KominProtocolContentTypes.ContactIDData:
+                    ret = new object[1];
+                    ret[0] = contact_id;
+                    break;
+                case KominProtocolContentTypes.TextMessageData:
+                    ret = new object[1];
+                    ret[0] = text_msg;
+                    break;
+                case KominProtocolContentTypes.AudioMessageData:
+                    ret = new object[1];
+                    ret[0] = audio_msg;
+                    break;
+                case KominProtocolContentTypes.VideoMessageData:
+                    ret = new object[1];
+                    ret[0] = video_msg;
+                    break;
+                case KominProtocolContentTypes.ContactNameData:
+                    ret = new object[1];
+                    ret[0] = contact_name;
+                    break;
+                case KominProtocolContentTypes.GroupNameData:
+                    ret = new object[1];
+                    ret[0] = group_name;
+                    break;
+                case KominProtocolContentTypes.FileData:
+                    ret = new object[4];
+                    ret[0] = file_id;
+                    ret[1] = filename;
+                    ret[2] = filesize;
+                    ret[3] = filedata;
+                    break;
+                case KominProtocolContentTypes.ErrorTextData:
+                    ret = new object[1];
+                    ret[0] = error_text;
+                    break;
+                /*case KominProtocolContentTypes.SMSData:
+                    ret = new object[2];
+                    ret[0] = sms_number;
+                    ret[1] = sms_text;
+                    break;*/
+            }
+
+            return ret;
         }
 
         public void DeleteContent()
@@ -539,7 +610,7 @@ namespace Komin
                     content_length -= (uint)(sizeof(uint) + group_name.Length * sizeof(char));
                     break;
                 case KominProtocolContentTypes.FileData:
-                    content_length -= (uint)(sizeof(uint) * 3 + filename.Length * sizeof(char) + filedata.Length);
+                    content_length -= (uint)(sizeof(uint) * 4 + filename.Length * sizeof(char) + filedata.Length);
                     break;
                 case KominProtocolContentTypes.ErrorTextData:
                     content_length -= (uint)(sizeof(uint) + error_text.Length * sizeof(char));

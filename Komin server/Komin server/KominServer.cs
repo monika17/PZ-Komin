@@ -17,7 +17,7 @@ namespace Komin
         public List<KominServerSideConnection> connections;
         public uint job_id;
 
-        KominServer()
+        public KominServer()
         {
             server = null;
             job_id = 0;
@@ -68,6 +68,7 @@ namespace Komin
                 listener.CancelAsync();
                 foreach (KominServerSideConnection conn in connections)
                     conn.Disconnect();
+                server.Stop();
             }
             catch (SocketException ex)
             {

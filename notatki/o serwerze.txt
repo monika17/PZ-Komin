@@ -106,6 +106,7 @@ file data:
 file_id : uint
 filename_length : uint
 filename_chars : char[length]
+filesize : uint
 filedata_length : uint
 filedata : byte[filedata_length]
 

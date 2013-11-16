@@ -36,6 +36,20 @@ namespace Komin
             Disconnect();
         }
 
+        public void Connect(string IP, int port)
+        {
+            try
+            {
+                server = new TcpClient();
+                server.Connect(IPAddress.Parse(IP), port);
+                commune.RunWorkerAsync();
+            }
+            catch (SocketException ex)
+            {
+                throw CantConnectToServer("Couldn't connect to server: socket error", ex);
+            }
+        }
+
         public void Disconnect()
         {
             if (server == null)
@@ -46,6 +60,11 @@ namespace Komin
             commune.CancelAsync();
             server.Close();
             server = null;
+        }
+
+        public Exception CantConnectToServer(string msg, SocketException socket_ex)
+        {
+            return new Exception(msg, socket_ex);
         }
 
         private void serverCommune(object sender, DoWorkEventArgs e)
@@ -187,7 +206,7 @@ namespace Komin
             InsertPacketForSending(ref packet);
         }
 
-        public void Login() //send login data to server
+        public void Login(string contact_name, string password, uint new_status) //send login data to server
         {
         }
 
@@ -195,45 +214,45 @@ namespace Komin
         {
         }
 
-        public void SetStatus() //send status data to server
+        public void SetStatus(uint new_status) //send status data to server
         {
         }
 
-        public void SetPassword() //send new password to server
+        public void SetPassword(string new_password) //send new password to server
         {
         }
 
-        public void CreateContact() //request creation of new account
+        public void CreateContact(string new_contact_name, string new_password) //request creation of new account
         {
         }
 
-        public void Accept() //accept something
+        public void Accept(/*...*/) //accept something
         {
         }
 
-        public void Deny() //deny something
+        public void Deny(/*...*/) //deny something
         {
         }
 
         //public void Error() { } //client doesn't report any errors
 
-        public void AddContactToList() //request new contact on private contact list
+        public void AddContactToList(string contact_name) //request new contact on private contact list
         {
         }
 
-        public void RemoveContactFromList() //request to remove contact from private contact list
+        public void RemoveContactFromList(string contact_name) //request to remove contact from private contact list
         {
         }
 
-        public void PingContactRequest() //ask client about its status, capabilities etc.
+        public void PingContactRequest(string contact_name) //ask client about its status, capabilities etc.
         {
         }
 
-        public void PingContactAnswer() //answer to ping
+        public void PingContactAnswer(/*...*/) //answer to ping
         {
         }
 
-        public void SendMessage() //send a message to contact or group
+        public void SendMessage(/*message_type, message*/) //send a message to contact or group
         {
         }
 
@@ -241,47 +260,47 @@ namespace Komin
         {
         }
 
-        public void RequestAudioCall() //request an audio call from contact
+        public void RequestAudioCall(string contact_name) //request an audio call from contact
         {
         }
 
-        public void RequestVideoCall() //request a video call from contact
+        public void RequestVideoCall(string contact_name) //request a video call from contact
         {
         }
 
-        public void CloseCall() //request closing of a call
+        public void CloseCall(uint contact_id) //request closing of a call
         {
         }
 
-        public void SwitchToAudioCall() //request change to audio call
+        public void SwitchToAudioCall(uint contact_id) //request change to audio call
         {
         }
 
-        public void SwitchToVideoCall() //request change to video call
+        public void SwitchToVideoCall(uint contact_id) //request change to video call
         {
         }
 
-        public void RequestFileTransfer() //request file transfer (to contact, to group or from group)
+        public void RequestFileTransfer(string contact_name, bool is_group/*, fileinfo*/) //request file transfer (to contact, to group or from group)
         {
         }
 
-        public void TimeoutFileTransfer() //notify contact about file timeout
+        public void TimeoutFileTransfer(uint file_id) //notify contact about file timeout
         {
         }
 
-        public void FinishFileTransfer() //notify contact or group about end of file transfer
+        public void FinishFileTransfer(uint file_id) //notify contact or group about end of file transfer
         {
         }
 
-        public void CreateGroup() //request group creation
+        public void CreateGroup(string group_name/*, capabilities*/) //request group creation
         {
         }
 
-        public void JoinGroup() //ask group (own join) or contact (invite contact) to join group
+        public void JoinGroup(string name, bool join_invite) //ask group (own join) or contact (invite contact) to join group
         {
         }
 
-        public void LeaveGroup() //ask group (own leave) or contact (kick) to leave group
+        public void LeaveGroup(string name, bool leave_kick) //ask group (own leave) or contact (kick) to leave group
         {
         }
 
