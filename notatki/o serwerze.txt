@@ -18,10 +18,11 @@
 	- ref: id kontaktu
 - lista grup (SQL)
 	- id grupy
+	- ref: id kontaktu ktory jest adminem grupy (zalozyciel)
 	- nazwa grupy
 		format: [A-Z][A-Za-z_0-9]*
 	- nazwa listy kontaktow (lista uczestnikow)
-- baza plikow grup (SQL) (tylkko grup bo miedzy kontaktami bedzie "jak nie odbierzesz w jakims czasie to nie dostaniesz")
+- baza plikow grup (SQL) (tylko grup bo miedzy kontaktami bedzie "jak nie odbierzesz w jakims czasie to nie dostaniesz")
 	- id pliku
 	- ref: id grupy
 	- ref: id kontaktu pochodzenia pliku
@@ -37,27 +38,87 @@ naglowek transmitowanych danych (czytaj: nasz protokol)
 sender : contact_id (0 is server)
 target : contact_id (0 is server)
 is_target_a_group : boolean
-command : uint32
-job_id : uint32 (for differing separate requests)
-content : uint32 (bit vector)
-content_length : uint32 (in bytes)
-part : int32 (-1 if not parted)
+command : uint
+job_id : uint (for differing separate requests; complete identifier is created by sender+job_id of first message)
+content : uint (bit vector)
+content_length : uint (in bytes)
+part : int32 (-1 if not parted; not yet supported)
 data : block<byte,content_length> (block<type, size>)
 
 content field bits:
-bt0 - has contact password
-bt1 - has contact status
-bt2 - has contact id
-bt3 - has text message
-bt4 - has audio message
-bt5 - has audio/video message
-bt6 - has contact name
-bt7 - has group name
+bt0 - has contact password data
+bt1 - has contact status data
+bt2 - has contact id data
+bt3 - has text message data
+bt4 - has audio message data
+bt5 - has video message data
+bt6 - has contact name data
+bt7 - has group name data
 bt8 - has file data
-bt9 - has error text
+bt9 - has error text data
 bt10 - has SMS data (?)
 
-command field values
+password data:
+length : uint
+chars : char[length]
+
+status data:
+status : uint
+	bt3-0:
+		0 - not logged
+		1 - not visible
+		2 - busy
+		3 - accessible
+	bt5-4:
+		bt4 - has microphone 
+		bt5 - microphone enabled
+		bt6 - sound enabled (don't want to listen anything)
+	bt9-7:
+		bt7 - has video camera
+		bt8 - video camera enabled
+		bt9 - vision enabled (don't want to watch anything)
+	bt31-10: <not yet reserved>
+
+contact id data:
+contact_id : uint
+
+text message data:
+length : uint
+chars : char[length]
+
+audio message data:
+size : uint (in bytes)
+data : byte[size]
+
+video message data:
+size : uint (in bytes)
+data : byte[size]
+
+contact name data:
+length : uint
+chars : char[length]
+
+group name data:
+length : uint
+chars : char[length]
+
+file data:
+file_id : uint
+filename_length : uint
+filename_chars : char[length]
+filedata_length : uint
+filedata : byte[filedata_length]
+
+error text data:
+length : uint
+chars : char[length]
+
+(?) SMS data:
+number : char[9]
+length : uint
+chars : char[length]
+
+command field values (not complete because of missing error notifications)
 0 - NOP (no operation)
 	command source: client/server
 		content bits: 00000000000
@@ -76,22 +137,23 @@ command field values
 					Nieprawid³owe dane ¿¹dania
 2 - LOGOUT
 	command source: client
-		content bits: 00000000100
+		content bits: 00000000000
 		responses from server:
-			cmd=6,content=00000000110 (successed)
-			cmd=8,content=01000000100 (failed)
+			cmd=6,content=00000000010 (successed)
+			cmd=8,content=01000000000 (failed)
 				error texts:
+					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
 	command source: server
-		content bits: 01000000100
+		content bits: 00000000010
 		responses:
 			<none>
 3 - SET_STATUS
 	command source: client
-		content bits: 00000000110
+		content bits: 00000000010
 		responses from server:
-			cmd=6,content=00000000110 (successed)
-			cmd=8,content=01000000100 (failed)
+			cmd=6,content=00000000010 (successed)
+			cmd=8,content=01000000000 (failed)
 				error texts:
 					U¿ytkownik nie jest zalogowany
 					Nieprawid³owe dane ¿¹dania
@@ -101,10 +163,10 @@ command field values
 			<none>
 4 - SET_PASSWORD
 	command source: client
-		content bits: 00000000101
+		content bits: 00000000001
 		responses from server:
-			cmd=6,content=00000000100 (successed)
-			cmd=8,content=01000000100 (failed)
+			cmd=6,content=00000000000 (successed)
+			cmd=8,content=01000000000 (failed)
 				error texts:
 					U¿ytkownik nie jest zalogowany
 					Nieprawid³owe dane ¿¹dania
@@ -119,7 +181,7 @@ command field values
 					Nieprawid³owe dane ¿¹dania
 6 - ACCEPT (also CONFIRM)
 	command source: client
-		content bits: 00??0??0100
+		content bits: 00??0??0?00
 			bt8 - accept file transfer
 			bt7 - accept joining group
 			bt5 - accept audio/video call
@@ -137,7 +199,7 @@ command field values
 			<none>
 7 - DENY
 	command source: client
-		content bits: 00??0??0100
+		content bits: 00??0??0?00
 		responses:
 			<none>
 8 - ERROR
@@ -148,45 +210,24 @@ command field values
 			<next attempt>
 9 - ADD_CONTACT_TO_LIST
 	command source: client
-		content bits: 000?1000100
-			bt7 - add to group => contact confirmation required
+		content bits: 00001000000
 		responses from server:
-			cmd=6,content=00001000100 (successed - add to contact private list)
-			cmd=8,content=010?1000100 (failed)
+			cmd=6,content=00001000000 (successed - add to contact private list)
+			cmd=8,content=01001000000 (failed)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik ju¿ znajduje siê na liœcie kontaktów
 					Nieprawid³owe dane ¿¹dania
-					<bt7=1 only>
-					U¿ytkownik nie jest zalogowany
-					Grupa nie istnieje
-					Nie nale¿ysz do tej grupy
-		responses from client:
-			<bt7=1 only>
-			cmd=6,content=00011000000 (successed - contact accepted joining group)
-			cmd=7,content=00011000000 (failed - contact denied joining group)
-	command source: server (contact joined group)
-		content bits: 00011000000
-		responses:
-			<none>
 10 - REMOVE_CONTACT_FROM_LIST
 	command source: client
-		content bits: 000?1000100
-			bt7 - remove from group (kick) => contact notification required
+		content bits: 00001000000
 		responses from server:
-			cmd=6,content=00001000100 (successed - remove from contact private list)
-			cmd=8,content=010?1000100 (failed)
+			cmd=6,content=00001000000 (successed - remove from contact private list)
+			cmd=8,content=01001000000 (failed)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie znajduje siê na liœcie kontaktów
 					Nieprawid³owe dane ¿¹dania
-					<bt7=1 only>
-					Grupa nie istnieje
-					Nie nale¿ysz do grupy
-	command source: server (contact left from group)
-		content bits: 00011000000
-		responses:
-			<none>
 11 - PING_CONTACT (request)
 	command source: server
 		content bits: 00000000100
@@ -206,26 +247,177 @@ command field values
 		responses:
 			<none>
 13 - SEND_MESSAGE
-	command source: client/server
-		content bits: ?0?00???100
+	command source: client
+		content bits: ?0?00???000
 			note: message destination is determined by header fields
 		responses:
-			<none>
-14 - PING_MESSAGES (check are there any messages destined for specified contact; used during login)
+			<none; for text messages: server can store contact related messages, group messages are not stored because group is destroyed when no user logged in>
+14 - PING_MESSAGES (check are there any messages destined for specified contact; used during login by client)
 	command source: client
+		content bits: 00000000000
+		responses from server:
+			cmd=13 chain
+			cmd=7,content=00000000000 (successed - no messages)
+15 - REQUEST_AUDIO_CALL
+	command source: client
+		content bits: 00001000000
+		responses from client (contact call) or server (group call):
+			cmd=6,content=00001000100 (successed)
+			cmd=7,content=00001000000 (failed - contact refused)
+			cmd=8,content=01001000000 (failed - error)
+				error texts:
+					U¿ytkownik nie istnieje
+					U¿ytkownik nie jest zalogowany
+					Nieprawid³owe dane ¿¹dania
+					Grupa nie istnieje
+					Nie nale¿ysz do grupy
+16 - REQUEST_VIDEO_CALL
+	command source: client
+		content bits: 00001000000
+		responses from client (contact call) or server (group call):
+			cmd=6,content=00001000100 (successed)
+			cmd=7,content=00001000000 (failed - contact refused)
+			cmd=8,content=01001000000 (failed - error)
+				error texts:
+					U¿ytkownik nie istnieje
+					U¿ytkownik nie jest zalogowany
+					Nieprawid³owe dane ¿¹dania
+					Grupa nie istnieje
+					Nie nale¿ysz do grupy
+17 - CLOSE_CALL
+	command source: client (contact want to close call)
+		content bits: 00000000100
+		responses from client:
+			cmd=6,content=00000000100 (successed)
+			cmd=8,content=01000000100 (failed - error)
+				error texts:
+					U¿ytkownik nie istnieje
+					U¿ytkownik nie jest zalogowany
+					Nieprawid³owe dane ¿¹dania
+					Grupa nie istnieje
+					Nie nale¿ysz do grupy
+					Po³¹czenie nie zosta³o otwarte
+	command source: server (contact left call notification for group) <-- it happens when user changes state so use SET_STATUS from client instead
+18 - SWITCH_TO_AUDIO_CALL
+	cmmand source: client
 		content bits: 00000000100
 		responses:
-			cmd=13 chain
-			cmd=7,content=00000000100 (successed - no messages)
-15 - REQUEST_AUDIO_CALL
-16 - REQUEST_VIDEO_CALL
-17 - CLOSE_CALL
-18 - SWITCH_TO_AUDIO_CALL
+			cmd=6,content=00000000100 (successed)
+			cmd=7,content=00000000100 (failed - contact refused)
+			cmd=8,content=01000000100 (failed - error)
+				error texts:
+					U¿ytkownik nie istnieje
+					U¿ytkownik nie jest zalogowany
+					Nieprawid³owe dane ¿¹dania
+					Grupa nie istnieje
+					Nie nale¿ysz do grupy
+					Po³¹czenie nie zosta³o otwarte
 19 - SWITCH_TO_VIDEO_CALL
+	cmmand source: client
+		content bits: 00000000100
+		responses:
+			cmd=6,content=00000000100 (successed)
+			cmd=7,content=00000000100 (failed - contact refused)
+			cmd=8,content=01000000100 (failed - error)
+				error texts:
+					U¿ytkownik nie istnieje
+					U¿ytkownik nie jest zalogowany
+					Nieprawid³owe dane ¿¹dania
+					Grupa nie istnieje
+					Nie nale¿ysz do grupy
+					Po³¹czenie nie zosta³o otwarte
 20 - REQUEST_FILE_TRANSFER
+	command source: client
+		content bits: 001??000000
+		responses:
+			cmd=6,content=001??000?00 (successed - contact or group accepted file transfer)
+			cmd=7,content=00101000000 (failed - contact refused file transfer)
+			cmd=8,content=011??000000 (failed - error)
+				error texts:
+					U¿ytkownik nie istnieje
+					U¿ytkownik nie jest zalogowany
+					Nieprawid³owe dane ¿¹dania
+					Grupa nie istnieje
+					Nie nale¿ysz do grupy
+					Serwer nie mo¿e przyj¹æ pliku
 21 - TIMEOUT_FILE_TRANSFER
+	command source: client
+		content bits: 00100000000
+		responses:
+			<none>
+			<next attempt>
+	command source: server (group file timed out)
+		content bits: 00100000000
+		responses:
+			<none>
 22 - FINISH_FILE_TRANSFER
+	command source: client/server
+		content bits: 001?0000000
+		responses:
+			<none>
 23 - CREATE_GROUP
+	command source: client
+		content bits: 00?10??0100
+			bt8+bt5+bt4 - group capabilities
+		responses from server:
+			cmd=6,content=00?10??0100 (successed)
+				bt8+bt5+bt4 - accepted group capabilities
+			cmd=8,content=01010000100 (failed - error)
+				error texts:
+					U¿ytkownik nie istnieje
+					U¿ytkownik nie jest zalogowany
+					Nieprawid³owe dane ¿¹dania
+					Grupa ju¿ istnieje
 24 - JOIN_GROUP
+	command source: client
+		content bits: 00010000100
+		responses from server:
+			cmd=6,content=00010000100 (successed)
+			cmd=8,content=01010000100 (failed - error)
+				error texts:
+					U¿ytkownik nie istnieje
+					U¿ytkownik nie jest zalogowany
+					Nieprawid³owe dane ¿¹dania
+					Grupa nie istnieje
+					U¿ytkownik nale¿y ju¿ do tej grupy
+		responses from client:
+			<bt7=1 only>
+			cmd=6,content=00011000000 (successed - contact accepted joining group)
+			cmd=7,content=00011000000 (failed - contact denied joining group)
+	command source: server (contact joined group notification)
+		content bits: 00001000000
+		responses:
+			<none>
 25 - LEAVE_GROUP
+	command source: client
+		content bits: 00000000100
+		responses from server:
+			cmd=6,content=00000000100 (successed)
+			cmd=8,content=01000000100 (failed - error)
+				error texts:
+					U¿ytkownik nie istnieje
+					U¿ytkownik nie jest zalogowany
+					Nieprawid³owe dane ¿¹dania
+					Grupa nie istnieje
+					U¿ytkownik nie nale¿y do tej grupy
+	command source: server (contact left group notification)
+		content bits: 00001000000
+		responses:
+			<none>
 26 - CLOSE_GROUP
+	command source: client
+		content bits: 00000000100
+		responses from server:
+			cmd=6,content=00000000100 (successed)
+			cmd=8,content=01000000100 (failed - error)
+				error texts:
+					U¿ytkownik nie istnieje
+					U¿ytkownik nie jest zalogowany
+					Nieprawid³owe dane ¿¹dania
+					Grupa nie istnieje
+					U¿ytkownik nie nale¿y do tej grupy
+					Nie masz do tego uprawnieñ (nie jesteœ za³o¿ycielem grupy)
+	command source: server (group close notification)
+		content bits: 00010000000
+		responses:
+			<none>

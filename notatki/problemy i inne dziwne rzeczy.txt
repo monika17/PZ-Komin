@@ -1,0 +1,28 @@
+1. problem job_id w pakietach
+	co to job_id?   - wartoœæ przypisana "rozmowie" miedzy klientami lub klientem a serwerem
+	po co to?       - slu¿y do rozpoznawania który z przychodz¹cych pakietów nale¿y do konkretnej "rozmowy"
+	problemy:
+		1. sk¹d to braæ?
+			rozwi¹zanie 1: generowaæ od tak sobie przez job_id++ czy coœ podobnego - raczej do dupy
+			rozwi¹zanie 2: stworzyæ klase Job która bêdzie przechowywa³a wszystkie dane odnoœnie konkretnej "rozmowy". wtedy klienci i serwer
+						bêd¹ trzymaæ u siebie np List<Job> i nr pozycji na liœcie bêdzie naszym job_id (troche z³e bo mo¿na usuwaæ ze œrodka listy - 
+						mo¿e lepiej trzymaæ job_id jako sk³adnik klasy, znowu pojawiaj¹ sie problemy odzyskiwania numerów (chyba ¿eby nie odzyskiwaæ))
+		2. (patrz problem 1, rozwi¹zanie 2) kto podejmie sie napisania klasy Job która ma reprezentowaæ wszystkie mo¿liwe "rozmowy"? (ju¿ widze ten
+			las r¹k... chocia¿ w sumie zbyt trudne to to nie bêdzie ale wymaga du¿ej integracji z klientem-oknem itp.)
+
+2. przesylanie duuuuuu¿ych plików (tj. powy¿ej 100 bajtów)
+	problemy:
+		1. czy wprowadzamy jakieœ pole od podzia³u pliku na czêœci? (póki co w zasadzie wykorzystywany by³by jedynie job_id i kolejnoœæ dotarcia pakietów
+			co jak wiadomo jest bardzo z³e...)
+			rozwi¹zanie 1: wprowadziæ dodatkowe pole w formularzyku z danymi przesy³anego pliku (podlega blokowi z content, bt8)
+		2. jak du¿y fragment przesy³aæ na raz?
+			rozwi¹zanie 1: no w³aœnie... ciê¿ko tu o kompromis miêdzy szybkoœci¹ a rozmiarem pakietu... ja proponuje na pocz¹tek 1KB na pakiet
+						(pamiêtajcie o tym ¿e jeszcze audio i wideo musza sie zmieœciæ)
+			rozwi¹zanie 2: ewentualnie mo¿naby zrobiæ osobne po³¹czenia na pliki. póki co to wszystko idzie tak jakby w 1 kablu miêdzy klientem a
+						serwerem, po zmianie ci¹gnê³oby sie dodatkowe kable na potrzeby ka¿dego pliku osobno - wzrasta przepustowoœæ poszczególnych
+						kabli ale zamu³ ca³ego kompa klienta i tak pozostaje ten sam (jak nie wiêkszy bo jednak wiêcej po³¹czzeñ na raz bêdzie utrzymywa³)
+
+3. niech no mi ktoœ powie jak to zrobiæ ¿eby github sk³adowa³ tylko Ÿród³a a nie œmieci z visuala (bo mi sie niezbyt chce myœleæ o tym tymbardziej, ¿e
+	mam wszystkie sprawy sieciowe projektu na g³owie)
+	
+n+1. dopisujcie swoje pomys³y na problemy (tylko bez "zimno mi" albo "g³odna/y jestem" ;D)
