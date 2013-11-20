@@ -31,4 +31,3 @@
 	
 5. poki co serwer czeka na baze danych i ewentualnie klienta (klienta do testow moge sam zrobic w razie czego jakiegos konsolowego czy cuœ)
 	
-n+1. dopisujcie swoje pomys³y na problemy (tylko bez "zimno mi" albo "g³odna/y jestem" ;D)
