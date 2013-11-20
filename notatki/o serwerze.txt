@@ -34,6 +34,9 @@
 ####################################################################################################
 ####################################################################################################
 
+miejsca niedokonczone w kodzie zaznaczane sa przez komentarze conajmniej trzech znakow # np.
+//######### something is missing here
+
 naglowek transmitowanych danych (czytaj: nasz protokol)
 sender : contact_id (0 is server)
 target : contact_id (0 is server)

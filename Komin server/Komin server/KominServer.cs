@@ -15,14 +15,14 @@ namespace Komin
         BackgroundWorker listener;
         TcpListener server;
         public List<KominServerSideConnection> connections;
-        public uint job_id;
+        public KominNetworkJobHolder jobs;
 
         public KominServer()
         {
             server = null;
-            job_id = 0;
             listener = new BackgroundWorker();
             connections = new List<KominServerSideConnection>();
+            jobs = new KominNetworkJobHolder();
             listener.WorkerSupportsCancellation = true;
             listener.DoWork += listen;
         }
@@ -51,6 +51,7 @@ namespace Komin
             {
                 server = new TcpListener(IPAddress.Parse(IP), port);
                 server.Start(100);
+                jobs.Restart();
                 listener.RunWorkerAsync();
             }
             catch (SocketException ex)
@@ -65,6 +66,8 @@ namespace Komin
             {
                 if (server == null)
                     return;
+
+                jobs.Restart();
                 listener.CancelAsync();
                 foreach (KominServerSideConnection conn in connections)
                     conn.Disconnect();
@@ -279,14 +282,18 @@ namespace Komin
             if (contact_id == 0)
                 return;
 
+            KominNetworkJob job = server.jobs.AddJob();
+
             KominNetworkPacket packet = new KominNetworkPacket();
             packet.sender = 0; //server
             packet.target = contact_id;
             packet.target_is_group = false;
-            packet.job_id = ++server.job_id;
+            packet.job_id = job.JobID;
             packet.command = (uint)KominProtocolCommands.NoOperation;
             packet.DeleteContent();
             InsertPacketForSending(ref packet);
+
+            server.jobs.FinishJob(job.JobID);
         }
 
         //public void Login() { } //server can't log any user in
@@ -295,6 +302,8 @@ namespace Komin
         {
             if (contact_id == 0)
                 return;
+
+            KominNetworkJob job = server.jobs.AddJob();
 
             //####################### <-- database requirement
             //get contact name => string name;
@@ -309,7 +318,7 @@ namespace Komin
             packet.sender = 0; //server
             packet.target = contact_id;
             packet.target_is_group = false;
-            packet.job_id = ++server.job_id;
+            packet.job_id = job.JobID;
             packet.command = (uint)KominProtocolCommands.Logout;
             packet.DeleteContent();
             //packet.InsertContent(KominProtocolContentTypes.StatusData, status);
@@ -351,12 +360,16 @@ namespace Komin
                     packet.target = group_ids[i];
                     conn.InsertPacketForSending(ref packet);
                 }*/
+
+            server.jobs.FinishJob(job.JobID);
         }
 
         public void SetStatus(KominNetworkPacket source) //server sends user status notification to all groups and contacts
         {
             if (contact_id == 0)
                 return;
+
+            KominNetworkJob job = server.jobs.AddJob();
 
             //####################### <-- database requirement
             //get contact name => string name;
@@ -401,6 +414,8 @@ namespace Komin
                     packet.target = group_ids[i];
                     conn.InsertPacketForSending(ref packet);
                 }*/
+
+            server.jobs.FinishJob(job.JobID);
         }
 
         //public void SetPassword() { } //server is not allowed to change password
@@ -419,6 +434,8 @@ namespace Komin
         {
             if (contact_id == 0)
                 return;
+
+            //########### need to resolve error source
 
             KominNetworkPacket packet = new KominNetworkPacket();
             packet.sender = 0; //server

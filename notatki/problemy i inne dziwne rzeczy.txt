@@ -1,4 +1,4 @@
-1. problem job_id w pakietach
+(rozwiazany)1. problem job_id w pakietach
 	co to job_id?   - wartoœæ przypisana "rozmowie" miedzy klientami lub klientem a serwerem
 	po co to?       - slu¿y do rozpoznawania który z przychodz¹cych pakietów nale¿y do konkretnej "rozmowy"
 	problemy:
@@ -8,7 +8,7 @@
 						bêd¹ trzymaæ u siebie np List<Job> i nr pozycji na liœcie bêdzie naszym job_id (troche z³e bo mo¿na usuwaæ ze œrodka listy - 
 						mo¿e lepiej trzymaæ job_id jako sk³adnik klasy, znowu pojawiaj¹ sie problemy odzyskiwania numerów (chyba ¿eby nie odzyskiwaæ))
 		2. (patrz problem 1, rozwi¹zanie 2) kto podejmie sie napisania klasy Job która ma reprezentowaæ wszystkie mo¿liwe "rozmowy"? (ju¿ widze ten
-			las r¹k... chocia¿ w sumie zbyt trudne to to nie bêdzie ale wymaga du¿ej integracji z klientem-oknem itp.)
+			las r¹k... chocia¿ w sumie zbyt trudne to to nie bêdzie ale wymaga chyba du¿ej integracji z klientem-oknem itp.)
 
 2. przesylanie duuuuuu¿ych plików (tj. powy¿ej 100 bajtów)
 	problemy:
@@ -22,7 +22,13 @@
 						serwerem, po zmianie ci¹gnê³oby sie dodatkowe kable na potrzeby ka¿dego pliku osobno - wzrasta przepustowoœæ poszczególnych
 						kabli ale zamu³ ca³ego kompa klienta i tak pozostaje ten sam (jak nie wiêkszy bo jednak wiêcej po³¹czzeñ na raz bêdzie utrzymywa³)
 
-3. niech no mi ktoœ powie jak to zrobiæ ¿eby github sk³adowa³ tylko Ÿród³a a nie œmieci z visuala (bo mi sie niezbyt chce myœleæ o tym tymbardziej, ¿e
+(rozwiazany)3. niech no mi ktoœ powie jak to zrobiæ ¿eby github sk³adowa³ tylko Ÿród³a a nie œmieci z visuala (bo mi sie niezbyt chce myœleæ o tym tymbardziej, ¿e
 	mam wszystkie sprawy sieciowe projektu na g³owie)
+	
+4. jak robimy zglaszanie bledow pochodzacych z polaczenia internetowego?
+	rozwiazanie 1: wyjatki?
+	rozwiazanie 2: delegat ktory bedzie odbieral wszystkie bledy zglaszane przez ClientSideConnection
+	
+5. poki co serwer czeka na baze danych i ewentualnie klienta (klienta do testow moge sam zrobic w razie czego jakiegos konsolowego czy cuœ)
 	
 n+1. dopisujcie swoje pomys³y na problemy (tylko bez "zimno mi" albo "g³odna/y jestem" ;D)

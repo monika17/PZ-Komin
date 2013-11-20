@@ -17,13 +17,15 @@ namespace Komin
         public BackgroundWorker commune;
         List<KominNetworkPacket> packets_to_send;
         //user data
-        uint contact_id;
-        List<uint> group_ids;
-        uint job_id;
+        public uint contact_id;
+        public List<uint> group_ids;
+        KominNetworkJobHolder jobs;
 
         public KominClientSideConnection()
         {
             contact_id = 0;
+            group_ids = new List<uint>();
+            jobs = new KominNetworkJobHolder();
             server = null;
             packets_to_send = new List<KominNetworkPacket>();
             commune = new BackgroundWorker();
@@ -42,6 +44,7 @@ namespace Komin
             {
                 server = new TcpClient();
                 server.Connect(IPAddress.Parse(IP), port);
+                jobs.Restart();
                 commune.RunWorkerAsync();
             }
             catch (SocketException ex)
@@ -57,6 +60,7 @@ namespace Komin
 
             Logout();
 
+            jobs.Restart();
             commune.CancelAsync();
             server.Close();
             server = null;
@@ -196,18 +200,56 @@ namespace Komin
             if (contact_id == 0)
                 return;
 
+            KominNetworkJob job = jobs.AddJob();
+
             KominNetworkPacket packet = new KominNetworkPacket();
             packet.sender = contact_id;
             packet.target = target;
             packet.target_is_group = target_is_group;
-            packet.job_id = ++job_id;
+            packet.job_id = job.JobID;
             packet.command = (uint)KominProtocolCommands.NoOperation;
             packet.DeleteContent();
             InsertPacketForSending(ref packet);
+
+            jobs.FinishJob(job.JobID);
         }
 
-        public void Login(string contact_name, string password, uint new_status) //send login data to server
+        public void Login(string contact_name, string password, ref uint new_status) //send login data to server
         {
+            KominNetworkJob job = jobs.AddJob();
+            bool finished = false;
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = 0; //client doesn't know its contact_id yet
+            packet.target = 0; //server
+            packet.target_is_group = false;
+            packet.job_id = job.JobID;
+            packet.command = (uint)KominProtocolCommands.Login;
+            packet.DeleteContent();
+            packet.InsertContent(KominProtocolContentTypes.ContactNameData, contact_name);
+            packet.InsertContent(KominProtocolContentTypes.PasswordData, password);
+            packet.InsertContent(KominProtocolContentTypes.StatusData, new_status);
+            InsertPacketForSending(ref packet);
+
+            do
+            {
+                job.WaitForNewArrival();
+                packet = job.Packet;
+                switch ((KominProtocolCommands)packet.command)
+                {
+                    case KominProtocolCommands.Accept:
+                        contact_id = (uint)packet.GetContent(KominProtocolContentTypes.ContactIDData)[0];
+                        new_status = (uint)packet.GetContent(KominProtocolContentTypes.StatusData)[0];
+                        finished = true;
+                        break;
+                    case KominProtocolCommands.Error:
+                        //######## no error messaging path yet created
+                        finished = true;
+                        break;
+                }
+            } while (!finished);
+
+            jobs.FinishJob(job.JobID);
         }
 
         public void Logout() //request logout

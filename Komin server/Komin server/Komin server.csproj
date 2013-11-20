@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="KominClientSideConnection.cs" />
+    <Compile Include="KominNetworkJob.cs" />
     <Compile Include="KominNetworkPacket.cs" />
     <Compile Include="KominServer.cs" />
     <Compile Include="KominServerForm.cs">
