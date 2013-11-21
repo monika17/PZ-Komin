@@ -88,6 +88,7 @@ namespace Komin
 
         public void WaitForNewArrival()
         {
+            new_arrival = false;
             while (new_arrival == false) ;
         }
     }

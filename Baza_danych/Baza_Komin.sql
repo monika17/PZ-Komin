@@ -1,9 +1,9 @@
 /* dodanie nowej bazy */
-create database serwer
+create database KominServerDatabase
 go
 
 /* przejscie do bazy o zadanej nazwie */
-use serwer
+use KominServerDatabase
 go
 
 /* definicja nowego typu danych */
@@ -14,20 +14,19 @@ go
 
 
 /* dodanie tabel */
-/* tabeli Konta */
+/* tabela Konta */
 create table konta
 	(id_konta int not null primary key,
 	nazwa string not null,
-	lista_kontaktow string,
 	haslo varchar(15) not null,
-	status_konta int not null)
+	status_konta int not null,
+	lista_kontaktow string)
 go
 
 /* tabeli kontakty */
 /*
 create table kontakty
-	(id_kontaktu int foreign key references konta(id_konta),
-	nazwa string foreign key references konta(nazwa))
+	(id_kontaktu int not null foreign key references konta(id_konta))
 go
 */
 
@@ -36,26 +35,26 @@ create table grupy
 	(id_grupy int not null primary key,
 	nazwa_grupy string,
 	id_zalozyciela int foreign key references konta(id_konta),
-	kontakty_nazwa string not null,
-	rodzaj_komunikacji int not null)	
+	rodzaj_komunikacji int not null,
+	kontakty_nazwa string not null)	
 go
 
 create table pliki_grup
-	(id_pliku int primary key,
+	(id_pliku int not null primary key,
 	œcie¿ka string not null,
-	rozmiar int, 
-	id_grupy int foreign key references grupy(id_grupy),
+	rozmiar int,
 	id_nadawcy int foreign key references konta(id_konta),
+	id_grupy int foreign key references grupy(id_grupy),
 	czas_wyslania int,
 	data_wyslania int,
 	data_konca datetime)
 go
 
 create table oczekuj¹ce_wiadomoœci
-	(id_wiadomosci int primary key,
+	(id_wiadomosci int not null primary key,
+	id_nadawcy int foreign key references konta(id_konta),
 	id_docelowy int,
 	czy_grupowy bit,
-	id_nadawcy int foreign key references konta(id_konta),
 	tresc_wiadomoci string1000 not null,
 	data_czas_wyslania datetime)
 go
@@ -76,9 +75,10 @@ insert into konta values (8, 'lala134', '4','niedostepny')
 go
 
 select * from konta
-go
+go*/
 
 /*tabela kontakty*/
+/*
 insert into  kontakty values(1, 'Monika')
 insert into  kontakty values(2, 'Monia')
 insert into  kontakty values(3, 'Jakub')
@@ -90,16 +90,16 @@ insert into  kontakty values(8, 'lala134')
 go
 
 select * from kontakty
-go
+go*/
  
 
 /*tabela grupy*/
-insert into grupy values(1,'praca' ,1, 'Monika')
+/*insert into grupy values(1,'praca' ,1, 'Monika')
 insert into grupy values(2,'projekt', 3,'Jakub')
 insert into grupy values(3,'ploty', 7, 'bibi')
 go
 
 select * from grupy
-go
-*/
+go*/
+
 

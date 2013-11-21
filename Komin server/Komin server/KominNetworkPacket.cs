@@ -108,7 +108,7 @@ namespace Komin
 
         public static uint CheckSize(ref byte[] buffer)
         {
-            if(buffer.Length<sizeof(uint)*6+1 /*sizeof(bool)*/)
+            if (buffer.Length < sizeof(uint) * 6 + 1 /*sizeof(bool)*/)
                 return 0;
             uint content_length = ByteArrayToUInt(new ArraySegment<byte>(buffer, sizeof(uint) * 5 + 1/*sizeof(bool)*/, sizeof(uint)).Array);
             if (buffer.Length < sizeof(uint) * 6 + 1 /*sizeof(bool)*/+ content_length)
@@ -173,7 +173,7 @@ namespace Komin
             //chars : char[length]
             if ((content & ((uint)KominProtocolContentTypes.PasswordData)) != 0)
             {
-                byte[] pwd = StringToByteArray (password);
+                byte[] pwd = StringToByteArray(password);
                 Buffer.BlockCopy(UIntToByteArray((uint)pwd.Length), 0, data, offset, sizeof(uint));
                 offset += sizeof(uint);
                 Buffer.BlockCopy(pwd, 0, data, offset, pwd.Length);
@@ -450,43 +450,67 @@ namespace Komin
 
         public void InsertContent(KominProtocolContentTypes type, params object[] args)
         {
-            DeleteContent(type);
+            DeleteContent((uint)type);
             content |= (uint)type;
             switch (type)
             {
                 case KominProtocolContentTypes.PasswordData:
+                    if (args[0].GetType().Name != "String")
+                        return;
                     password = (string)args[0];
                     content_length += (uint)(sizeof(uint) + password.Length * sizeof(char));
                     break;
                 case KominProtocolContentTypes.StatusData:
+                    if (args[0].GetType().Name != "UInt32")
+                        return;
                     status = (uint)args[0];
                     content_length += (uint)(sizeof(uint));
                     break;
                 case KominProtocolContentTypes.ContactIDData:
+                    if (args[0].GetType().Name != "UInt32")
+                        return;
                     contact_id = (uint)args[0];
                     content_length += (uint)(sizeof(uint));
                     break;
                 case KominProtocolContentTypes.TextMessageData:
+                    if (args[0].GetType().Name != "String")
+                        return;
                     text_msg = (string)args[0];
                     content_length += (uint)(sizeof(uint) + text_msg.Length * sizeof(char));
                     break;
                 case KominProtocolContentTypes.AudioMessageData:
+                    if (args[0].GetType().Name != "Byte[]")
+                        return;
                     audio_msg = (byte[])((byte[])args[0]).Clone();
                     content_length += (uint)(sizeof(uint) + audio_msg.Length);
                     break;
                 case KominProtocolContentTypes.VideoMessageData:
+                    if (args[0].GetType().Name != "Byte[]")
+                        return;
                     video_msg = (byte[])((byte[])args[0]).Clone();
                     content_length += (uint)(sizeof(uint) + video_msg.Length);
                     break;
                 case KominProtocolContentTypes.ContactNameData:
+                    if (args[0].GetType().Name != "String")
+                        return;
                     contact_name = (string)args[0];
                     content_length += (uint)(sizeof(uint) + contact_name.Length * sizeof(char));
                     break;
                 case KominProtocolContentTypes.GroupNameData:
+                    if (args[0].GetType().Name != "String")
+                        return;
                     group_name = (string)args[0];
                     content_length += (uint)(sizeof(uint) + group_name.Length * sizeof(char));
                     break;
                 case KominProtocolContentTypes.FileData:
+                    if (args[0].GetType().Name != "UInt32")
+                        return;
+                    if (args[1].GetType().Name != "String")
+                        return;
+                    if (args[2].GetType().Name != "UInt32")
+                        return;
+                    if (args[3].GetType().Name != "Byte[]")
+                        return;
                     file_id = (uint)args[0];
                     filename = (string)args[1];
                     filesize = (uint)args[2];
@@ -496,10 +520,16 @@ namespace Komin
                     content_length += (uint)(sizeof(uint) * 4 + filename.Length * sizeof(char) + filedata.Length);
                     break;
                 case KominProtocolContentTypes.ErrorTextData:
+                    if (args[0].GetType().Name != "String")
+                        return;
                     error_text = (string)args[0];
                     content_length += (uint)(sizeof(uint) + error_text.Length * sizeof(char));
                     break;
                 /*case KominProtocolContentTypes.SMSData:
+                    if (args[0].GetType().Name != "String")
+                        return;
+                    if (args[1].GetType().Name != "String")
+                        return;
                     char[] c = new char[9];
                     ((string)args[0]).CopyTo(0, c, 0, 9);
                     sms_number = new string(c);
@@ -578,12 +608,25 @@ namespace Komin
             data = new byte[0];
         }
 
-        public void DeleteContent(KominProtocolContentTypes type)
+        public void DeleteContent(uint type, bool except_specified = false)
         {
-            if ((content & ((uint)type)) == 0)
+            type &= (uint)KominProtocolContentTypes.Mask;
+
+            if (except_specified)
+                type = ~type;
+
+            if ((content & type) == 0)
                 return;
-            content &= ~(uint)type;
-            switch (type)
+
+            content &= ~type;
+            List<KominProtocolContentTypes> types = new List<KominProtocolContentTypes>();
+            for (int i = 1; i <= (int)KominProtocolContentTypes.MaxValue; i <<= 1)
+            {
+                if ((type & i) != 0)
+                    types.Add((KominProtocolContentTypes)i);
+            }
+            foreach(KominProtocolContentTypes t in types)
+            switch (t)
             {
                 case KominProtocolContentTypes.PasswordData:
                     content_length -= (uint)(sizeof(uint) + password.Length * sizeof(char));
@@ -620,6 +663,18 @@ namespace Komin
                     break;*/
             }
         }
+
+        public void CopyContent(KominNetworkPacket packet)
+        {
+            List<KominProtocolContentTypes> types = new List<KominProtocolContentTypes>();
+            for (int i = 1; i <= (int)KominProtocolContentTypes.MaxValue; i <<= 1)
+            {
+                if ((packet.content & i) != 0)
+                    types.Add((KominProtocolContentTypes)i);
+            }
+            foreach (KominProtocolContentTypes t in types)
+                InsertContent(t, packet.GetContent(t));
+        }
     }
 
     public enum KominProtocolCommands : uint
@@ -651,6 +706,7 @@ namespace Komin
         JoinGroup,
         LeaveGroup,
         CloseGroup,
+        MaxValue = CloseGroup
     }
 
     public enum KominProtocolContentTypes : uint
@@ -666,6 +722,8 @@ namespace Komin
         FileData = 0x100,
         ErrorTextData = 0x200,
         //SMSData = 0x400,
+        MaxValue = ErrorTextData,
+        Mask = 0x7FF
     }
 
     public struct KominNetworkErrors
@@ -684,9 +742,34 @@ namespace Komin
         GroupNotExists = "Grupa nie istnieje",
         GroupAlreadyExists = "Grupa już istnieje",
         SenderNotInGroup = "Nie należysz do tej grupy",
-        CallNotStartedYet = "Połączenie nie zostało otwarte",
+        CallNotStartedYet = "Rozmowa nie została jeszcze rozpoczęta",
         ServerFull = "Serwer przepełniony - nie można sie zalogować",
         ServerFileStorageFull = "Serwer nie może przyjąć pliku",
         UserIsNotGroupHolder = "Nie masz do tego uprawnień (nie jesteś założycielem grupy)";
+    }
+
+    public enum KominClientStatusCodes : uint
+    {
+        NotAccessible = 0,  //niedostepny
+        Invisible = 1,      //niewidoczny
+        Busy = 2,           //zajęty/zaraz wracam
+        Accessible = 3,     //dostępny
+        MaxValue = Accessible,
+        Mask = 0x3 //valid bits mask only
+    }
+
+    public enum KominClientCapabilities : uint
+    {
+        HasMicrophone = 0x10,
+        MicrophoneMuted = 0x20,
+        SoundMuted = 0x40,
+        AudioCapabilitiesMask = 0x70,
+
+        HasCamera = 0x80,
+        CameraDisabled = 0x100,
+        VisionDisabled = 0x200,
+        VideoCapabilitiesMask = 0x380,
+
+        Mask = AudioCapabilitiesMask + VideoCapabilitiesMask
     }
 }

@@ -1,0 +1,1 @@
+klasa jest w <PZ-Komin>\Komin server\Komin server\KominServerDatabase.cs

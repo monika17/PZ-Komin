@@ -25,7 +25,7 @@
 (rozwiazany)3. niech no mi ktoœ powie jak to zrobiæ ¿eby github sk³adowa³ tylko Ÿród³a a nie œmieci z visuala (bo mi sie niezbyt chce myœleæ o tym tymbardziej, ¿e
 	mam wszystkie sprawy sieciowe projektu na g³owie)
 	
-4. jak robimy zglaszanie bledow pochodzacych z polaczenia internetowego?
+(poki co rozwiazany. rozwiazanie 1)4. jak robimy zglaszanie bledow pochodzacych z polaczenia internetowego?
 	rozwiazanie 1: wyjatki?
 	rozwiazanie 2: delegat ktory bedzie odbieral wszystkie bledy zglaszane przez ClientSideConnection
 	

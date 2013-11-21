@@ -1,3 +1,5 @@
+klasa do obslugi bazy danych z serwera: KominServerDatabase
+
 - lista zarejestrowanych uzytkownikow (SQL)
 	- id kontaktu
 	- nazwa kontaktu
@@ -74,14 +76,14 @@ status : uint
 		1 - not visible
 		2 - busy
 		3 - accessible
-	bt5-4:
+	bt6-4:
 		bt4 - has microphone 
-		bt5 - microphone enabled
-		bt6 - sound enabled (don't want to listen anything)
+		bt5 - microphone muted
+		bt6 - sound muted (don't want to listen anything)
 	bt9-7:
 		bt7 - has video camera
-		bt8 - video camera enabled
-		bt9 - vision enabled (don't want to watch anything)
+		bt8 - video camera disabled
+		bt9 - vision disabled (don't want to watch anything)
 	bt31-10: <not yet reserved>
 
 contact id data:
@@ -135,12 +137,13 @@ command field values (not complete because of missing error notifications)
 		content bits: 00001000011
 		responses from server:
 			cmd=6,content=00001000110 (successed)
-			cmd=8,content=01001000000 (failed)
+			cmd=8,content=0100?000??0 (failed)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik ju¿ jest zalogowany
 					B³êdne has³o
 					Nieprawid³owe dane ¿¹dania
+					B³êdny status
 2 - LOGOUT
 	command source: client
 		content bits: 00000000000

@@ -243,9 +243,9 @@ namespace Komin
                         finished = true;
                         break;
                     case KominProtocolCommands.Error:
-                        //######## no error messaging path yet created
                         finished = true;
-                        break;
+                        jobs.FinishJob(job.JobID);
+                        throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
                 }
             } while (!finished);
 
@@ -348,6 +348,15 @@ namespace Komin
 
         public void CloseGroup() //request closing group
         {
+        }
+
+        public class KominClientErrorException : Exception
+        {
+            public KominClientErrorException() : base() { }
+            public KominClientErrorException(string message) : base("Operacja nie powiodła się\n" + message) { }
+            public KominClientErrorException(string message, Exception inner) : base("Operacja nie powiodła się\n" + message, inner) { }
+            protected KominClientErrorException(System.Runtime.Serialization.SerializationInfo info,
+                System.Runtime.Serialization.StreamingContext context) { }
         }
     }
 }

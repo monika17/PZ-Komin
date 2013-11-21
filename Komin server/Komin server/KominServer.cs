@@ -56,7 +56,7 @@ namespace Komin
             }
             catch (SocketException ex)
             {
-                throw ServerSocketException("Server couldn't be created: socket error", ex);
+                throw new ServerSocketException("Server couldn't be created: socket error", ex);
             }
         }
 
@@ -75,7 +75,7 @@ namespace Komin
             }
             catch (SocketException ex)
             {
-                throw ServerSocketException("Server couldn't be stopped: socket error", ex);
+                throw new ServerSocketException("Server couldn't be stopped: socket error", ex);
             }
         }
 
@@ -96,9 +96,13 @@ namespace Komin
             }
         }
 
-        public Exception ServerSocketException(string msg, SocketException socket_ex)
+        public class ServerSocketException : Exception
         {
-            return new Exception(msg, socket_ex);
+            public ServerSocketException() : base() { }
+            public ServerSocketException(string message) : base(message) { }
+            public ServerSocketException(string message, Exception inner) : base(message, inner) { }
+            protected ServerSocketException(System.Runtime.Serialization.SerializationInfo info,
+                System.Runtime.Serialization.StreamingContext context) { }
         }
     }
 
@@ -207,6 +211,31 @@ namespace Komin
                 case KominProtocolCommands.NoOperation:
                     break;
                 case KominProtocolCommands.Login: //client tries to log in
+                    if (packet.content != 0x43)
+                    {
+                        packet.DeleteContent((uint)KominProtocolContentTypes.ContactNameData, true);
+                        Error(KominNetworkErrors.WrongRequestContent, packet);
+                        return;
+                    }
+                    //get request data
+                    string req_contact_name = (string)packet.GetContent(KominProtocolContentTypes.ContactNameData)[0];
+                    string req_password = (string)packet.GetContent(KominProtocolContentTypes.PasswordData)[0];
+                    uint req_status = (uint)packet.GetContent(KominProtocolContentTypes.StatusData)[0];
+                    //######## check database over UserNotExists error
+                    //######## check database over UserAlreadyLoggedIn error
+                    //######## check database over WrongPassword error
+                    //check over WrongStatus error
+                    if (((req_status & ((uint)KominClientStatusCodes.Mask + (uint)KominClientCapabilities.Mask)) != req_status) ||
+                        ((req_status & (uint)KominClientStatusCodes.Mask) > (uint)KominClientStatusCodes.MaxValue) ||
+                        ((req_status & (uint)KominClientStatusCodes.Mask) == (uint)KominClientStatusCodes.NotAccessible))
+                    {
+                        packet.DeleteContent((uint)KominProtocolContentTypes.StatusData, true);
+                        Error(KominNetworkErrors.WrongStatus, packet);
+                        return;
+                    }
+                    //######## send new status to database
+                    //send status change notifications
+                    SetStatus(req_status);
                     break;
                 case KominProtocolCommands.Logout: //client tries to log out
                     break;
@@ -364,7 +393,7 @@ namespace Komin
             server.jobs.FinishJob(job.JobID);
         }
 
-        public void SetStatus(KominNetworkPacket source) //server sends user status notification to all groups and contacts
+        public void SetStatus(uint status = uint.MaxValue) //server sends user status change notification to all groups and contacts
         {
             if (contact_id == 0)
                 return;
@@ -430,7 +459,7 @@ namespace Komin
         {
         }
 
-        public void Error(KominNetworkErrors err, KominNetworkPacket source) //server notifies user about some error
+        public void Error(string err, KominNetworkPacket source) //server notifies user about some error
         {
             if (contact_id == 0)
                 return;
@@ -439,12 +468,13 @@ namespace Komin
 
             KominNetworkPacket packet = new KominNetworkPacket();
             packet.sender = 0; //server
-            packet.target = contact_id;
-            packet.target_is_group = false;
+            packet.target = source.sender;
+            packet.target_is_group = false; //group can't receive errors
             packet.job_id = source.job_id;
             packet.command = (uint)KominProtocolCommands.Error;
             packet.DeleteContent();
-            packet.InsertContent(KominProtocolContentTypes.ErrorTextData, err.ToString());
+            packet.CopyContent(source);
+            packet.InsertContent(KominProtocolContentTypes.ErrorTextData, err);
             InsertPacketForSending(ref packet);
         }
 
