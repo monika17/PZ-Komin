@@ -22,6 +22,7 @@
 	- nazwa grupy
 		format: [A-Z][A-Za-z_0-9]*
 	- nazwa listy kontaktow (lista uczestnikow)
+	- rodzaj komunikacji
 - baza plikow grup (SQL) (tylko grup bo miedzy kontaktami bedzie "jak nie odbierzesz w jakims czasie to nie dostaniesz")
 	- id pliku
 	- ref: id grupy
@@ -29,6 +30,7 @@
 	- sciezka do pliku na serwerze
 	- rozmiar pliku
 	- data/czas wyslania na serwer (tj. data zakonczenia uploadu na serwer - pojawienia sie wpisu w bazie)
+	- data koñca
 	
 ####################################################################################################
 ####################################################################################################
