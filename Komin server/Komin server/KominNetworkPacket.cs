@@ -24,13 +24,14 @@ namespace Komin
         private string text_msg;
         private byte[] audio_msg;
         private byte[] video_msg;
-        private string contact_name;
-        private string group_name;
+        private ContactData contact;
+        private GroupData group;
         private uint file_id;
         private string filename;
         private uint filesize;
         private byte[] filedata;
         private string error_text;
+        private UserData userdata;
         /*private string sms_number;
         private string sms_text;*/
 
@@ -51,13 +52,14 @@ namespace Komin
             text_msg = "";
             audio_msg = new byte[0];
             video_msg = new byte[0];
-            contact_name = "";
-            group_name = "";
+            contact = null;
+            group = null;
             file_id = 0;
             filename = "";
             filesize = 0;
             filedata = new byte[0];
             error_text = "";
+            userdata = null;
             /*sms_number = "";
             sms_text = "";*/
         }
@@ -72,9 +74,9 @@ namespace Komin
             return output;
         }
 
-        static uint ByteArrayToUInt(byte[] ba)
+        static uint ByteArrayToUInt(byte[] ba, int offset=0)
         {
-            return (((uint)ba[3]) << 24) + (((uint)ba[2]) << 16) + (((uint)ba[1]) << 8) + ((uint)ba[0]);
+            return (((uint)ba[offset + 3]) << 24) + (((uint)ba[offset + 2]) << 16) + (((uint)ba[offset + 1]) << 8) + ((uint)ba[offset]);
         }
 
         static byte[] BoolToByteArray(bool b)
@@ -87,9 +89,9 @@ namespace Komin
             return output;
         }
 
-        static bool ByteArrayToBool(byte[] ba)
+        static bool ByteArrayToBool(byte[] ba, int offset=0)
         {
-            return (ba[0] == 1 ? true : false);
+            return (ba[offset] == 1 ? true : false);
         }
 
         static byte[] StringToByteArray(string s)
@@ -99,10 +101,12 @@ namespace Komin
             return bytes;
         }
 
-        static string ByteArrayToString(byte[] ba)
+        static string ByteArrayToString(byte[] ba, int offset=0, int length_in_bytes=0)
         {
-            char[] chars = new char[ba.Length / sizeof(char)];
-            Buffer.BlockCopy(ba, 0, chars, 0, ba.Length);
+            if (length_in_bytes == 0)
+                length_in_bytes = ba.Length;
+            char[] chars = new char[length_in_bytes / sizeof(char)];
+            Buffer.BlockCopy(ba, offset, chars, 0, length_in_bytes);
             return new string(chars);
         }
 
@@ -110,7 +114,7 @@ namespace Komin
         {
             if (buffer.Length < sizeof(uint) * 6 + 1 /*sizeof(bool)*/)
                 return 0;
-            uint content_length = ByteArrayToUInt(new ArraySegment<byte>(buffer, sizeof(uint) * 5 + 1/*sizeof(bool)*/, sizeof(uint)).Array);
+            uint content_length = ByteArrayToUInt(buffer, sizeof(uint) * 5 + 1/*sizeof(bool)*/);
             if (buffer.Length < sizeof(uint) * 6 + 1 /*sizeof(bool)*/+ content_length)
                 return 0;
             return sizeof(uint) * 6 + 1 /*sizeof(bool)*/+ content_length;
@@ -118,6 +122,7 @@ namespace Komin
 
         public byte[] PackForSending()
         {
+            CreateDataBlock();
             uint size = (uint)(sizeof(uint) * 6 + 1 /*sizeof(bool)*/ + data.Length);
             byte[] db = new byte[size];
             int offset = 0;
@@ -135,7 +140,6 @@ namespace Komin
             offset += sizeof(uint);
             Buffer.BlockCopy(UIntToByteArray(content_length), 0, db, offset, sizeof(uint));
             offset += sizeof(uint);
-            CreateDataBlock();
             Buffer.BlockCopy(data, 0, db, offset, data.Length);
             return db;
         }
@@ -144,19 +148,19 @@ namespace Komin
         {
             int offset = 0;
 
-            sender = ByteArrayToUInt(new ArraySegment<byte>(db, offset, sizeof(uint)).Array);
+            sender = ByteArrayToUInt(db, offset);
             offset += sizeof(uint);
-            target = ByteArrayToUInt(new ArraySegment<byte>(db, offset, sizeof(uint)).Array);
+            target = ByteArrayToUInt(db, offset);
             offset += sizeof(uint);
-            target_is_group = ByteArrayToBool(new ArraySegment<byte>(db, offset, 1 /*sizeof(bool)*/).Array);
+            target_is_group = ByteArrayToBool(db, offset);
             offset += 1 /*sizeof(uint)*/;
-            command = ByteArrayToUInt(new ArraySegment<byte>(db, offset, sizeof(uint)).Array);
+            command = ByteArrayToUInt(db, offset);
             offset += sizeof(uint);
-            job_id = ByteArrayToUInt(new ArraySegment<byte>(db, offset, sizeof(uint)).Array);
+            job_id = ByteArrayToUInt(db, offset);
             offset += sizeof(uint);
-            content = ByteArrayToUInt(new ArraySegment<byte>(db, offset, sizeof(uint)).Array);
+            content = ByteArrayToUInt(db, offset);
             offset += sizeof(uint);
-            content_length = ByteArrayToUInt(new ArraySegment<byte>(db, offset, sizeof(uint)).Array);
+            content_length = ByteArrayToUInt(db, offset);
             offset += sizeof(uint);
             data = new byte[content_length];
             Buffer.BlockCopy(db, offset, data, 0, (int)content_length);
@@ -234,28 +238,64 @@ namespace Komin
                 offset += video_msg.Length;
             }
 
-            //contact name data:
-            //length : uint
-            //chars : char[length]
-            if ((content & ((uint)KominProtocolContentTypes.ContactNameData)) != 0)
+            //contact data:
+            //contact_id : uint
+            //contact_name_length : uint
+            //contact_name : char[contact_name_length]
+            //status : uint
+            if ((content & ((uint)KominProtocolContentTypes.ContactData)) != 0)
             {
-                byte[] text = StringToByteArray(contact_name);
+                Buffer.BlockCopy(UIntToByteArray((uint)contact.contact_id), 0, data, offset, sizeof(uint));
+                offset += sizeof(uint);
+                byte[] text = StringToByteArray(contact.contact_name);
                 Buffer.BlockCopy(UIntToByteArray((uint)text.Length), 0, data, offset, sizeof(uint));
                 offset += sizeof(uint);
                 Buffer.BlockCopy(text, 0, data, offset, text.Length);
                 offset += text.Length;
+                Buffer.BlockCopy(UIntToByteArray((uint)contact.status), 0, data, offset, sizeof(uint));
+                offset += sizeof(uint);
             }
 
-            //group name data:
-            //length : uint
-            //chars : char[length]
-            if ((content & ((uint)KominProtocolContentTypes.GroupNameData)) != 0)
+            //group data:
+            //group_id : uint
+            //group_name_length : uint
+            //group_name : char[group_name_length]
+            //communication_type : uint
+            //creators_id : uint
+            //members_count : uint
+            //struct{
+	        //    contact_id : uint
+	        //    contact_name_length : uint
+	        //    contact_name : char[contact_name_length]
+	        //    status : uint
+            //} [members_count]
+            if ((content & ((uint)KominProtocolContentTypes.GroupData)) != 0)
             {
-                byte[] text = StringToByteArray(group_name);
+                Buffer.BlockCopy(UIntToByteArray((uint)group.group_id), 0, data, offset, sizeof(uint));
+                offset += sizeof(uint);
+                byte[] text = StringToByteArray(group.group_name);
                 Buffer.BlockCopy(UIntToByteArray((uint)text.Length), 0, data, offset, sizeof(uint));
                 offset += sizeof(uint);
                 Buffer.BlockCopy(text, 0, data, offset, text.Length);
                 offset += text.Length;
+                Buffer.BlockCopy(UIntToByteArray((uint)group.communication_type), 0, data, offset, sizeof(uint));
+                offset += sizeof(uint);
+                Buffer.BlockCopy(UIntToByteArray((uint)group.creators_id), 0, data, offset, sizeof(uint));
+                offset += sizeof(uint);
+                Buffer.BlockCopy(UIntToByteArray((uint)group.members.Count), 0, data, offset, sizeof(uint));
+                offset += sizeof(uint);
+                foreach (ContactData cd in group.members)
+                {
+                    Buffer.BlockCopy(UIntToByteArray((uint)cd.contact_id), 0, data, offset, sizeof(uint));
+                    offset += sizeof(uint);
+                    text = StringToByteArray(cd.contact_name);
+                    Buffer.BlockCopy(UIntToByteArray((uint)text.Length), 0, data, offset, sizeof(uint));
+                    offset += sizeof(uint);
+                    Buffer.BlockCopy(text, 0, data, offset, text.Length);
+                    offset += text.Length;
+                    Buffer.BlockCopy(UIntToByteArray((uint)cd.status), 0, data, offset, sizeof(uint));
+                    offset += sizeof(uint);
+                }
             }
 
             //file data:
@@ -296,6 +336,90 @@ namespace Komin
                 offset += text.Length;
             }
 
+            //user data:
+            //contact_id : uint
+            //contact_name_length : uint
+            //contact_name : char[contact_name_length]
+            //status : uint
+            //contacts_count : uint
+            //struct{
+	        //    contact_id : uint
+	        //    contact_name_length : uint
+	        //    contact_name : char[contact_name_length]
+	        //    status : uint
+            //} [contacts_count]
+            //groups_count : uint
+            //struct{
+	        //    group_id : uint
+            //    group_name_length : uint
+            //    group_name : char[group_name_length]
+            //    communication_type : uint
+            //    creators_id : uint;
+	        //    members_count : uint
+	        //    struct{
+		    //        contact_id : uint
+		    //        contact_name_length : uint
+		    //        contact_name : char[contact_name_length]
+		    //        status : uint
+	        //    } [members_count]
+            //} [groups_count]
+            if ((content & ((uint)KominProtocolContentTypes.UserData)) != 0)
+            {
+                Buffer.BlockCopy(UIntToByteArray((uint)userdata.contact_id), 0, data, offset, sizeof(uint));
+                offset += sizeof(uint);
+                byte[] text = StringToByteArray(userdata.contact_name);
+                Buffer.BlockCopy(UIntToByteArray((uint)text.Length), 0, data, offset, sizeof(uint));
+                offset += sizeof(uint);
+                Buffer.BlockCopy(text, 0, data, offset, text.Length);
+                offset += text.Length;
+                Buffer.BlockCopy(UIntToByteArray((uint)userdata.status), 0, data, offset, sizeof(uint));
+                offset += sizeof(uint);
+                Buffer.BlockCopy(UIntToByteArray((uint)userdata.contacts.Count), 0, data, offset, sizeof(uint));
+                offset += sizeof(uint);
+                foreach (ContactData cd in userdata.contacts)
+                {
+                    Buffer.BlockCopy(UIntToByteArray((uint)cd.contact_id), 0, data, offset, sizeof(uint));
+                    offset += sizeof(uint);
+                    text = StringToByteArray(cd.contact_name);
+                    Buffer.BlockCopy(UIntToByteArray((uint)text.Length), 0, data, offset, sizeof(uint));
+                    offset += sizeof(uint);
+                    Buffer.BlockCopy(text, 0, data, offset, text.Length);
+                    offset += text.Length;
+                    Buffer.BlockCopy(UIntToByteArray((uint)cd.status), 0, data, offset, sizeof(uint));
+                    offset += sizeof(uint);
+                }
+                Buffer.BlockCopy(UIntToByteArray((uint)userdata.groups.Count), 0, data, offset, sizeof(uint));
+                offset += sizeof(uint);
+                foreach (GroupData gd in userdata.groups)
+                {
+                    Buffer.BlockCopy(UIntToByteArray((uint)gd.group_id), 0, data, offset, sizeof(uint));
+                    offset += sizeof(uint);
+                    text = StringToByteArray(gd.group_name);
+                    Buffer.BlockCopy(UIntToByteArray((uint)text.Length), 0, data, offset, sizeof(uint));
+                    offset += sizeof(uint);
+                    Buffer.BlockCopy(text, 0, data, offset, text.Length);
+                    offset += text.Length;
+                    Buffer.BlockCopy(UIntToByteArray((uint)gd.communication_type), 0, data, offset, sizeof(uint));
+                    offset += sizeof(uint);
+                    Buffer.BlockCopy(UIntToByteArray((uint)gd.creators_id), 0, data, offset, sizeof(uint));
+                    offset += sizeof(uint);
+                    Buffer.BlockCopy(UIntToByteArray((uint)gd.members.Count), 0, data, offset, sizeof(uint));
+                    offset += sizeof(uint);
+                    foreach (ContactData cd in gd.members)
+                    {
+                        Buffer.BlockCopy(UIntToByteArray((uint)cd.contact_id), 0, data, offset, sizeof(uint));
+                        offset += sizeof(uint);
+                        text = StringToByteArray(cd.contact_name);
+                        Buffer.BlockCopy(UIntToByteArray((uint)text.Length), 0, data, offset, sizeof(uint));
+                        offset += sizeof(uint);
+                        Buffer.BlockCopy(text, 0, data, offset, text.Length);
+                        offset += text.Length;
+                        Buffer.BlockCopy(UIntToByteArray((uint)cd.status), 0, data, offset, sizeof(uint));
+                        offset += sizeof(uint);
+                    }
+                }
+            }
+
             //(?) SMS data:
             //number : char[9]
             //length : uint
@@ -306,7 +430,7 @@ namespace Komin
                 Buffer.BlockCopy(text, 0, data, offset, text.Length);
                 offset += text.Length;
                 text = StringToByteArray(sms_text);
-                Buffer.BlockCopy(uintToByteArray((uint)text.Length), 0, data, offset, sizeof(uint));
+                Buffer.BlockCopy(UIntToByteArray((uint)text.Length), 0, data, offset, sizeof(uint));
                 offset += sizeof(uint);
                 Buffer.BlockCopy(text, 0, data, offset, text.Length);
                 offset += text.Length;
@@ -322,9 +446,9 @@ namespace Komin
             //chars : char[length]
             if ((content & ((uint)KominProtocolContentTypes.PasswordData)) != 0)
             {
-                int pwd_length = (int)ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                int pwd_length = (int)ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                password = ByteArrayToString(new ArraySegment<byte>(data, offset, pwd_length).Array);
+                password = ByteArrayToString(data, offset, pwd_length);
                 offset += pwd_length;
             }
 
@@ -332,7 +456,7 @@ namespace Komin
             //status : uint
             if ((content & ((uint)KominProtocolContentTypes.StatusData)) != 0)
             {
-                status = ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                status = ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
             }
 
@@ -340,7 +464,7 @@ namespace Komin
             //contact_id : uint
             if ((content & ((uint)KominProtocolContentTypes.ContactIDData)) != 0)
             {
-                contact_id = ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                contact_id = ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
             }
 
@@ -349,9 +473,9 @@ namespace Komin
             //chars : char[length]
             if ((content & ((uint)KominProtocolContentTypes.TextMessageData)) != 0)
             {
-                int text_length = (int)ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                int text_length = (int)ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                text_msg = ByteArrayToString(new ArraySegment<byte>(data, offset, text_length).Array);
+                text_msg = ByteArrayToString(data, offset, text_length);
                 offset += text_length;
             }
 
@@ -360,9 +484,10 @@ namespace Komin
             //data : byte[size]
             if ((content & ((uint)KominProtocolContentTypes.AudioMessageData)) != 0)
             {
-                int audio_length = (int)ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                int audio_length = (int)ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                audio_msg = new ArraySegment<byte>(data, offset, audio_length).Array;
+                audio_msg = new byte[audio_length];
+                Buffer.BlockCopy(data, offset, audio_msg, 0, audio_length);
                 offset += audio_length;
             }
 
@@ -371,32 +496,73 @@ namespace Komin
             //data : byte[size]
             if ((content & ((uint)KominProtocolContentTypes.VideoMessageData)) != 0)
             {
-                int video_length = (int)ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                int video_length = (int)ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                video_msg = new ArraySegment<byte>(data, offset, video_length).Array;
+                video_msg = new byte[video_length];
+                Buffer.BlockCopy(data, offset, video_msg, 0, video_length);
                 offset += video_length;
             }
 
-            //contact name data:
-            //length : uint
-            //chars : char[length]
-            if ((content & ((uint)KominProtocolContentTypes.ContactNameData)) != 0)
+            //contact data:
+            //contact_id : uint
+            //contact_name_length : uint
+            //contact_name : char[contact_name_length]
+            //status : uint
+            if ((content & ((uint)KominProtocolContentTypes.ContactData)) != 0)
             {
-                int text_length = (int)ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                contact = new ContactData();
+                contact.contact_id = ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                contact_name = ByteArrayToString(new ArraySegment<byte>(data, offset, text_length).Array);
+                int text_length = (int)ByteArrayToUInt(data, offset);
+                offset += sizeof(uint);
+                contact.contact_name = ByteArrayToString(data, offset, text_length);
                 offset += text_length;
+                contact.status = ByteArrayToUInt(data, offset);
+                offset += sizeof(uint);
             }
 
-            //group name data:
-            //length : uint
-            //chars : char[length]
-            if ((content & ((uint)KominProtocolContentTypes.GroupNameData)) != 0)
+            //group data:
+            //group_id : uint
+            //group_name_length : uint
+            //group_name : char[group_name_length]
+            //communication_type : uint
+            //creators_id : uint
+            //members_count : uint
+            //struct{
+	        //    contact_id : uint
+	        //    contact_name_length : uint
+	        //    contact_name : char[contact_name_length]
+	        //    status : uint
+            //} [members_count]
+            if ((content & ((uint)KominProtocolContentTypes.GroupData)) != 0)
             {
-                int text_length = (int)ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                group = new GroupData();
+                group.group_id = ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                group_name = ByteArrayToString(new ArraySegment<byte>(data, offset, text_length).Array);
+                int text_length = (int)ByteArrayToUInt(data, offset);
+                offset += sizeof(uint);
+                group.group_name = ByteArrayToString(data, offset, text_length);
                 offset += text_length;
+                group.communication_type = ByteArrayToUInt(data, offset);
+                offset += sizeof(uint);
+                group.creators_id = ByteArrayToUInt(data, offset);
+                offset += sizeof(uint);
+                int contacts_count = (int)ByteArrayToUInt(data, offset);
+                offset += sizeof(uint);
+                group.members.Clear();
+                for (; contacts_count > 0; contacts_count--)
+                {
+                    ContactData cd = new ContactData();
+                    cd.contact_id = ByteArrayToUInt(data, offset);
+                    offset += sizeof(uint);
+                    text_length = (int)ByteArrayToUInt(data, offset);
+                    offset += sizeof(uint);
+                    cd.contact_name = ByteArrayToString(data, offset, text_length);
+                    offset += text_length;
+                    cd.status = ByteArrayToUInt(data, offset);
+                    offset += sizeof(uint);
+                    group.members.Add(cd);
+                }
             }
 
             //file data:
@@ -408,17 +574,18 @@ namespace Komin
             //filedata : byte[filedata_length]
             if ((content & ((uint)KominProtocolContentTypes.FileData)) != 0)
             {
-                file_id = ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                file_id = ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                int text_length = (int)ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                int text_length = (int)ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                filename = ByteArrayToString(new ArraySegment<byte>(data, offset, text_length).Array);
+                filename = ByteArrayToString(data, offset, text_length);
                 offset += text_length;
-                filesize = ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                filesize = ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                int filedata_length = (int)ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                int filedata_length = (int)ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                filedata = new ArraySegment<byte>(data, offset, filedata_length).Array;
+                filedata = new byte[filedata_length];
+                Buffer.BlockCopy(data, offset, filedata, 0, filedata_length);
                 offset += filedata_length;
             }
 
@@ -427,10 +594,100 @@ namespace Komin
             //chars : char[length]
             if ((content & ((uint)KominProtocolContentTypes.ErrorTextData)) != 0)
             {
-                int text_length = (int)ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                int text_length = (int)ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                error_text = ByteArrayToString(new ArraySegment<byte>(data, offset, text_length).Array);
+                error_text = ByteArrayToString(data, offset, text_length);
                 offset += text_length;
+            }
+
+            //user data:
+            //contact_id : uint
+            //contact_name_length : uint
+            //contact_name : char[contact_name_length]
+            //status : uint
+            //contacts_count : uint
+            //struct{
+            //    contact_id : uint
+            //    contact_name_length : uint
+            //    contact_name : char[contact_name_length]
+            //    status : uint
+            //} [contacts_count]
+            //groups_count : uint
+            //struct{
+            //    group_id : uint
+            //    group_name_length : uint
+            //    group_name : char[group_name_length]
+            //    communication_type : uint
+            //    creators_id : uint;
+            //    members_count : uint
+            //    struct{
+            //        contact_id : uint
+            //        contact_name_length : uint
+            //        contact_name : char[contact_name_length]
+            //        status : uint
+            //    } [members_count]
+            //} [groups_count]
+            if ((content & ((uint)KominProtocolContentTypes.UserData)) != 0)
+            {
+                userdata = new UserData();
+                userdata.contact_id = ByteArrayToUInt(data, offset);
+                offset += sizeof(uint);
+                int text_length = (int)ByteArrayToUInt(data, offset);
+                offset += sizeof(uint);
+                userdata.contact_name = ByteArrayToString(data, offset, text_length);
+                offset += text_length;
+                userdata.status = ByteArrayToUInt(data, offset);
+                offset += sizeof(uint);
+                int contacts_count = (int)ByteArrayToUInt(data, offset);
+                offset += sizeof(uint);
+                userdata.contacts.Clear();
+                for (; contacts_count>0; contacts_count--)
+                {
+                    ContactData cd = new ContactData();
+                    cd.contact_id = ByteArrayToUInt(data, offset);
+                    offset += sizeof(uint);
+                    text_length = (int)ByteArrayToUInt(data, offset);
+                    offset += sizeof(uint);
+                    cd.contact_name = ByteArrayToString(data, offset, text_length);
+                    offset += text_length;
+                    cd.status = ByteArrayToUInt(data, offset);
+                    offset += sizeof(uint);
+                    userdata.contacts.Add(cd);
+                }
+                int groups_count = (int)ByteArrayToUInt(data, offset);
+                offset += sizeof(uint);
+                userdata.groups.Clear();
+                for (; groups_count > 0; groups_count--)
+                {
+                    GroupData gd = new GroupData();
+                    gd.group_id = ByteArrayToUInt(data, offset);
+                    offset += sizeof(uint);
+                    text_length = (int)ByteArrayToUInt(data, offset);
+                    offset += sizeof(uint);
+                    gd.group_name = ByteArrayToString(data, offset, text_length);
+                    offset += text_length;
+                    gd.communication_type = ByteArrayToUInt(data, offset);
+                    offset += sizeof(uint);
+                    gd.creators_id = ByteArrayToUInt(data, offset);
+                    offset += sizeof(uint);
+                    contacts_count = (int)ByteArrayToUInt(data, offset);
+                    offset += sizeof(uint);
+                    gd.members.Clear();
+                    for (; contacts_count > 0; contacts_count--)
+                    {
+                        ContactData cd = new ContactData();
+                        cd.contact_id = ByteArrayToUInt(data, offset);
+                        offset += sizeof(uint);
+                        text_length = (int)ByteArrayToUInt(data, offset);
+                        offset += sizeof(uint);
+                        cd.contact_name = ByteArrayToString(data, offset, text_length);
+                        offset += text_length;
+                        cd.status = ByteArrayToUInt(data, offset);
+                        offset += sizeof(uint);
+                        gd.members.Add(cd);
+                    }
+                    userdata.groups.Add(gd);
+                }
             }
 
             //(?) SMS data:
@@ -439,11 +696,11 @@ namespace Komin
             //chars : char[length]
             /*if ((content & ((uint)KominProtocolContentTypes.SMSData)) != 0)
             {
-                sms_number = ByteArrayToString(new ArraySegment<byte>(data, offset, 9 * sizeof(char)).Array);
+                sms_number = ByteArrayToString(data, offset, 9 * sizeof(char));
                 offset += 9 * sizeof(char);
-                int text_length = (int)ByteArrayToUInt(new ArraySegment<byte>(data, offset, sizeof(uint)).Array);
+                int text_length = (int)ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                sms_text = ByteArrayToString(new ArraySegment<byte>(data, offset, text_length).Array);
+                sms_text = ByteArrayToString(data, offset, text_length);
                 offset += text_length;
             }*/
         }
@@ -451,7 +708,6 @@ namespace Komin
         public void InsertContent(KominProtocolContentTypes type, params object[] args)
         {
             DeleteContent((uint)type);
-            content |= (uint)type;
             switch (type)
             {
                 case KominProtocolContentTypes.PasswordData:
@@ -490,17 +746,20 @@ namespace Komin
                     video_msg = (byte[])((byte[])args[0]).Clone();
                     content_length += (uint)(sizeof(uint) + video_msg.Length);
                     break;
-                case KominProtocolContentTypes.ContactNameData:
-                    if (args[0].GetType().Name != "String")
+                case KominProtocolContentTypes.ContactData:
+                    if (args[0].GetType().Name != "ContactData")
                         return;
-                    contact_name = (string)args[0];
-                    content_length += (uint)(sizeof(uint) + contact_name.Length * sizeof(char));
+                    contact = (ContactData)args[0];
+                    content_length += (uint)(sizeof(uint) * 3 + contact.contact_name.Length * sizeof(char));
                     break;
-                case KominProtocolContentTypes.GroupNameData:
-                    if (args[0].GetType().Name != "String")
+                case KominProtocolContentTypes.GroupData:
+                    if (args[0].GetType().Name != "GroupData")
                         return;
-                    group_name = (string)args[0];
-                    content_length += (uint)(sizeof(uint) + group_name.Length * sizeof(char));
+                    group = (GroupData)args[0];
+                    uint group_sum = 0;
+                    foreach (ContactData cd in group.members)
+                        group_sum += (uint)(sizeof(uint) * 3 + cd.contact_name.Length * sizeof(char));
+                    content_length += (uint)(sizeof(uint) * 5 + group.group_name.Length * sizeof(char)+group_sum);
                     break;
                 case KominProtocolContentTypes.FileData:
                     if (args[0].GetType().Name != "UInt32")
@@ -525,6 +784,22 @@ namespace Komin
                     error_text = (string)args[0];
                     content_length += (uint)(sizeof(uint) + error_text.Length * sizeof(char));
                     break;
+                case KominProtocolContentTypes.UserData:
+                    if (args[0].GetType().Name != "UserData")
+                        return;
+                    userdata = (UserData)args[0];
+                    uint contacts_sum = 0;
+                    foreach (ContactData cd in userdata.contacts)
+                        contacts_sum += (uint)(sizeof(uint) * 3 + cd.contact_name.Length * sizeof(char));
+                    uint groups_sum = 0;
+                    foreach (GroupData gd in userdata.groups)
+                    {
+                        groups_sum += (uint)(sizeof(uint) * 5 + gd.group_name.Length * sizeof(char));
+                        foreach (ContactData cd in gd.members)
+                            groups_sum += (uint)(sizeof(uint) * 3 + cd.contact_name.Length * sizeof(char));
+                    }
+                    content_length += (uint)(sizeof(uint) * 5 + userdata.contact_name.Length * sizeof(char) + contacts_sum + groups_sum);
+                    break;
                 /*case KominProtocolContentTypes.SMSData:
                     if (args[0].GetType().Name != "String")
                         return;
@@ -537,6 +812,7 @@ namespace Komin
                     content_length += (uint)(9 * sizeof(char) + sizeof(uint) + sms_text.Length * sizeof(char));
                     break;*/
             }
+            content |= (uint)type;
         }
 
         public object[] GetContent(KominProtocolContentTypes type)
@@ -572,13 +848,13 @@ namespace Komin
                     ret = new object[1];
                     ret[0] = video_msg;
                     break;
-                case KominProtocolContentTypes.ContactNameData:
+                case KominProtocolContentTypes.ContactData:
                     ret = new object[1];
-                    ret[0] = contact_name;
+                    ret[0] = contact;
                     break;
-                case KominProtocolContentTypes.GroupNameData:
+                case KominProtocolContentTypes.GroupData:
                     ret = new object[1];
-                    ret[0] = group_name;
+                    ret[0] = group;
                     break;
                 case KominProtocolContentTypes.FileData:
                     ret = new object[4];
@@ -590,6 +866,10 @@ namespace Komin
                 case KominProtocolContentTypes.ErrorTextData:
                     ret = new object[1];
                     ret[0] = error_text;
+                    break;
+                case KominProtocolContentTypes.UserData:
+                    ret = new object[1];
+                    ret[0] = userdata;
                     break;
                 /*case KominProtocolContentTypes.SMSData:
                     ret = new object[2];
@@ -646,17 +926,33 @@ namespace Komin
                 case KominProtocolContentTypes.VideoMessageData:
                     content_length -= (uint)(sizeof(uint) + video_msg.Length);
                     break;
-                case KominProtocolContentTypes.ContactNameData:
-                    content_length -= (uint)(sizeof(uint) + contact_name.Length * sizeof(char));
+                case KominProtocolContentTypes.ContactData:
+                    content_length -= (uint)(sizeof(uint) * 3 + contact.contact_name.Length * sizeof(char));
                     break;
-                case KominProtocolContentTypes.GroupNameData:
-                    content_length -= (uint)(sizeof(uint) + group_name.Length * sizeof(char));
+                case KominProtocolContentTypes.GroupData:
+                    uint group_sum = 0;
+                    foreach (ContactData cd in group.members)
+                        group_sum += (uint)(sizeof(uint) * 3 + cd.contact_name.Length * sizeof(char));
+                    content_length -= (uint)(sizeof(uint) * 5 + group.group_name.Length * sizeof(char)+group_sum);
                     break;
                 case KominProtocolContentTypes.FileData:
                     content_length -= (uint)(sizeof(uint) * 4 + filename.Length * sizeof(char) + filedata.Length);
                     break;
                 case KominProtocolContentTypes.ErrorTextData:
                     content_length -= (uint)(sizeof(uint) + error_text.Length * sizeof(char));
+                    break;
+                case KominProtocolContentTypes.UserData:
+                    uint contacts_sum = 0;
+                    foreach (ContactData cd in userdata.contacts)
+                        contacts_sum += (uint)(sizeof(uint) * 3 + cd.contact_name.Length * sizeof(char));
+                    uint groups_sum = 0;
+                    foreach (GroupData gd in userdata.groups)
+                    {
+                        groups_sum += (uint)(sizeof(uint) * 5 + gd.group_name.Length * sizeof(char));
+                        foreach (ContactData cd in gd.members)
+                            groups_sum += (uint)(sizeof(uint) * 3 + cd.contact_name.Length * sizeof(char));
+                    }
+                    content_length -= (uint)(sizeof(uint) * 5 + userdata.contact_name.Length * sizeof(char) + contacts_sum + groups_sum);
                     break;
                 /*case KominProtocolContentTypes.SMSData:
                     content_length -= (uint)(9 * sizeof(char) + sizeof(uint) + sms_text.Length * sizeof(char));
@@ -717,12 +1013,13 @@ namespace Komin
         TextMessageData = 8,
         AudioMessageData = 0x10,
         VideoMessageData = 0x20,
-        ContactNameData = 0x40,
-        GroupNameData = 0x80,
+        ContactData = 0x40,
+        GroupData = 0x80,
         FileData = 0x100,
         ErrorTextData = 0x200,
-        //SMSData = 0x400,
-        MaxValue = ErrorTextData,
+        UserData = 0x400,
+        //SMSData = 0x800,
+        MaxValue = UserData,
         Mask = 0x7FF
     }
 

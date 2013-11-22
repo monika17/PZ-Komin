@@ -213,12 +213,12 @@ namespace Komin
                 case KominProtocolCommands.Login: //client tries to log in
                     if (packet.content != 0x43)
                     {
-                        packet.DeleteContent((uint)KominProtocolContentTypes.ContactNameData, true);
+                        packet.DeleteContent((uint)KominProtocolContentTypes.ContactData, true);
                         Error(KominNetworkErrors.WrongRequestContent, packet);
                         return;
                     }
                     //get request data
-                    string req_contact_name = (string)packet.GetContent(KominProtocolContentTypes.ContactNameData)[0];
+                    string req_contact_name = (string)packet.GetContent(KominProtocolContentTypes.ContactData)[0];
                     string req_password = (string)packet.GetContent(KominProtocolContentTypes.PasswordData)[0];
                     uint req_status = (uint)packet.GetContent(KominProtocolContentTypes.StatusData)[0];
                     //######## check database over UserNotExists error
@@ -255,8 +255,8 @@ namespace Komin
                     break;
                 case KominProtocolCommands.RemoveContactFromList: //client wants to remove someone from its own contact list
                     break;
-                /*case KominProtocolCommands.PingContactRequest: //server and groups don't answer to ping
-                    break;*/
+                case KominProtocolCommands.PingContactRequest: //groups don't answer to ping, server answers to ping (self-pings and ping with contact_name only)
+                    break;
                 case KominProtocolCommands.PingContactAnswer: //client answers to ping from server
                     break;
                 case KominProtocolCommands.SendMessage: //client sends group messages
@@ -322,7 +322,7 @@ namespace Komin
             packet.DeleteContent();
             InsertPacketForSending(ref packet);
 
-            server.jobs.FinishJob(job.JobID);
+            server.jobs.FinishJob(job);
         }
 
         //public void Login() { } //server can't log any user in
@@ -390,7 +390,7 @@ namespace Komin
                     conn.InsertPacketForSending(ref packet);
                 }*/
 
-            server.jobs.FinishJob(job.JobID);
+            server.jobs.FinishJob(job);
         }
 
         public void SetStatus(uint status = uint.MaxValue) //server sends user status change notification to all groups and contacts
@@ -444,7 +444,7 @@ namespace Komin
                     conn.InsertPacketForSending(ref packet);
                 }*/
 
-            server.jobs.FinishJob(job.JobID);
+            server.jobs.FinishJob(job);
         }
 
         //public void SetPassword() { } //server is not allowed to change password

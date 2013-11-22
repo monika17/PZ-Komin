@@ -24,10 +24,10 @@ namespace Komin
             return job;
         }
 
-        public void FinishJob(uint job_id)
+        public void FinishJob(KominNetworkJob job)
         {
             for(int i=0; i<jobs.Count; i++)
-                if (jobs[i].JobID == job_id)
+                if (jobs[i].JobID == job.JobID)
                 {
                     jobs.RemoveAt(i);
                     break;

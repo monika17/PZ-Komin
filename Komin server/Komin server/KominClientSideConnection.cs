@@ -16,26 +16,18 @@ namespace Komin
         NetworkStream stream;
         public BackgroundWorker commune;
         List<KominNetworkPacket> packets_to_send;
-        //user data
-        public uint contact_id;
-        public List<uint> group_ids;
+        public UserData userdata;
         KominNetworkJobHolder jobs;
 
         public KominClientSideConnection()
         {
-            contact_id = 0;
-            group_ids = new List<uint>();
+            userdata = new UserData();
             jobs = new KominNetworkJobHolder();
             server = null;
             packets_to_send = new List<KominNetworkPacket>();
             commune = new BackgroundWorker();
             commune.WorkerSupportsCancellation = true;
             commune.DoWork += serverCommune;
-        }
-        
-        ~KominClientSideConnection()
-        {
-            Disconnect();
         }
 
         public void Connect(string IP, int port)
@@ -49,7 +41,7 @@ namespace Komin
             }
             catch (SocketException ex)
             {
-                throw CantConnectToServer("Couldn't connect to server: socket error", ex);
+                throw new KominClientErrorException("Nie można połączyć się z serwerem: błąd socketa", ex);
             }
         }
 
@@ -60,15 +52,10 @@ namespace Komin
 
             Logout();
 
-            jobs.Restart();
             commune.CancelAsync();
+            jobs.Restart();
             server.Close();
             server = null;
-        }
-
-        public Exception CantConnectToServer(string msg, SocketException socket_ex)
-        {
-            return new Exception(msg, socket_ex);
         }
 
         private void serverCommune(object sender, DoWorkEventArgs e)
@@ -107,12 +94,12 @@ namespace Komin
         {
             //filter out packets not targeted to this contact or its groups
             bool passed = false;
-            if (packet.target == contact_id)
+            if (packet.target == userdata.contact_id)
                 passed = true;
             else if (packet.target_is_group == true)
             {
-                foreach (uint group_id in group_ids)
-                    if (packet.target == group_id)
+                foreach (GroupData group in userdata.groups)
+                    if (packet.target == group.group_id)
                         passed = true;
             }
             if (passed == false)
@@ -179,7 +166,7 @@ namespace Komin
             }
         }
 
-        private void InsertPacketForSending(ref KominNetworkPacket packet)
+        private void InsertPacketForSending(KominNetworkPacket packet)
         {
             packets_to_send.Add(packet);
         }
@@ -197,21 +184,21 @@ namespace Komin
         //these methods are used when client wants to send something to client(s) or server
         public void NoOperation(uint target, bool target_is_group)
         {
-            if (contact_id == 0)
+            if (userdata.contact_id == 0)
                 return;
 
             KominNetworkJob job = jobs.AddJob();
 
             KominNetworkPacket packet = new KominNetworkPacket();
-            packet.sender = contact_id;
+            packet.sender = userdata.contact_id;
             packet.target = target;
             packet.target_is_group = target_is_group;
             packet.job_id = job.JobID;
             packet.command = (uint)KominProtocolCommands.NoOperation;
             packet.DeleteContent();
-            InsertPacketForSending(ref packet);
+            InsertPacketForSending(packet);
 
-            jobs.FinishJob(job.JobID);
+            jobs.FinishJob(job);
         }
 
         public void Login(string contact_name, string password, ref uint new_status) //send login data to server
@@ -226,10 +213,10 @@ namespace Komin
             packet.job_id = job.JobID;
             packet.command = (uint)KominProtocolCommands.Login;
             packet.DeleteContent();
-            packet.InsertContent(KominProtocolContentTypes.ContactNameData, contact_name);
+            packet.InsertContent(KominProtocolContentTypes.ContactData, contact_name);
             packet.InsertContent(KominProtocolContentTypes.PasswordData, password);
             packet.InsertContent(KominProtocolContentTypes.StatusData, new_status);
-            InsertPacketForSending(ref packet);
+            InsertPacketForSending(packet);
 
             do
             {
@@ -238,22 +225,66 @@ namespace Komin
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:
-                        contact_id = (uint)packet.GetContent(KominProtocolContentTypes.ContactIDData)[0];
+                        userdata.contact_id = (uint)packet.GetContent(KominProtocolContentTypes.ContactIDData)[0];
                         new_status = (uint)packet.GetContent(KominProtocolContentTypes.StatusData)[0];
+                        //send self-ping request to get user data
+                        packet.sender = userdata.contact_id;
+                        packet.target = 0; //server
+                        packet.target_is_group = false;
+                        packet.job_id = job.JobID;
+                        packet.command = (uint)KominProtocolCommands.PingContactRequest;
+                        packet.DeleteContent();
+                        packet.InsertContent(KominProtocolContentTypes.ContactIDData, packet.sender);
+                        InsertPacketForSending(packet);
+                        break;
+                    case KominProtocolCommands.PingContactAnswer:
+                        userdata = (UserData)packet.GetContent(KominProtocolContentTypes.UserData)[0];
                         finished = true;
                         break;
                     case KominProtocolCommands.Error:
                         finished = true;
-                        jobs.FinishJob(job.JobID);
+                        jobs.FinishJob(job);
                         throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
                 }
             } while (!finished);
 
-            jobs.FinishJob(job.JobID);
+            jobs.FinishJob(job);
         }
 
         public void Logout() //request logout
         {
+            if (userdata.contact_id == 0)
+                return;
+
+            KominNetworkJob job = jobs.AddJob();
+            bool finished = false;
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id;
+            packet.target = 0; //server
+            packet.target_is_group = false;
+            packet.job_id = job.JobID;
+            packet.command = (uint)KominProtocolCommands.Logout;
+            packet.DeleteContent();
+            InsertPacketForSending(packet);
+
+            do
+            {
+                job.WaitForNewArrival();
+                packet = job.Packet;
+                switch ((KominProtocolCommands)packet.command)
+                {
+                    case KominProtocolCommands.Accept:
+                        finished = true;
+                        break;
+                    case KominProtocolCommands.Error:
+                        finished = true;
+                        jobs.FinishJob(job);
+                        throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                }
+            } while (!finished);
+
+            jobs.FinishJob(job);
         }
 
         public void SetStatus(uint new_status) //send status data to server
@@ -286,8 +317,50 @@ namespace Komin
         {
         }
 
-        public void PingContactRequest(string contact_name) //ask client about its status, capabilities etc.
+        public ContactData PingContactRequest(uint contact_id, string contact_name="") //ask client about its status, capabilities etc.
         {
+            if (userdata.contact_id == 0)
+                return null;
+
+            KominNetworkJob job = jobs.AddJob();
+            bool finished = false;
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id;
+            packet.target = contact_id; //contact_name required if contact_id=0 (server)
+            packet.target_is_group = false;
+            packet.job_id = job.JobID;
+            packet.command = (uint)KominProtocolCommands.PingContactRequest;
+            packet.DeleteContent();
+            if (contact_id != 0)
+                packet.InsertContent(KominProtocolContentTypes.ContactIDData, contact_id);
+            if (contact_name != "")
+            {
+                ContactData cd = new ContactData();
+                cd.contact_id = contact_id;
+                cd.contact_name = contact_name;
+                packet.InsertContent(KominProtocolContentTypes.ContactData, cd);
+            }
+            InsertPacketForSending(packet);
+
+            do
+            {
+                job.WaitForNewArrival();
+                packet = job.Packet;
+                switch ((KominProtocolCommands)packet.command)
+                {
+                    case KominProtocolCommands.PingContactAnswer:
+                        finished = true;
+                        break;
+                    case KominProtocolCommands.Error:
+                        finished = true;
+                        jobs.FinishJob(job);
+                        throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                }
+            } while (!finished);
+
+            jobs.FinishJob(job);
+            return (ContactData)packet.GetContent(KominProtocolContentTypes.ContactData)[0];
         }
 
         public void PingContactAnswer(/*...*/) //answer to ping
@@ -302,11 +375,11 @@ namespace Komin
         {
         }
 
-        public void RequestAudioCall(string contact_name) //request an audio call from contact
+        public void RequestAudioCall(uint contact_id) //request an audio call from contact
         {
         }
 
-        public void RequestVideoCall(string contact_name) //request a video call from contact
+        public void RequestVideoCall(uint contact_id) //request a video call from contact
         {
         }
 
@@ -322,15 +395,16 @@ namespace Komin
         {
         }
 
-        public void RequestFileTransfer(string contact_name, bool is_group/*, fileinfo*/) //request file transfer (to contact, to group or from group)
+        public void RequestFileTransfer(uint id, bool is_group, uint file_id, string filename, uint filesize)
+        //request file transfer (to contact (is_group=false), to group (is_group=true, filename!="") or from group (is_group=true, file_id!=0))
         {
         }
 
-        public void TimeoutFileTransfer(uint file_id) //notify contact about file timeout
+        public void TimeoutFileTransfer(uint contact_id, uint file_id) //notify contact about file timeout
         {
         }
 
-        public void FinishFileTransfer(uint file_id) //notify contact or group about end of file transfer
+        public void FinishFileTransfer(uint id, bool is_group, uint file_id) //notify contact or group about end of file transfer
         {
         }
 
@@ -338,15 +412,15 @@ namespace Komin
         {
         }
 
-        public void JoinGroup(string name, bool join_invite) //ask group (own join) or contact (invite contact) to join group
+        public void JoinGroup(uint id, bool invite = false) //ask group (own join) or contact (invite contact) to join group
         {
         }
 
-        public void LeaveGroup(string name, bool leave_kick) //ask group (own leave) or contact (kick) to leave group
+        public void LeaveGroup(uint id, bool kick = false) //ask group (own leave) or contact (kick) to leave group
         {
         }
 
-        public void CloseGroup() //request closing group
+        public void CloseGroup(uint group_id) //request closing group
         {
         }
 

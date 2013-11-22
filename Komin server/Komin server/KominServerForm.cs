@@ -23,6 +23,8 @@ namespace Komin
         {
             if (button1.Text == "start")
             {
+                if (textBox1.Text == "")
+                    textBox1.Text = "666";
                 server.Start(comboBox1.Items[comboBox1.SelectedIndex].ToString(), int.Parse(textBox1.Text));
                 comboBox1.Enabled = false;
                 textBox1.Enabled = false;

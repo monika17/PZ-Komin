@@ -59,11 +59,12 @@ bt2 - has contact id data
 bt3 - has text message data
 bt4 - has audio message data
 bt5 - has video message data
-bt6 - has contact name data
-bt7 - has group name data
+bt6 - has contact data
+bt7 - has group data
 bt8 - has file data
 bt9 - has error text data
-bt10 - has SMS data (?)
+bt10 - has user data
+bt11 - has SMS data (?)
 
 password data:
 length : uint
@@ -101,18 +102,30 @@ video message data:
 size : uint (in bytes)
 data : byte[size]
 
-contact name data:
-length : uint
-chars : char[length]
+contact data:
+contact_id : uint
+contact_name_length : uint
+contact_name : char[contact_name_length]
+status : uint
 
 group name data:
-length : uint
-chars : char[length]
+group_id : uint
+group_name_length : uint
+group_name : char[group_name_length]
+communication_type : uint
+creators_id : uint
+members_count : uint
+struct{
+	contact_id : uint
+	contact_name_length : uint
+	contact_name : char[contact_name_length]
+	status : uint
+} [members_count]
 
 file data:
 file_id : uint
 filename_length : uint
-filename_chars : char[length]
+filename_chars : char[filename_length]
 filesize : uint
 filedata_length : uint
 filedata : byte[filedata_length]
@@ -120,6 +133,34 @@ filedata : byte[filedata_length]
 error text data:
 length : uint
 chars : char[length]
+
+user data:
+contact_id : uint
+contact_name_length : uint
+contact_name : char[contact_name_length]
+status : uint
+contacts_count : uint
+struct{
+	contact_id : uint
+	contact_name_length : uint
+	contact_name : char[contact_name_length]
+	status : uint
+} [contacts_count]
+groups_count : uint
+struct{
+	group_id : uint
+    group_name_length : uint
+    group_name : char[group_name_length]
+    communication_type : uint
+    creators_id : uint
+	members_count : uint
+	struct{
+		contact_id : uint
+		contact_name_length : uint
+		contact_name : char[contact_name_length]
+		status : uint
+	} [members_count]
+} [groups_count]
 
 (?) SMS data:
 number : char[9]
@@ -129,15 +170,15 @@ chars : char[length]
 command field values (not complete because of missing error notifications)
 0 - NOP (no operation)
 	command source: client/server
-		content bits: 00000000000
+		content bits: 000000000000
 		responese:
 			<none>
 1 - LOGIN
 	command source: client
-		content bits: 00001000011
+		content bits: 000001000011
 		responses from server:
-			cmd=6,content=00001000110 (successed)
-			cmd=8,content=0100?000??0 (failed)
+			cmd=6,content=000001000110 (successed)
+			cmd=8,content=00100?000??0 (failed)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik ju¿ jest zalogowany
@@ -146,51 +187,51 @@ command field values (not complete because of missing error notifications)
 					B³êdny status
 2 - LOGOUT
 	command source: client
-		content bits: 00000000000
+		content bits: 000000000000
 		responses from server:
-			cmd=6,content=00000000010 (successed)
-			cmd=8,content=01000000000 (failed)
+			cmd=6,content=000000000010 (successed)
+			cmd=8,content=001000000000 (failed)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
 	command source: server
-		content bits: 00000000010
+		content bits: 000000000010
 		responses:
 			<none>
 3 - SET_STATUS
 	command source: client
-		content bits: 00000000010
+		content bits: 000000000010
 		responses from server:
-			cmd=6,content=00000000010 (successed)
-			cmd=8,content=01000000000 (failed)
+			cmd=6,content=000000000010 (successed)
+			cmd=8,content=001000000000 (failed)
 				error texts:
 					U¿ytkownik nie jest zalogowany
 					Nieprawid³owe dane ¿¹dania
 	command source: server (status change notification)
-		content bits: 00001000010
+		content bits: 000001000010
 		responses:
 			<none>
 4 - SET_PASSWORD
 	command source: client
-		content bits: 00000000001
+		content bits: 000000000001
 		responses from server:
-			cmd=6,content=00000000000 (successed)
-			cmd=8,content=01000000000 (failed)
+			cmd=6,content=000000000000 (successed)
+			cmd=8,content=001000000000 (failed)
 				error texts:
 					U¿ytkownik nie jest zalogowany
 					Nieprawid³owe dane ¿¹dania
 5 - CREATE_CONTACT
 	command source: client
-		content bits: 00001000001
+		content bits: 000001000001
 		responses from server:
-			cmd=6,content=00001000110 (successed)
-			cmd=8,content=01001000000 (failed)
+			cmd=6,content=000001000110 (successed)
+			cmd=8,content=001001000000 (failed)
 				error texts:
 					U¿ytkownik ju¿ istnieje
 					Nieprawid³owe dane ¿¹dania
 6 - ACCEPT (also CONFIRM)
 	command source: client
-		content bits: 00??0??0?00
+		content bits: 000??0??0?00
 			bt8 - accept file transfer
 			bt7 - accept joining group
 			bt5 - accept audio/video call
@@ -198,7 +239,7 @@ command field values (not complete because of missing error notifications)
 		responses:
 			<none>
 	command source: server
-		content bits: 00???000???
+		content bits: 000???000???
 			bt8+bt7+bt2 - server accepts arrival of group-destined file
 			bt2+bt1 - status change/logout confirmation
 			bt2 - password change confirmation
@@ -208,72 +249,84 @@ command field values (not complete because of missing error notifications)
 			<none>
 7 - DENY
 	command source: client
-		content bits: 00??0??0?00
+		content bits: 000??0??0?00
 		responses:
 			<none>
 8 - ERROR
 	command source: server
-		content bits: ?1?????????
+		content bits: ?01?????????
 		responses from client:
 			<none>
 			<next attempt>
 9 - ADD_CONTACT_TO_LIST
 	command source: client
-		content bits: 00001000000
+		content bits: 000001000000
 		responses from server:
-			cmd=6,content=00001000000 (successed - add to contact private list)
-			cmd=8,content=01001000000 (failed)
+			cmd=6,content=000001000000 (successed - add to contact private list)
+			cmd=8,content=001001000000 (failed)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik ju¿ znajduje siê na liœcie kontaktów
 					Nieprawid³owe dane ¿¹dania
 10 - REMOVE_CONTACT_FROM_LIST
 	command source: client
-		content bits: 00001000000
+		content bits: 000001000000
 		responses from server:
-			cmd=6,content=00001000000 (successed - remove from contact private list)
-			cmd=8,content=01001000000 (failed)
+			cmd=6,content=000001000000 (successed - remove from contact private list)
+			cmd=8,content=001001000000 (failed)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie znajduje siê na liœcie kontaktów
 					Nieprawid³owe dane ¿¹dania
 11 - PING_CONTACT (request)
 	command source: server
-		content bits: 00000000100
+		content bits: 000000000100
 		responses from client:
 			cmd=12,content=00011??1110
 				bt5+bt4 - client capabilities
 	command source: client
-		content bits: 00001000000
+		content bits: 00000?000?00
+			bt2 or bt6 - depends on clients knowledge, bt2 is considered as more reliable
 		responses from client:
-			cmd=12,content=00011??1010
+			cmd=12,content=000011??1110
 				bt5+bt4 - client capabilities
+		responses from server:
+			cmd=8,content=00100?000?00
+				error texts:
+					U¿ytkownik nie istnieje
+					Nieprawid³owe dane ¿¹dania
+			<only when self-ping>
+			cmd=12,content=010000000100
 12 - PING_CONTACT (answer)
 	command source: client
-		content bits: 00011??1?10
+		content bits: 000011??1110
 			bt5+bt4 - client capabilities
-			bt2 - set to 1 only in response to server ping
+		responses:
+			<none>
+	command source: server
+		content bits: 010000000100
+			bt5+bt4 - client capabilities
 		responses:
 			<none>
 13 - SEND_MESSAGE
 	command source: client
-		content bits: ?0?00???000
+		content bits: ?00?00???000
 			note: message destination is determined by header fields
 		responses:
 			<none; for text messages: server can store contact related messages, group messages are not stored because group is destroyed when no user logged in>
 14 - PING_MESSAGES (check are there any messages destined for specified contact; used during login by client)
 	command source: client
-		content bits: 00000000000
+		content bits: 000000000000
 		responses from server:
 			cmd=13 chain
-			cmd=7,content=00000000000 (successed - no messages)
+			cmd=7,content=000000000000 (successed - no messages)
 15 - REQUEST_AUDIO_CALL
 	command source: client
-		content bits: 00001000000
+		content bits: 000001000000
 		responses from client (contact call) or server (group call):
-			cmd=6,content=00001000100 (successed)
-			cmd=7,content=00001000000 (failed - contact refused)
-			cmd=8,content=01001000000 (failed - error)
+			cmd=6,content=000001000100 (successed)
+			cmd=7,content=000001000000 (failed - contact refused)
+			cmd=8,content=001001000000 (failed - error)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
@@ -282,11 +335,11 @@ command field values (not complete because of missing error notifications)
 					Nie nale¿ysz do grupy
 16 - REQUEST_VIDEO_CALL
 	command source: client
-		content bits: 00001000000
+		content bits: 000001000000
 		responses from client (contact call) or server (group call):
-			cmd=6,content=00001000100 (successed)
-			cmd=7,content=00001000000 (failed - contact refused)
-			cmd=8,content=01001000000 (failed - error)
+			cmd=6,content=000001000100 (successed)
+			cmd=7,content=000001000000 (failed - contact refused)
+			cmd=8,content=001001000000 (failed - error)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
@@ -295,10 +348,10 @@ command field values (not complete because of missing error notifications)
 					Nie nale¿ysz do grupy
 17 - CLOSE_CALL
 	command source: client (contact want to close call)
-		content bits: 00000000100
+		content bits: 000000000100
 		responses from client:
-			cmd=6,content=00000000100 (successed)
-			cmd=8,content=01000000100 (failed - error)
+			cmd=6,content=000000000100 (successed)
+			cmd=8,content=001000000100 (failed - error)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
@@ -309,11 +362,11 @@ command field values (not complete because of missing error notifications)
 	command source: server (contact left call notification for group) <-- it happens when user changes state so use SET_STATUS from client instead
 18 - SWITCH_TO_AUDIO_CALL
 	cmmand source: client
-		content bits: 00000000100
+		content bits: 000000000100
 		responses:
-			cmd=6,content=00000000100 (successed)
-			cmd=7,content=00000000100 (failed - contact refused)
-			cmd=8,content=01000000100 (failed - error)
+			cmd=6,content=000000000100 (successed)
+			cmd=7,content=000000000100 (failed - contact refused)
+			cmd=8,content=001000000100 (failed - error)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
@@ -323,11 +376,11 @@ command field values (not complete because of missing error notifications)
 					Po³¹czenie nie zosta³o otwarte
 19 - SWITCH_TO_VIDEO_CALL
 	cmmand source: client
-		content bits: 00000000100
+		content bits: 000000000100
 		responses:
-			cmd=6,content=00000000100 (successed)
-			cmd=7,content=00000000100 (failed - contact refused)
-			cmd=8,content=01000000100 (failed - error)
+			cmd=6,content=000000000100 (successed)
+			cmd=7,content=000000000100 (failed - contact refused)
+			cmd=8,content=001000000100 (failed - error)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
@@ -337,11 +390,11 @@ command field values (not complete because of missing error notifications)
 					Po³¹czenie nie zosta³o otwarte
 20 - REQUEST_FILE_TRANSFER
 	command source: client
-		content bits: 001??000000
+		content bits: 0001??000000
 		responses:
-			cmd=6,content=001??000?00 (successed - contact or group accepted file transfer)
-			cmd=7,content=00101000000 (failed - contact refused file transfer)
-			cmd=8,content=011??000000 (failed - error)
+			cmd=6,content=0001??000?00 (successed - contact or group accepted file transfer)
+			cmd=7,content=000101000000 (failed - contact refused file transfer)
+			cmd=8,content=0011??000000 (failed - error)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
@@ -351,27 +404,27 @@ command field values (not complete because of missing error notifications)
 					Serwer nie mo¿e przyj¹æ pliku
 21 - TIMEOUT_FILE_TRANSFER
 	command source: client
-		content bits: 00100000000
+		content bits: 000100000000
 		responses:
 			<none>
 			<next attempt>
 	command source: server (group file timed out)
-		content bits: 00100000000
+		content bits: 000100000000
 		responses:
 			<none>
 22 - FINISH_FILE_TRANSFER
 	command source: client/server
-		content bits: 001?0000000
+		content bits: 0001?0000000
 		responses:
 			<none>
 23 - CREATE_GROUP
 	command source: client
-		content bits: 00?10??0100
+		content bits: 000?10??0100
 			bt8+bt5+bt4 - group capabilities
 		responses from server:
-			cmd=6,content=00?10??0100 (successed)
+			cmd=6,content=000?10??0100 (successed)
 				bt8+bt5+bt4 - accepted group capabilities
-			cmd=8,content=01010000100 (failed - error)
+			cmd=8,content=001010000100 (failed - error)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
@@ -379,10 +432,10 @@ command field values (not complete because of missing error notifications)
 					Grupa ju¿ istnieje
 24 - JOIN_GROUP
 	command source: client
-		content bits: 00010000100
+		content bits: 000010000100
 		responses from server:
-			cmd=6,content=00010000100 (successed)
-			cmd=8,content=01010000100 (failed - error)
+			cmd=6,content=000010000100 (successed)
+			cmd=8,content=001010000100 (failed - error)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
@@ -391,18 +444,18 @@ command field values (not complete because of missing error notifications)
 					U¿ytkownik nale¿y ju¿ do tej grupy
 		responses from client:
 			<bt7=1 only>
-			cmd=6,content=00011000000 (successed - contact accepted joining group)
-			cmd=7,content=00011000000 (failed - contact denied joining group)
+			cmd=6,content=000011000000 (successed - contact accepted joining group)
+			cmd=7,content=000011000000 (failed - contact denied joining group)
 	command source: server (contact joined group notification)
-		content bits: 00001000000
+		content bits: 000001000000
 		responses:
 			<none>
 25 - LEAVE_GROUP
 	command source: client
-		content bits: 00000000100
+		content bits: 000000000100
 		responses from server:
-			cmd=6,content=00000000100 (successed)
-			cmd=8,content=01000000100 (failed - error)
+			cmd=6,content=000000000100 (successed)
+			cmd=8,content=001000000100 (failed - error)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
@@ -410,15 +463,15 @@ command field values (not complete because of missing error notifications)
 					Grupa nie istnieje
 					U¿ytkownik nie nale¿y do tej grupy
 	command source: server (contact left group notification)
-		content bits: 00001000000
+		content bits: 000001000000
 		responses:
 			<none>
 26 - CLOSE_GROUP
 	command source: client
-		content bits: 00000000100
+		content bits: 000000000100
 		responses from server:
-			cmd=6,content=00000000100 (successed)
-			cmd=8,content=01000000100 (failed - error)
+			cmd=6,content=000000000100 (successed)
+			cmd=8,content=001000000100 (failed - error)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
@@ -427,6 +480,6 @@ command field values (not complete because of missing error notifications)
 					U¿ytkownik nie nale¿y do tej grupy
 					Nie masz do tego uprawnieñ (nie jesteœ za³o¿ycielem grupy)
 	command source: server (group close notification)
-		content bits: 00010000000
+		content bits: 000010000000
 		responses:
 			<none>
