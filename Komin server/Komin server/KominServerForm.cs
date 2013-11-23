@@ -44,6 +44,9 @@ namespace Komin
             server = new KominServer();
             comboBox1.Items.AddRange(server.DetectIPAddresses());
             comboBox1.SelectedIndex = 0;
+            KominServerDatabase db = new KominServerDatabase();
+            List<GroupFileData> gfdl = db.GetGroupFiles();
+            db.Disconnect();
         }
     }
 }

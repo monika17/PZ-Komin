@@ -45,9 +45,8 @@ create table pliki_grup
 	rozmiar int,
 	id_nadawcy int foreign key references konta(id_konta),
 	id_grupy int foreign key references grupy(id_grupy),
-	czas_wyslania int,
-	data_wyslania int,
-	data_konca datetime)
+	dataczas_wyslania datetime,
+	dataczas_konca datetime)
 go
 
 create table oczekuj¹ce_wiadomoœci

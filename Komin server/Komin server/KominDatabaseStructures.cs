@@ -55,9 +55,91 @@ namespace Komin
         }
     }
 
+    public class FileData
+    {
+        public uint file_id;
+        public string filename;
+        public uint filesize;
+        public DateTime upload;
+        public DateTime timeout;
+        public uint part_seq;
+        public byte[] filedata;
+
+        public FileData()
+        {
+            file_id = 0;
+            filename = "";
+            filesize = 0;
+            upload = new DateTime();
+            timeout = new DateTime();
+            part_seq = 0;
+            filedata = new byte[0];
+        }
+    }
+
+    public class TextMessage
+    {
+        public string message;
+        public DateTime send_date;
+
+        public TextMessage()
+        {
+            message = "";
+            send_date = new DateTime();
+        }
+    }
+
+    public class PendingMessage : TextMessage //this class is used only between server and database
+    {
+        public uint sender_id;
+        public uint receiver_id;
+        public bool receiver_is_group;
+        public uint message_id;
+
+        public PendingMessage()
+            : base()
+        {
+            sender_id = 0;
+            receiver_id = 0;
+            receiver_is_group = false;
+            message_id = 0;
+        }
+    }
+
+    public class GroupFileData : FileData //this class is used only between server and database
+    {
+        public uint sender_id;
+        public uint group_id;
+
+        public GroupFileData()
+            : base()
+        {
+            sender_id = 0;
+            group_id = 0;
+        }
+    }
+
+    public class RemoveSummary //this class is used only between server and database
+    {
+        public UserData ud;
+        public GroupData gd;
+        public List<GroupFileData> gfdl;
+        public List<uint> changed_contact_lists;
+        public List<uint> changed_member_lists;
+
+        public RemoveSummary()
+        {
+            ud = new UserData();
+            gd = new GroupData();
+            gfdl = new List<GroupFileData>();
+            changed_contact_lists = new List<uint>();
+            changed_member_lists = new List<uint>();
+        }
+    }
+
     public class DataTesters
     {
-        public bool TestLoginOrGroupName(string contact_name) //check is login name correct
+        public static bool TestLoginOrGroupName(string contact_name) //check is login name correct
         {
             Regex regexp = new Regex("[A-Z][A-Za-z0-9_]*");
 

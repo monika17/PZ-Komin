@@ -91,6 +91,7 @@ contact id data:
 contact_id : uint
 
 text message data:
+send_datetime : byte[7] (2 bytes for year, 1 byte for each of month, day, hour, minute, second)
 length : uint
 chars : char[length]
 
@@ -127,6 +128,9 @@ file_id : uint
 filename_length : uint
 filename_chars : char[filename_length]
 filesize : uint
+upload_datetime : byte[7] (2 bytes for year, 1 byte for each of month, day, hour, minute, second)
+timeout_datetime : byte[7] (2 bytes for year, 1 byte for each of month, day, hour, minute, second)
+part_seq : uint (number indicating position of this part in sequence)
 filedata_length : uint
 filedata : byte[filedata_length]
 

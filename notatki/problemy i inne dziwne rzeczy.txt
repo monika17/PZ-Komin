@@ -12,7 +12,7 @@
 
 2. przesylanie duuuuuu¿ych plików (tj. powy¿ej 100 bajtów)
 	problemy:
-		1. czy wprowadzamy jakieœ pole od podzia³u pliku na czêœci? (póki co w zasadzie wykorzystywany by³by jedynie job_id i kolejnoœæ dotarcia pakietów
+		(poki co rozwiazany. rozwiazanie 1)1. czy wprowadzamy jakieœ pole od podzia³u pliku na czêœci? (póki co w zasadzie wykorzystywany by³by jedynie job_id i kolejnoœæ dotarcia pakietów
 			co jak wiadomo jest bardzo z³e...)
 			rozwi¹zanie 1: wprowadziæ dodatkowe pole w formularzyku z danymi przesy³anego pliku (podlega blokowi z content, bt8)
 		2. jak du¿y fragment przesy³aæ na raz?

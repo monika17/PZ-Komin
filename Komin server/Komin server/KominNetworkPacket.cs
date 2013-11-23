@@ -21,15 +21,12 @@ namespace Komin
         private string password;
         private uint status;
         private uint contact_id;
-        private string text_msg;
+        private TextMessage text_msg;
         private byte[] audio_msg;
         private byte[] video_msg;
         private ContactData contact;
         private GroupData group;
-        private uint file_id;
-        private string filename;
-        private uint filesize;
-        private byte[] filedata;
+        private FileData file;
         private string error_text;
         private UserData userdata;
         /*private string sms_number;
@@ -49,15 +46,12 @@ namespace Komin
             password = "";
             status = 0;
             contact_id = 0;
-            text_msg = "";
+            text_msg = null;
             audio_msg = new byte[0];
             video_msg = new byte[0];
             contact = null;
             group = null;
-            file_id = 0;
-            filename = "";
-            filesize = 0;
-            filedata = new byte[0];
+            file = null;
             error_text = "";
             userdata = null;
             /*sms_number = "";
@@ -108,6 +102,24 @@ namespace Komin
             char[] chars = new char[length_in_bytes / sizeof(char)];
             Buffer.BlockCopy(ba, offset, chars, 0, length_in_bytes);
             return new string(chars);
+        }
+
+        static byte[] DateTimeToByteArray(DateTime dt)
+        {
+            byte[] output = new byte[7];
+            output[0] = (byte)dt.Second;
+            output[1] = (byte)dt.Minute;
+            output[2] = (byte)dt.Hour;
+            output[3] = (byte)dt.Day;
+            output[4] = (byte)dt.Month;
+            output[5] = (byte)((dt.Year >> 8) & 0xff);
+            output[6] = (byte)(dt.Year & 0xff);
+            return output;
+        }
+
+        static DateTime ByteArrayToDateTime(byte[] ba, int offset = 0)
+        {
+            return new DateTime((((int)ba[5]) << 8) + ba[6], ba[4], ba[3], ba[2], ba[1], ba[0]);
         }
 
         public static uint CheckSize(ref byte[] buffer)
@@ -201,11 +213,14 @@ namespace Komin
             }
 
             //text message data:
+            //send_datetime : byte[7] (2 bytes for year, 1 byte for each of month, day, hour, minute, second)
             //length : uint
             //chars : char[length]
             if ((content & ((uint)KominProtocolContentTypes.TextMessageData)) != 0)
             {
-                byte[] text = StringToByteArray(text_msg);
+                Buffer.BlockCopy(DateTimeToByteArray(text_msg.send_date), 0, data, offset, 7);
+                offset += 7;
+                byte[] text = StringToByteArray(text_msg.message);
                 Buffer.BlockCopy(UIntToByteArray((uint)text.Length), 0, data, offset, sizeof(uint));
                 offset += sizeof(uint);
                 Buffer.BlockCopy(text, 0, data, offset, text.Length);
@@ -303,25 +318,34 @@ namespace Komin
             //filename_length : uint
             //filename_chars : char[length]
             //filesize : uint
+            //upload_datetime : byte[7] (2 bytes for year, 1 byte for each of month, day, hour, minute, second)
+            //timeout_datetime : byte[7] (2 bytes for year, 1 byte for each of month, day, hour, minute, second)
+            //part_seq : uint
             //filedata_length : uint
             //filedata : byte[filedata_length]
             if ((content & ((uint)KominProtocolContentTypes.FileData)) != 0)
             {
-                Buffer.BlockCopy(UIntToByteArray(file_id), 0, data, offset, sizeof(uint));
+                Buffer.BlockCopy(UIntToByteArray(file.file_id), 0, data, offset, sizeof(uint));
                 offset += sizeof(uint);
-                byte[] text = StringToByteArray(filename);
+                byte[] text = StringToByteArray(file.filename);
                 Buffer.BlockCopy(UIntToByteArray((uint)text.Length), 0, data, offset, sizeof(uint));
                 offset += sizeof(uint);
                 Buffer.BlockCopy(text, 0, data, offset, text.Length);
                 offset += text.Length;
-                Buffer.BlockCopy(UIntToByteArray(filesize), 0, data, offset, sizeof(uint));
+                Buffer.BlockCopy(UIntToByteArray(file.filesize), 0, data, offset, sizeof(uint));
                 offset += sizeof(uint);
-                if (filedata == null)
-                    filedata = new byte[0];
-                Buffer.BlockCopy(UIntToByteArray((uint)filedata.Length), 0, data, offset, sizeof(uint));
+                Buffer.BlockCopy(DateTimeToByteArray(file.upload), 0, data, offset, 7);
+                offset += 7;
+                Buffer.BlockCopy(DateTimeToByteArray(file.timeout), 0, data, offset, 7);
+                offset += 7;
+                Buffer.BlockCopy(UIntToByteArray(file.part_seq), 0, data, offset, sizeof(uint));
                 offset += sizeof(uint);
-                Buffer.BlockCopy(filedata, 0, data, offset, filedata.Length);
-                offset += filedata.Length;
+                if (file.filedata == null)
+                    file.filedata = new byte[0];
+                Buffer.BlockCopy(UIntToByteArray((uint)file.filedata.Length), 0, data, offset, sizeof(uint));
+                offset += sizeof(uint);
+                Buffer.BlockCopy(file.filedata, 0, data, offset, file.filedata.Length);
+                offset += file.filedata.Length;
             }
 
             //error text data:
@@ -469,13 +493,17 @@ namespace Komin
             }
 
             //text message data:
+            //send_datetime : byte[7] (2 bytes for year, 1 byte for each of month, day, hour, minute, second)
             //length : uint
             //chars : char[length]
             if ((content & ((uint)KominProtocolContentTypes.TextMessageData)) != 0)
             {
+                text_msg = new TextMessage();
+                text_msg.send_date = ByteArrayToDateTime(data, offset);
+                offset += 7;
                 int text_length = (int)ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                text_msg = ByteArrayToString(data, offset, text_length);
+                text_msg.message = ByteArrayToString(data, offset, text_length);
                 offset += text_length;
             }
 
@@ -570,22 +598,32 @@ namespace Komin
             //filename_length : uint
             //filename_chars : char[length]
             //filesize : uint
+            //upload_datetime : byte[7] (2 bytes for year, 1 byte for each of month, day, hour, minute, second)
+            //timeout_datetime : byte[7] (2 bytes for year, 1 byte for each of month, day, hour, minute, second)
+            //part_seq : uint
             //filedata_length : uint
             //filedata : byte[filedata_length]
             if ((content & ((uint)KominProtocolContentTypes.FileData)) != 0)
             {
-                file_id = ByteArrayToUInt(data, offset);
+                file = new FileData();
+                file.file_id = ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
                 int text_length = (int)ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                filename = ByteArrayToString(data, offset, text_length);
+                file.filename = ByteArrayToString(data, offset, text_length);
                 offset += text_length;
-                filesize = ByteArrayToUInt(data, offset);
+                file.filesize = ByteArrayToUInt(data, offset);
+                offset += sizeof(uint);
+                file.upload = ByteArrayToDateTime(data, offset);
+                offset += 7;
+                file.timeout = ByteArrayToDateTime(data, offset);
+                offset += 7;
+                file.part_seq = ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
                 int filedata_length = (int)ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
-                filedata = new byte[filedata_length];
-                Buffer.BlockCopy(data, offset, filedata, 0, filedata_length);
+                file.filedata = new byte[filedata_length];
+                Buffer.BlockCopy(data, offset, file.filedata, 0, filedata_length);
                 offset += filedata_length;
             }
 
@@ -729,10 +767,10 @@ namespace Komin
                     content_length += (uint)(sizeof(uint));
                     break;
                 case KominProtocolContentTypes.TextMessageData:
-                    if (args[0].GetType().Name != "String")
+                    if (args[0].GetType().Name != "TextMessage")
                         return;
-                    text_msg = (string)args[0];
-                    content_length += (uint)(sizeof(uint) + text_msg.Length * sizeof(char));
+                    text_msg = (TextMessage)args[0];
+                    content_length += (uint)(7 + sizeof(uint) + text_msg.message.Length * sizeof(char));
                     break;
                 case KominProtocolContentTypes.AudioMessageData:
                     if (args[0].GetType().Name != "Byte[]")
@@ -762,21 +800,10 @@ namespace Komin
                     content_length += (uint)(sizeof(uint) * 5 + group.group_name.Length * sizeof(char)+group_sum);
                     break;
                 case KominProtocolContentTypes.FileData:
-                    if (args[0].GetType().Name != "UInt32")
+                    if (args[0].GetType().Name != "FileData")
                         return;
-                    if (args[1].GetType().Name != "String")
-                        return;
-                    if (args[2].GetType().Name != "UInt32")
-                        return;
-                    if (args[3].GetType().Name != "Byte[]")
-                        return;
-                    file_id = (uint)args[0];
-                    filename = (string)args[1];
-                    filesize = (uint)args[2];
-                    if (args[3] == null)
-                        args[3] = new byte[0];
-                    filedata = (byte[])((byte[])args[3]).Clone();
-                    content_length += (uint)(sizeof(uint) * 4 + filename.Length * sizeof(char) + filedata.Length);
+                    file = (FileData)args[0];
+                    content_length += (uint)(sizeof(uint) * 5 + 14 + file.filename.Length * sizeof(char) + file.filedata.Length);
                     break;
                 case KominProtocolContentTypes.ErrorTextData:
                     if (args[0].GetType().Name != "String")
@@ -857,11 +884,8 @@ namespace Komin
                     ret[0] = group;
                     break;
                 case KominProtocolContentTypes.FileData:
-                    ret = new object[4];
-                    ret[0] = file_id;
-                    ret[1] = filename;
-                    ret[2] = filesize;
-                    ret[3] = filedata;
+                    ret = new object[1];
+                    ret[0] = file;
                     break;
                 case KominProtocolContentTypes.ErrorTextData:
                     ret = new object[1];
@@ -918,7 +942,7 @@ namespace Komin
                     content_length -= (uint)(sizeof(uint));
                     break;
                 case KominProtocolContentTypes.TextMessageData:
-                    content_length -= (uint)(sizeof(uint) + text_msg.Length * sizeof(char));
+                    content_length -= (uint)(7 + sizeof(uint) + text_msg.message.Length * sizeof(char));
                     break;
                 case KominProtocolContentTypes.AudioMessageData:
                     content_length -= (uint)(sizeof(uint) + audio_msg.Length);
@@ -936,7 +960,7 @@ namespace Komin
                     content_length -= (uint)(sizeof(uint) * 5 + group.group_name.Length * sizeof(char)+group_sum);
                     break;
                 case KominProtocolContentTypes.FileData:
-                    content_length -= (uint)(sizeof(uint) * 4 + filename.Length * sizeof(char) + filedata.Length);
+                    content_length -= (uint)(sizeof(uint) * 5 + 14 + file.filename.Length * sizeof(char) + file.filedata.Length);
                     break;
                 case KominProtocolContentTypes.ErrorTextData:
                     content_length -= (uint)(sizeof(uint) + error_text.Length * sizeof(char));
