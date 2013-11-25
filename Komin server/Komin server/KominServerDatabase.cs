@@ -31,7 +31,7 @@ namespace Komin
             SqlCommand cmd = new SqlCommand("", connection);
 
             //check is there any contact with specified name
-            cmd.CommandText = "select * from konta where nazwa=\'"+contact_name+"\'";
+            cmd.CommandText = "select * from konta where nazwa=\'" + contact_name + "\'";
             rdr = cmd.ExecuteReader();
             if (rdr.HasRows) //user already exists
             {
@@ -44,13 +44,13 @@ namespace Komin
             cmd.CommandText = "select id_konta from konta order by id_konta asc";
             uint contact_id = 1;
             rdr = cmd.ExecuteReader();
-            if(rdr.HasRows)
-            while (rdr.Read())
-            {
-                contact_id++;
-                if ((uint)((int)rdr["id_konta"]) != contact_id)
-                    break;
-            }
+            if (rdr.HasRows)
+                while (rdr.Read())
+                {
+                    contact_id++;
+                    if ((uint)((int)rdr["id_konta"]) != contact_id)
+                        break;
+                }
             rdr.Close();
 
             //create contact list table
@@ -69,7 +69,7 @@ namespace Komin
             SqlCommand cmd = new SqlCommand("", connection);
 
             //check does this list already exist
-            cmd.CommandText = "select * from "+list_name;
+            cmd.CommandText = "select * from " + list_name;
             try
             {
                 rdr = cmd.ExecuteReader();
@@ -82,7 +82,7 @@ namespace Komin
             catch (SqlException) { } //list doesn't exist
 
             //create list
-            cmd.CommandText = "create table "+list_name+" (id_kontaktu int not null foreign key references konta(id_konta))";
+            cmd.CommandText = "create table " + list_name + " (id_kontaktu int not null foreign key references konta(id_konta))";
             cmd.ExecuteNonQuery();
 
             return 0;
@@ -94,7 +94,7 @@ namespace Komin
             SqlCommand cmd = new SqlCommand("", connection);
 
             //check is creator a valid user
-            cmd.CommandText = "select * from konta where id_konta="+creators_id;
+            cmd.CommandText = "select * from konta where id_konta=" + creators_id;
             rdr = cmd.ExecuteReader();
             if (!rdr.HasRows) //creator doesn't exist
             {
@@ -118,12 +118,12 @@ namespace Komin
             uint group_id = 1;
             rdr = cmd.ExecuteReader();
             if (rdr.HasRows)
-            while (rdr.Read())
-            {
-                group_id++;
-                if ((uint)((int)rdr["id_grupy"]) != group_id)
-                    break;
-            }
+                while (rdr.Read())
+                {
+                    group_id++;
+                    if ((uint)((int)rdr["id_grupy"]) != group_id)
+                        break;
+                }
             rdr.Close();
 
             //create member list table
@@ -198,7 +198,7 @@ namespace Komin
             rdr.Close();
 
             //check is new_creator_id a valid group member
-            cmd.CommandText = "select id_kontaktu from members"+group_id+" where id_kontaktu=" + new_creator_id;
+            cmd.CommandText = "select id_kontaktu from members" + group_id + " where id_kontaktu=" + new_creator_id;
             rdr = cmd.ExecuteReader();
             if (!rdr.HasRows) //new_creator_id is not a group member
             {
@@ -230,7 +230,7 @@ namespace Komin
             rdr.Close();
 
             //check is list name valid
-            string list_name = (is_group==true?"members":"contacts")+list_id;
+            string list_name = (is_group == true ? "members" : "contacts") + list_id;
             cmd.CommandText = "select * from " + list_name;
             try
             {
@@ -301,11 +301,11 @@ namespace Komin
             //get count
             cmd.CommandText = "select count(*) as ilość from " + list_name;
             rdr = cmd.ExecuteReader();
-            if(rdr.HasRows)
-            while (rdr.Read())
-            {
-                ret = (int)rdr["ilość"];
-            }
+            if (rdr.HasRows)
+                while (rdr.Read())
+                {
+                    ret = (int)rdr["ilość"];
+                }
             rdr.Close();
 
             return ret;
@@ -378,13 +378,13 @@ namespace Komin
             cmd.CommandText = "select id_pliku from pliki_grup order by id_pliku asc";
             fd.file_id = 1;
             rdr = cmd.ExecuteReader();
-            if(rdr.HasRows)
-            while (rdr.Read())
-            {
-                fd.file_id++;
-                if ((uint)((int)rdr["id_pliku"]) != fd.file_id)
-                    break;
-            }
+            if (rdr.HasRows)
+                while (rdr.Read())
+                {
+                    fd.file_id++;
+                    if ((uint)((int)rdr["id_pliku"]) != fd.file_id)
+                        break;
+                }
             rdr.Close();
 
             //insert group file
@@ -429,7 +429,7 @@ namespace Komin
             rdr.Close();
 
             //check is receiver_id a valid user or group
-            if(receiver_is_group==false)
+            if (receiver_is_group == false)
                 cmd.CommandText = "select id_konta from konta where id_konta=" + receiver_id;
             else
                 cmd.CommandText = "select id_grupy from grupy where id_grupy=" + receiver_id;
@@ -458,13 +458,13 @@ namespace Komin
             cmd.CommandText = "select id_wiadomosci from oczekujące_wiadomości order by id_wiadomosci asc";
             uint message_id = 0;
             rdr = cmd.ExecuteReader();
-            if(rdr.HasRows)
-            while (rdr.Read())
-            {
-                message_id++;
-                if ((uint)((int)rdr["id_wiadomosci"]) != message_id)
-                    break;
-            }
+            if (rdr.HasRows)
+                while (rdr.Read())
+                {
+                    message_id++;
+                    if ((uint)((int)rdr["id_wiadomosci"]) != message_id)
+                        break;
+                }
             rdr.Close();
 
             //insert pending message
@@ -548,12 +548,12 @@ namespace Komin
             }
             List<uint> contact_ids = new List<uint>();
             if (rdr.HasRows)
-            while (rdr.Read())
-            {
-                contact_ids.Add((uint)((int)rdr["id_kontaktu"]));
-            }
+                while (rdr.Read())
+                {
+                    contact_ids.Add((uint)((int)rdr["id_kontaktu"]));
+                }
             rdr.Close();
-            foreach(uint contact_id in contact_ids)
+            foreach (uint contact_id in contact_ids)
             {
                 ContactData contact = GetContactData(contact_id);
                 if (contact != null)
@@ -596,12 +596,12 @@ namespace Komin
             rdr = cmd.ExecuteReader();
             List<uint> group_ids = new List<uint>();
             if (rdr.HasRows)
-            while (rdr.Read())
-            {
-                group_ids.Add((uint)((int)rdr["id_grupy"]));
-            }
+                while (rdr.Read())
+                {
+                    group_ids.Add((uint)((int)rdr["id_grupy"]));
+                }
             rdr.Close();
-            foreach(uint group_id in group_ids)
+            foreach (uint group_id in group_ids)
             {
                 GroupData group = GetGroupData(group_id);
                 if (group.members != null)
@@ -715,14 +715,14 @@ namespace Komin
             return ret;
         }
 
-        public List<PendingMessage> GetPendingMessages(uint contact_id, bool is_group=false)
+        public List<PendingMessage> GetPendingMessages(uint contact_id, bool is_group = false)
         {
             List<PendingMessage> ret = new List<PendingMessage>();
             SqlDataReader rdr;
             SqlCommand cmd = new SqlCommand("", connection);
 
             //check is contact_id a valid user or group
-            if(is_group==false)
+            if (is_group == false)
                 cmd.CommandText = "select id_konta from konta where id_konta=" + contact_id;
             else
                 cmd.CommandText = "select id_grupy from grupy where id_grupy=" + contact_id;
@@ -773,7 +773,7 @@ namespace Komin
             rdr.Close();
 
             summary = new RemoveSummary();
-            
+
             //get user data
             summary.ud = GetUserData(contact_name);
 
@@ -925,7 +925,7 @@ namespace Komin
 
             //remove members list
             RemoveContactList("members" + summary.gd.group_id);
-            
+
             //remove group
             cmd.CommandText = "delete from grupy where id_grupy=" + summary.gd.group_id;
             cmd.ExecuteNonQuery();
