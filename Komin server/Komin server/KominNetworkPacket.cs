@@ -127,7 +127,7 @@ namespace Komin
             if (buffer.Length < sizeof(uint) * 6 + 1 /*sizeof(bool)*/)
                 return 0;
             uint content_length = ByteArrayToUInt(buffer, sizeof(uint) * 5 + 1/*sizeof(bool)*/);
-            if (buffer.Length < sizeof(uint) * 6 + 1 /*sizeof(bool)*/+ content_length)
+            if (buffer.Length != sizeof(uint) * 6 + 1 /*sizeof(bool)*/+ content_length)
                 return 0;
             return sizeof(uint) * 6 + 1 /*sizeof(bool)*/+ content_length;
         }
@@ -1064,9 +1064,10 @@ namespace Komin
         GroupAlreadyExists = "Grupa już istnieje",
         SenderNotInGroup = "Nie należysz do tej grupy",
         CallNotStartedYet = "Rozmowa nie została jeszcze rozpoczęta",
-        ServerFull = "Serwer przepełniony - nie można sie zalogować",
+        //ServerFull = "Serwer przepełniony - nie można sie zalogować",
         ServerFileStorageFull = "Serwer nie może przyjąć pliku",
-        UserIsNotGroupHolder = "Nie masz do tego uprawnień (nie jesteś założycielem grupy)";
+        UserIsNotGroupHolder = "Nie masz do tego uprawnień (nie jesteś założycielem grupy)",
+        CannotInfluOtherUsers = "Nie wolno wpływać na innych użytkowników";
     }
 
     public enum KominClientStatusCodes : uint

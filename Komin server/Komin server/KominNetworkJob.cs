@@ -44,7 +44,10 @@ namespace Komin
         {
             foreach(KominNetworkJob job in jobs)
                 if (job.JobID == job_id)
+                {
                     job.Packet = packet;
+                    break;
+                }
         }
 
         public void WaitForJobsFinished()
@@ -88,7 +91,6 @@ namespace Komin
 
         public void WaitForNewArrival()
         {
-            new_arrival = false;
             while (new_arrival == false) ;
         }
     }

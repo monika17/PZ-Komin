@@ -10,7 +10,7 @@ using System.Net.Sockets;
 
 namespace Komin
 {
-    class KominClientSideConnection
+    public class KominClientSideConnection
     {
         public TcpClient server;
         NetworkStream stream;
@@ -18,6 +18,26 @@ namespace Komin
         List<KominNetworkPacket> packets_to_send;
         public UserData userdata;
         KominNetworkJobHolder jobs;
+
+        //delegates
+        public NewTextMessage onNewTextMessage;
+        public NewAudioMessage onNewAudioMessage;
+        public NewVideoMessage onNewVideoMessage;
+        public ServerForcedLogout onServerLogout;
+        public StatusNotificationArrived onStatusNotification;
+        public AudioCallRequest onAudioCallRequest;
+        public VideoCallRequest onVideoCallRequest;
+        public CloseCallNotification onCloseCall;
+        public SwitchToAudioRequest onSwitchToAudio;
+        public SwitchToVideoRequest onSwitchToVideo;
+        public FileTransferRequest onFileTransferRequest;
+        public FileTimeoutNotification onFileTimeout;
+        public FileTransferFinishedNotification onFileFinished;
+        public GroupInvitation onGroupInvite;
+        public ContactJoinedGroup onGroupJoin;
+        public ContactLeftGroup onGroupLeave;
+        public GroupClosedNotification onGroupClosed;
+        public SomeError onError;
 
         public KominClientSideConnection()
         {
@@ -28,6 +48,24 @@ namespace Komin
             commune = new BackgroundWorker();
             commune.WorkerSupportsCancellation = true;
             commune.DoWork += serverCommune;
+            onNewTextMessage = null;
+            onNewAudioMessage = null;
+            onNewVideoMessage = null;
+            onServerLogout = null;
+            onStatusNotification = null;
+            onAudioCallRequest = null;
+            onVideoCallRequest = null;
+            onCloseCall = null;
+            onSwitchToAudio = null;
+            onSwitchToVideo = null;
+            onFileTransferRequest = null;
+            onFileTimeout = null;
+            onFileFinished = null;
+            onGroupInvite = null;
+            onGroupJoin = null;
+            onGroupLeave = null;
+            onGroupClosed = null;
+            onError = null;
         }
 
         public void Connect(string IP, int port)
@@ -41,7 +79,10 @@ namespace Komin
             }
             catch (SocketException ex)
             {
-                throw new KominClientErrorException("Nie można połączyć się z serwerem: błąd socketa", ex);
+                if(onError!=null)
+                    onError("Nie można połączyć się z serwerem: błąd socketa", null);
+                else
+                    throw new KominClientErrorException("Nie można połączyć się z serwerem: błąd socketa", ex);
             }
         }
 
@@ -49,13 +90,23 @@ namespace Komin
         {
             if (server == null)
                 return;
+            try
+            {
+                if (userdata.contact_id != 0)
+                    Logout();
 
-            Logout();
-
-            commune.CancelAsync();
-            jobs.Restart();
-            server.Close();
-            server = null;
+                commune.CancelAsync();
+                jobs.Restart();
+                server.Close();
+                server = null;
+            }
+            catch (SocketException ex)
+            {
+                if (onError != null)
+                    onError("Nie można rozłączyć się z serwerem: błąd socketa", null);
+                else
+                    throw new KominClientErrorException("Nie można rozłączyć się z serwerem: błąd socketa", ex);
+            }
         }
 
         private void serverCommune(object sender, DoWorkEventArgs e)
@@ -73,13 +124,16 @@ namespace Komin
                 byte[] subbuffer = new byte[server.Available];
                 stream.Read(subbuffer, 0, server.Available);
                 Array.Resize<byte>(ref buffer, buffer.Length + subbuffer.Length);
+                Buffer.BlockCopy(subbuffer, 0, buffer, buffer.Length - subbuffer.Length, subbuffer.Length);
                 do
                 {
                     packet_size = (int)KominNetworkPacket.CheckSize(ref buffer);
                     if (packet_size != 0)
                     {
-                        byte[] packet_data = new ArraySegment<byte>(buffer, 0, packet_size).Array;
-                        buffer = new ArraySegment<byte>(buffer, packet_size, buffer.Length - packet_size).Array;
+                        byte[] packet_data = new byte[packet_size];
+                        Buffer.BlockCopy(buffer, 0, packet_data, 0, packet_size);
+                        Buffer.BlockCopy(buffer, packet_size, buffer, 0, buffer.Length - packet_size);
+                        Array.Resize<byte>(ref buffer, buffer.Length - packet_size);
                         KominNetworkPacket packet = new KominNetworkPacket();
                         packet.UnpackReceivedPacket(ref packet_data);
                         InterpretePacket(ref packet);
@@ -93,17 +147,20 @@ namespace Komin
         private void InterpretePacket(ref KominNetworkPacket packet)
         {
             //filter out packets not targeted to this contact or its groups
-            bool passed = false;
-            if (packet.target == userdata.contact_id)
-                passed = true;
-            else if (packet.target_is_group == true)
+            if (userdata.contact_id != 0)
             {
-                foreach (GroupData group in userdata.groups)
-                    if (packet.target == group.group_id)
-                        passed = true;
+                bool passed = false;
+                if (packet.target == userdata.contact_id)
+                    passed = true;
+                else if (packet.target_is_group == true)
+                {
+                    foreach (GroupData group in userdata.groups)
+                        if (packet.target == group.group_id)
+                            passed = true;
+                }
+                if (passed == false)
+                    return;
             }
-            if (passed == false)
-                return;
 
             //only contact or group targeted packets can reach here
             //client interpretes here received packets
@@ -122,10 +179,13 @@ namespace Komin
                 /*case KominProtocolCommands.CreateContact: //client is not responsible for storing account data
                     break;*/
                 case KominProtocolCommands.Accept: //server/group or other user accepted something
+                    jobs.MarkNewArrival(packet.job_id, ref packet);
                     break;
                 case KominProtocolCommands.Deny: //server/group or other user denied something
+                    jobs.MarkNewArrival(packet.job_id, ref packet);
                     break;
                 case KominProtocolCommands.Error: //server notifies an error
+                    jobs.MarkNewArrival(packet.job_id, ref packet);
                     break;
                 /*case KominProtocolCommands.AddContactToList: //client is not allowed to change contact lists
                     break;
@@ -134,8 +194,24 @@ namespace Komin
                 case KominProtocolCommands.PingContactRequest: //server or other user requests ping
                     break;
                 case KominProtocolCommands.PingContactAnswer: //other user answers ping
+                    jobs.MarkNewArrival(packet.job_id, ref packet);
                     break;
                 case KominProtocolCommands.SendMessage: //message from group or other client arrived
+                    if ((packet.content & (uint)KominProtocolContentTypes.TextMessageData) != 0)
+                    {
+                        if (onNewTextMessage != null)
+                            onNewTextMessage(packet.sender, packet.target, packet.target_is_group, (TextMessage)packet.GetContent(KominProtocolContentTypes.TextMessageData)[0]);
+                    }
+                    if ((packet.content & (uint)KominProtocolContentTypes.AudioMessageData) != 0)
+                    {
+                        if (onNewAudioMessage != null)
+                            onNewAudioMessage(packet.sender, packet.target, packet.target_is_group, (byte[])packet.GetContent(KominProtocolContentTypes.AudioMessageData)[0]);
+                    }
+                    if ((packet.content & (uint)KominProtocolContentTypes.VideoMessageData) != 0)
+                    {
+                        if (onNewVideoMessage != null)
+                            onNewVideoMessage(packet.sender, packet.target, packet.target_is_group, (byte[])packet.GetContent(KominProtocolContentTypes.VideoMessageData)[0]);
+                    }
                     break;
                 /*case KominProtocolCommands.PingMessages: //client doesn't store any messages
                     break;*/
@@ -152,8 +228,10 @@ namespace Komin
                 case KominProtocolCommands.RequestFileTransfer: //other user requests file transfer or server notifies about group file presence
                     break;
                 case KominProtocolCommands.TimeoutFileTransfer: //server or other user notifies about file timeout
+                    jobs.MarkNewArrival(packet.job_id, ref packet);
                     break;
                 case KominProtocolCommands.FinishFileTransfer: //server or other user has finished file transfer
+                    jobs.MarkNewArrival(packet.job_id, ref packet);
                     break;
                 /*case KominProtocolCommands.CreateGroup: //client is not responsible of group creation
                     break;*/
@@ -213,7 +291,9 @@ namespace Komin
             packet.job_id = job.JobID;
             packet.command = (uint)KominProtocolCommands.Login;
             packet.DeleteContent();
-            packet.InsertContent(KominProtocolContentTypes.ContactData, contact_name);
+            ContactData cd = new ContactData();
+            cd.contact_name = contact_name;
+            packet.InsertContent(KominProtocolContentTypes.ContactData, cd);
             packet.InsertContent(KominProtocolContentTypes.PasswordData, password);
             packet.InsertContent(KominProtocolContentTypes.StatusData, new_status);
             InsertPacketForSending(packet);
@@ -239,12 +319,19 @@ namespace Komin
                         break;
                     case KominProtocolCommands.PingContactAnswer:
                         userdata = (UserData)packet.GetContent(KominProtocolContentTypes.UserData)[0];
+                        PingMessages();
                         finished = true;
                         break;
                     case KominProtocolCommands.Error:
                         finished = true;
                         jobs.FinishJob(job);
-                        throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                        if (onError != null)
+                        {
+                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
+                            break;
+                        }
+                        else
+                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
                 }
             } while (!finished);
 
@@ -275,12 +362,19 @@ namespace Komin
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:
+                        userdata.contact_id = 0;
                         finished = true;
                         break;
                     case KominProtocolCommands.Error:
                         finished = true;
                         jobs.FinishJob(job);
-                        throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                        if (onError != null)
+                        {
+                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
+                            break;
+                        }
+                        else
+                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
                 }
             } while (!finished);
 
@@ -297,6 +391,45 @@ namespace Komin
 
         public void CreateContact(string new_contact_name, string new_password) //request creation of new account
         {
+            KominNetworkJob job = jobs.AddJob();
+            bool finished = false;
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = 0; //client doesn't know its contact_id yet
+            packet.target = 0; //server
+            packet.target_is_group = false;
+            packet.job_id = job.JobID;
+            packet.command = (uint)KominProtocolCommands.CreateContact;
+            packet.DeleteContent();
+            ContactData cd = new ContactData();
+            cd.contact_name = new_contact_name;
+            packet.InsertContent(KominProtocolContentTypes.ContactData, cd);
+            packet.InsertContent(KominProtocolContentTypes.PasswordData, new_password);
+            InsertPacketForSending(packet);
+
+            do
+            {
+                job.WaitForNewArrival();
+                packet = job.Packet;
+                switch ((KominProtocolCommands)packet.command)
+                {
+                    case KominProtocolCommands.Accept:
+                        finished = true;
+                        break;
+                    case KominProtocolCommands.Error:
+                        finished = true;
+                        jobs.FinishJob(job);
+                        if (onError != null)
+                        {
+                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
+                            break;
+                        }
+                        else
+                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                }
+            } while (!finished);
+
+            jobs.FinishJob(job);
         }
 
         public void Accept(/*...*/) //accept something
@@ -355,7 +488,13 @@ namespace Komin
                     case KominProtocolCommands.Error:
                         finished = true;
                         jobs.FinishJob(job);
-                        throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                        if (onError != null)
+                        {
+                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
+                            break;
+                        }
+                        else
+                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
                 }
             } while (!finished);
 
@@ -367,12 +506,58 @@ namespace Komin
         {
         }
 
-        public void SendMessage(/*message_type, message*/) //send a message to contact or group
+        public void SendMessage(uint receiver, bool receiver_is_group, string msg) //send a message to contact or group
         {
+            if (userdata.contact_id == 0)
+                return; //basicaly it should be error: can't send messages when logged out
+            if (receiver == 0)
+                return; //cannot send messages to server
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id;
+            packet.target = receiver;
+            packet.target_is_group = receiver_is_group;
+            packet.job_id = 0; //messaging job id. all messages are directed by sender/target values and don't have return responses
+            packet.command = (uint)KominProtocolCommands.SendMessage;
+            packet.DeleteContent();
+            TextMessage tmsg = new TextMessage();
+            tmsg.send_date = DateTime.Now;
+            tmsg.message = msg;
+            packet.InsertContent(KominProtocolContentTypes.TextMessageData, tmsg);
+            InsertPacketForSending(packet);
+        }
+
+        public void SendMessage(uint receiver, bool receiver_is_group, byte[] msg, bool is_video) //send audio or video message to contact or group
+        {
+            if (userdata.contact_id == 0)
+                return; //basicaly it should be error: can't send messages when logged out
+            if (receiver == 0)
+                return; //cannot send messages to server
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id;
+            packet.target = receiver;
+            packet.target_is_group = receiver_is_group;
+            packet.job_id = 0; //messaging job id. all messages are directed by sender/target values and don't have return responses
+            packet.command = (uint)KominProtocolCommands.SendMessage;
+            packet.DeleteContent();
+            packet.InsertContent((is_video == false ? KominProtocolContentTypes.AudioMessageData : KominProtocolContentTypes.VideoMessageData), msg);
+            InsertPacketForSending(packet);
         }
 
         public void PingMessages() //ask for sending stored messages
         {
+            if (userdata.contact_id == 0)
+                return;
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id;
+            packet.target = 0;
+            packet.target_is_group = false;
+            packet.job_id = 0;
+            packet.command = (uint)KominProtocolCommands.PingMessages;
+            packet.DeleteContent();
+            InsertPacketForSending(packet);
         }
 
         public void RequestAudioCall(uint contact_id) //request an audio call from contact
@@ -423,14 +608,33 @@ namespace Komin
         public void CloseGroup(uint group_id) //request closing group
         {
         }
+    }
 
-        public class KominClientErrorException : Exception
-        {
-            public KominClientErrorException() : base() { }
-            public KominClientErrorException(string message) : base("Operacja nie powiodła się\n" + message) { }
-            public KominClientErrorException(string message, Exception inner) : base("Operacja nie powiodła się\n" + message, inner) { }
-            protected KominClientErrorException(System.Runtime.Serialization.SerializationInfo info,
-                System.Runtime.Serialization.StreamingContext context) { }
-        }
+    public delegate void NewTextMessage(uint sender, uint receiver, bool receiver_is_group, TextMessage msg);
+    public delegate void NewAudioMessage(uint sender, uint receiver, bool receiver_is_group, byte[] msg);
+    public delegate void NewVideoMessage(uint sender, uint receiver, bool receiver_is_group, byte[] msg);
+    public delegate void ServerForcedLogout();
+    public delegate void StatusNotificationArrived(KominNetworkPacket packet);
+    public delegate bool AudioCallRequest(KominNetworkPacket packet);
+    public delegate bool VideoCallRequest(KominNetworkPacket packet);
+    public delegate void CloseCallNotification(KominNetworkPacket packet);
+    public delegate bool SwitchToAudioRequest(KominNetworkPacket packet);
+    public delegate bool SwitchToVideoRequest(KominNetworkPacket packet);
+    public delegate bool FileTransferRequest(KominNetworkPacket packet); //file part message missing
+    public delegate void FileTimeoutNotification(KominNetworkPacket packet);
+    public delegate void FileTransferFinishedNotification(KominNetworkPacket packet);
+    public delegate bool GroupInvitation(KominNetworkPacket packet);
+    public delegate void ContactJoinedGroup(KominNetworkPacket packet);
+    public delegate void ContactLeftGroup(KominNetworkPacket packet);
+    public delegate void GroupClosedNotification(KominNetworkPacket packet);
+    public delegate void SomeError(string err_text, KominNetworkPacket packet);
+
+    public class KominClientErrorException : Exception
+    {
+        public KominClientErrorException() : base() { }
+        public KominClientErrorException(string message) : base("Operacja nie powiodła się\n" + message) { }
+        public KominClientErrorException(string message, Exception inner) : base("Operacja nie powiodła się\n" + message, inner) { }
+        protected KominClientErrorException(System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) { }
     }
 }

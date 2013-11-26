@@ -212,7 +212,7 @@ command field values (not complete because of missing error notifications)
 					U¿ytkownik nie jest zalogowany
 					Nieprawid³owe dane ¿¹dania
 	command source: server (status change notification)
-		content bits: 000001000010
+		content bits: 000001000000
 		responses:
 			<none>
 4 - SET_PASSWORD
@@ -228,7 +228,7 @@ command field values (not complete because of missing error notifications)
 	command source: client
 		content bits: 000001000001
 		responses from server:
-			cmd=6,content=000001000110 (successed)
+			cmd=6,content=000001000000 (successed)
 			cmd=8,content=001001000000 (failed)
 				error texts:
 					U¿ytkownik ju¿ istnieje
@@ -258,7 +258,7 @@ command field values (not complete because of missing error notifications)
 			<none>
 8 - ERROR
 	command source: server
-		content bits: ?01?????????
+		content bits: ?01????????0
 		responses from client:
 			<none>
 			<next attempt>
@@ -315,15 +315,14 @@ command field values (not complete because of missing error notifications)
 13 - SEND_MESSAGE
 	command source: client
 		content bits: ?00?00???000
-			note: message destination is determined by header fields
+			note: message destination and type are determined by header fields
 		responses:
 			<none; for text messages: server can store contact related messages, group messages are not stored because group is destroyed when no user logged in>
 14 - PING_MESSAGES (check are there any messages destined for specified contact; used during login by client)
 	command source: client
 		content bits: 000000000000
 		responses from server:
-			cmd=13 chain
-			cmd=7,content=000000000000 (successed - no messages)
+			cmd=13 chain if any messages are stored, otherwise <none>
 15 - REQUEST_AUDIO_CALL
 	command source: client
 		content bits: 000001000000
@@ -487,3 +486,20 @@ command field values (not complete because of missing error notifications)
 		content bits: 000010000000
 		responses:
 			<none>
+//not yet implemented or provided
+27 - GROUP_HOLDER_CHANGE
+	command source: client
+		content bits: 000011000000
+		responses from server:
+			cmd=6,content=000011000000 (successed)
+			cmd=8,content=001000000000 (failed - error)
+	command source: server (group holder change notification)
+		content bits: 000010000000
+		responses:
+			<none>
+28 - REMOVE_CONTACT
+	command source: client
+		content bits: 000001000001
+		responses from server:
+			cmd=6,content=000011000000 (successed)
+			cmd=8,content=001000000000 (failed - error)

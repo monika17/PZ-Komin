@@ -54,7 +54,8 @@ namespace Komin
             rdr.Close();
 
             //create contact list table
-            CreateContactList("contacts" + contact_id);
+            if (CreateContactList("contacts" + contact_id) != 0)
+                return -2; //error during creaation of contact list
 
             //create account
             cmd.CommandText = "insert into konta values (" + contact_id + ", \'" + contact_name + "\', \'" + password + "\', 0, \'contacts" + contact_id + "\')";
@@ -127,7 +128,8 @@ namespace Komin
             rdr.Close();
 
             //create member list table
-            CreateContactList("members" + group_id);
+            if (CreateContactList("members" + group_id) != 0)
+                return -3; //error during creaation of members list
             InsertContactIntoList(group_id, true, creators_id);
 
             //create group
@@ -493,6 +495,33 @@ namespace Komin
                 ret.contact_id = (uint)((int)rdr["id_konta"]);
                 ret.contact_name = (string)rdr["nazwa"];
                 ret.status = (uint)((int)rdr["status_konta"]);
+            }
+            rdr.Close();
+
+            return ret;
+        }
+
+        public List<ContactData> GetContactsData()
+        {
+            List<ContactData> ret = new List<ContactData>();
+            SqlDataReader rdr;
+            SqlCommand cmd = new SqlCommand("", connection);
+
+            //get contact data
+            cmd.CommandText = "select * from konta";
+            rdr = cmd.ExecuteReader();
+            if (!rdr.HasRows) //no user not exists
+            {
+                rdr.Close();
+                return null;
+            }
+            while (rdr.Read())
+            {
+                ContactData cd = new ContactData();
+                cd.contact_id = (uint)((int)rdr["id_konta"]);
+                cd.contact_name = (string)rdr["nazwa"];
+                cd.status = (uint)((int)rdr["status_konta"]);
+                ret.Add(cd);
             }
             rdr.Close();
 
