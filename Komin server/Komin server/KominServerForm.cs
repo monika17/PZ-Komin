@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using System.Text.RegularExpressions;
+
 namespace Komin
 {
     public partial class KominServerForm : Form
@@ -21,11 +23,17 @@ namespace Komin
 
         private void onStartStopListening(object sender, EventArgs e)
         {
+            Regex regexp = new Regex("(0|(1([0-9]?[0-9])?)|(2((5[0-5]?)|([0-4]?[0-9]))?)|([3-9][0-9]?))\\.(0|(1([0-9]?[0-9])?)|(2((5[0-5]?)|([0-4]?[0-9]))?)|([3-9][0-9]?))\\.(0|(1([0-9]?[0-9])?)|(2((5[0-5]?)|([0-4]?[0-9]))?)|([3-9][0-9]?))\\.(0|(1([0-9]?[0-9])?)|(2((5[0-5]?)|([0-4]?[0-9]))?)|([3-9][0-9]?))");
+            if (regexp.Matches(comboBox1.Text).Count != 1)
+            {
+                MessageBox.Show("Niepoprawny format adresu IP", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             if (button1.Text == "start")
             {
                 if (textBox1.Text == "")
                     textBox1.Text = "666";
-                server.Start(comboBox1.Items[comboBox1.SelectedIndex].ToString(), int.Parse(textBox1.Text));
+                server.Start(comboBox1.Text, int.Parse(textBox1.Text));
                 comboBox1.Enabled = false;
                 textBox1.Enabled = false;
                 button1.Text = "stop";

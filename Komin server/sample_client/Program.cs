@@ -18,15 +18,30 @@ namespace sample_client
 
             try
             {
+                Console.Write("Podaj IP serwera: ");
+                string IP = Console.ReadLine();
                 Console.WriteLine("Łączę się z serwerem...");
-                conn.Connect("192.168.0.2", 666);
-                Console.WriteLine("Podłączono: 192.168.0.2:666");
-
-                //Console.WriteLine("Tworze konto: waldek haslo1");
-                //conn.CreateContact("waldek", "haslo1");
-                //Console.WriteLine("Stworzono konto");
+                conn.Connect(IP, 666);
+                Console.WriteLine("Podłączono: " + IP + ":666");
 
                 string name, pass;
+                string ch;
+                do
+                {
+                    do
+                    {
+                        Console.Write("Chcesz utworzyć nowe konto? (tak/nie) "); ch = Console.ReadLine();
+                    } while (ch.ToLower() != "tak" && ch.ToLower() != "nie");
+                    if (ch.ToLower() == "tak")
+                    {
+                        Console.Write("Podaj login: "); name = Console.ReadLine();
+                        Console.Write("Podaj haslo: "); pass = Console.ReadLine();
+                        Console.WriteLine("Tworze konto " + name + " z hasłem " + pass + "...");
+                        conn.CreateContact(name, pass);
+                        Console.WriteLine("Stworzono konto");
+                    }
+                } while (ch.ToLower() != "nie");
+
                 Console.Write("Podaj login: "); name = Console.ReadLine();
                 Console.Write("Podaj haslo: "); pass = Console.ReadLine();
                 Console.WriteLine("Loguje sie na konto {0} haslem {1}", name, pass);
@@ -34,7 +49,6 @@ namespace sample_client
                 conn.Login(name, pass, ref new_state);
                 Console.WriteLine("Zalogowano: twój contact_id to " + conn.userdata.contact_id);
 
-                string ch;
                 do
                 {
                     do
@@ -58,7 +72,7 @@ namespace sample_client
                             break;
                     }
                 } while (ch[0] != '0');
-                Console.ReadKey(true);
+                
 
 
                 Console.WriteLine("Wylogowywanie...");

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace Komin
 {
@@ -120,7 +121,12 @@ namespace Komin
             while (!commune.CancellationPending)
             {
                 while (server.Available <= 0)
-                    SendPacketToServer();
+                {
+                    if (packets_to_send.Count > 0)
+                        SendPacketToServer();
+                    else
+                        Thread.Sleep(50);
+                }
                 byte[] subbuffer = new byte[server.Available];
                 stream.Read(subbuffer, 0, server.Available);
                 Array.Resize<byte>(ref buffer, buffer.Length + subbuffer.Length);
