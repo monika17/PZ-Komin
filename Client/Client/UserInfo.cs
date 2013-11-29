@@ -1,4 +1,4 @@
-﻿namespace Client
+﻿namespace Komin
 {
     public class UserInfo
     {

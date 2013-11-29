@@ -60,9 +60,16 @@ namespace sample_client
                     switch (ch[0])
                     {
                         case '1':
-                            Console.WriteLine("Czekam na wiadomosc...");
+                            Console.WriteLine("Czekam na wiadomosc...(naciśnij dowolny klawisz aby przerwać)");
                             conn.onNewTextMessage = odbiorca_wiadomosci;
-                            while (conn.onNewTextMessage != null) ;
+                            while (conn.onNewTextMessage != null)
+                            {
+                                if (Console.KeyAvailable)
+                                {
+                                    Console.ReadKey(true);
+                                    conn.onNewTextMessage = null;
+                                }
+                            }
                             break;
                         case '2':
                             Console.WriteLine("Podaj tresc wiadomosci:");

@@ -7,7 +7,7 @@
     <ProjectGuid>{372FBE94-B0E8-4384-B129-156C520BE354}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Client</RootNamespace>
+    <RootNamespace>Komin</RootNamespace>
     <AssemblyName>Client</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -44,17 +44,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="KominClientForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="KominClientForm.Designer.cs">
+      <DependentUpon>KominClientForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="KominClientSideConnection.cs" />
+    <Compile Include="KominDatabaseStructures.cs" />
+    <Compile Include="KominNetworkJob.cs" />
+    <Compile Include="KominNetworkPacket.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextMessagingPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TextMessagingPanel.Designer.cs">
+      <DependentUpon>TextMessagingPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="KominClientForm.resx">
+      <DependentUpon>KominClientForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -64,7 +74,11 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="TextMessagingPanel.resx">
+      <DependentUpon>TextMessagingPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

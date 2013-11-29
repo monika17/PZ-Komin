@@ -143,9 +143,20 @@ namespace Komin
 
             Logout();
 
+            KominNetworkPacket p = new KominNetworkPacket();
+            p.sender = 0;
+            p.target = 0;
+            p.target_is_group = false;
+            p.command = (uint)KominProtocolCommands.Disconnect;
+            p.job_id = 0;
+            p.DeleteContent();
+            InsertPacketForSending(p);
+            while (packets_to_send.Count > 0) ;
+
             commune.CancelAsync();
             client.Close();
             client = null;
+            server.connections.Remove(this);
         }
 
         private void clientCommune(object sender, DoWorkEventArgs e)
@@ -192,7 +203,8 @@ namespace Komin
         {
             if ((packet.sender != contact_id) ||
                 ((packet.sender == 0) && ((packet.command != (uint)KominProtocolCommands.Login) &&
-                                          (packet.command != (uint)KominProtocolCommands.CreateContact))))
+                                          (packet.command != (uint)KominProtocolCommands.CreateContact) &&
+                                          (packet.command != (uint)KominProtocolCommands.Disconnect))))
             {
                 //packet error - illegal attempt
                 return;
@@ -205,7 +217,7 @@ namespace Komin
                 foreach (KominServerSideConnection conn in server.connections)
                     if (conn.contact_id == packet.target)
                     {
-                        conn.InsertPacketForSending(ref packet);
+                        conn.InsertPacketForSending(packet);
                         redirected = true;
                         break;
                     }
@@ -466,7 +478,7 @@ namespace Komin
                         p.command = (uint)KominProtocolCommands.SendMessage;
                         p.DeleteContent();
                         p.InsertContent(KominProtocolContentTypes.TextMessageData, (TextMessage)pm);
-                        InsertPacketForSending(ref p);
+                        InsertPacketForSending(p);
                     }
                     break;
                 /*case KominProtocolCommands.RequestAudioCall: //client can't request a call from server
@@ -494,10 +506,16 @@ namespace Komin
                     break;
                 case KominProtocolCommands.CloseGroup: //client wants to close group
                     break;
+                case KominProtocolCommands.Disconnect: //client notifies about disconnecting
+                    commune.CancelAsync();
+                    client.Close();
+                    client = null;
+                    server.connections.Remove(this);
+                    break;
             }
         }
 
-        private void InsertPacketForSending(ref KominNetworkPacket packet)
+        private void InsertPacketForSending(KominNetworkPacket packet)
         {
             packets_to_send.Add(packet);
         }
@@ -527,7 +545,7 @@ namespace Komin
             packet.job_id = job.JobID;
             packet.command = (uint)KominProtocolCommands.NoOperation;
             packet.DeleteContent();
-            InsertPacketForSending(ref packet);
+            InsertPacketForSending(packet);
 
             server.jobs.FinishJob(job);
         }
@@ -553,7 +571,7 @@ namespace Komin
             packet.command = (uint)KominProtocolCommands.Logout;
             packet.DeleteContent();
             packet.InsertContent(KominProtocolContentTypes.StatusData, (uint)KominClientStatusCodes.NotAccessible);
-            InsertPacketForSending(ref packet);
+            InsertPacketForSending(packet);
 
             //check is new state influ on group existence
             UserData ud = server.database.GetUserData(server.database.GetContactData(contact_id).contact_name);
@@ -613,7 +631,7 @@ namespace Komin
                 foreach (KominServerSideConnection con in server.connections)
                     if (con.contact_id == contact)
                     {
-                        con.InsertPacketForSending(ref packet);
+                        con.InsertPacketForSending(packet);
                         break;
                     }
             }
@@ -634,7 +652,7 @@ namespace Komin
             source.sender = 0;
             source.target_is_group = false;
             source.command = (uint)KominProtocolCommands.Accept;
-            InsertPacketForSending(ref source);
+            InsertPacketForSending(source);
         }
 
         public void Deny(KominNetworkPacket source) //server denies some user actions with this message (rather use Error)
@@ -646,7 +664,7 @@ namespace Komin
             source.sender = 0;
             source.target_is_group = false;
             source.command = (uint)KominProtocolCommands.Deny;
-            InsertPacketForSending(ref source);
+            InsertPacketForSending(source);
         }
 
         public void Error(string err, KominNetworkPacket source) //server notifies user about some error
@@ -659,7 +677,7 @@ namespace Komin
             source.target_is_group = false; //group can't receive errors
             source.command = (uint)KominProtocolCommands.Error;
             source.InsertContent(KominProtocolContentTypes.ErrorTextData, err);
-            InsertPacketForSending(ref source);
+            InsertPacketForSending(source);
         }
 
         //public void AddContactToList() { } //server is not allowed to interfere in contact lists
@@ -676,7 +694,7 @@ namespace Komin
             answer.sender = 0; //server
             answer.target_is_group = false;
             answer.command = (uint)KominProtocolCommands.PingContactAnswer;
-            InsertPacketForSending(ref answer);
+            InsertPacketForSending(answer);
         }
 
         //public void SendMessage() { } //server can't force any user to send anything

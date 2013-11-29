@@ -503,3 +503,8 @@ command field values (not complete because of missing error notifications)
 		responses from server:
 			cmd=6,content=000011000000 (successed)
 			cmd=8,content=001000000000 (failed - error)
+29 - DISCONNECT
+	command source: client
+		content bits: 000000000000
+		responses from server:
+			<none>
