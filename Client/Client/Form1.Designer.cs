@@ -28,6 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("send text message");
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Contact#1", new System.Windows.Forms.TreeNode[] {
+            treeNode13});
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("send text message");
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Contact#2", new System.Windows.Forms.TreeNode[] {
+            treeNode15});
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("send text message");
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Contact#3", new System.Windows.Forms.TreeNode[] {
+            treeNode17});
             this.MainTabPanel = new System.Windows.Forms.TabControl();
             this.LoginTab = new System.Windows.Forms.TabPage();
             this.RegisterButton = new System.Windows.Forms.Button();
@@ -44,14 +53,20 @@
             this.LoginLabel = new System.Windows.Forms.Label();
             this.tmpTab = new System.Windows.Forms.TabPage();
             this.tmpTest = new System.Windows.Forms.Label();
+            this.tabSendTextMessage = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
+            this.textMessageBox = new System.Windows.Forms.TextBox();
+            this.textMessageContainer = new System.Windows.Forms.TextBox();
             this.RightMenu = new System.Windows.Forms.Panel();
-            this.UserStatus = new System.Windows.Forms.Label();
-            this.UserName = new System.Windows.Forms.Label();
             this.ContactGroupBox = new System.Windows.Forms.GroupBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.UserStatus = new System.Windows.Forms.Label();
+            this.UserName = new System.Windows.Forms.Label();
+            this.logout = new System.Windows.Forms.Button();
             this.MainTabPanel.SuspendLayout();
             this.LoginTab.SuspendLayout();
             this.tmpTab.SuspendLayout();
+            this.tabSendTextMessage.SuspendLayout();
             this.RightMenu.SuspendLayout();
             this.ContactGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -62,6 +77,8 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MainTabPanel.Controls.Add(this.LoginTab);
+            this.MainTabPanel.Controls.Add(this.tmpTab);
+            this.MainTabPanel.Controls.Add(this.tabSendTextMessage);
             this.MainTabPanel.Location = new System.Drawing.Point(12, 12);
             this.MainTabPanel.Name = "MainTabPanel";
             this.MainTabPanel.SelectedIndex = 0;
@@ -199,7 +216,7 @@
             this.tmpTab.Padding = new System.Windows.Forms.Padding(3);
             this.tmpTab.Size = new System.Drawing.Size(517, 401);
             this.tmpTab.TabIndex = 1;
-            this.tmpTab.Text = "tmpTab";
+            this.tmpTab.Text = "Home";
             this.tmpTab.UseVisualStyleBackColor = true;
             this.tmpTab.ParentChanged += new System.EventHandler(this.tabTmp_Test);
             // 
@@ -212,11 +229,51 @@
             this.tmpTest.TabIndex = 0;
             this.tmpTest.Text = "test";
             // 
+            // tabSendTextMessage
+            // 
+            this.tabSendTextMessage.Controls.Add(this.button1);
+            this.tabSendTextMessage.Controls.Add(this.textMessageBox);
+            this.tabSendTextMessage.Controls.Add(this.textMessageContainer);
+            this.tabSendTextMessage.Location = new System.Drawing.Point(4, 22);
+            this.tabSendTextMessage.Name = "tabSendTextMessage";
+            this.tabSendTextMessage.Size = new System.Drawing.Size(517, 401);
+            this.tabSendTextMessage.TabIndex = 1;
+            this.tabSendTextMessage.Text = "Text";
+            this.tabSendTextMessage.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(431, 327);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(69, 57);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "Send";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // textMessageBox
+            // 
+            this.textMessageBox.Location = new System.Drawing.Point(9, 327);
+            this.textMessageBox.Multiline = true;
+            this.textMessageBox.Name = "textMessageBox";
+            this.textMessageBox.Size = new System.Drawing.Size(412, 58);
+            this.textMessageBox.TabIndex = 1;
+            // 
+            // textMessageContainer
+            // 
+            this.textMessageContainer.Enabled = false;
+            this.textMessageContainer.Location = new System.Drawing.Point(9, 9);
+            this.textMessageContainer.Multiline = true;
+            this.textMessageContainer.Name = "textMessageContainer";
+            this.textMessageContainer.Size = new System.Drawing.Size(492, 310);
+            this.textMessageContainer.TabIndex = 0;
+            // 
             // RightMenu
             // 
             this.RightMenu.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.RightMenu.Controls.Add(this.logout);
             this.RightMenu.Controls.Add(this.ContactGroupBox);
             this.RightMenu.Controls.Add(this.UserStatus);
             this.RightMenu.Controls.Add(this.UserName);
@@ -224,6 +281,40 @@
             this.RightMenu.Name = "RightMenu";
             this.RightMenu.Size = new System.Drawing.Size(145, 404);
             this.RightMenu.TabIndex = 1;
+            // 
+            // ContactGroupBox
+            // 
+            this.ContactGroupBox.Controls.Add(this.treeView1);
+            this.ContactGroupBox.Location = new System.Drawing.Point(3, 101);
+            this.ContactGroupBox.Name = "ContactGroupBox";
+            this.ContactGroupBox.Size = new System.Drawing.Size(139, 300);
+            this.ContactGroupBox.TabIndex = 2;
+            this.ContactGroupBox.TabStop = false;
+            this.ContactGroupBox.Text = "Kontakty";
+            // 
+            // treeView1
+            // 
+            this.treeView1.Location = new System.Drawing.Point(0, 19);
+            this.treeView1.Name = "treeView1";
+            treeNode13.Name = "Node3";
+            treeNode13.Text = "send text message";
+            treeNode14.Name = "Node0";
+            treeNode14.Text = "Contact#1";
+            treeNode15.Name = "Node4";
+            treeNode15.Text = "send text message";
+            treeNode16.Name = "Node1";
+            treeNode16.Text = "Contact#2";
+            treeNode17.Name = "Node5";
+            treeNode17.Text = "send text message";
+            treeNode18.Name = "Node2";
+            treeNode18.Text = "Contact#3";
+            this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode14,
+            treeNode16,
+            treeNode18});
+            this.treeView1.Size = new System.Drawing.Size(138, 315);
+            this.treeView1.TabIndex = 0;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // UserStatus
             // 
@@ -237,28 +328,21 @@
             // UserName
             // 
             this.UserName.AutoSize = true;
-            this.UserName.Location = new System.Drawing.Point(15, 15);
+            this.UserName.Location = new System.Drawing.Point(15, 24);
             this.UserName.Name = "UserName";
             this.UserName.Size = new System.Drawing.Size(46, 13);
             this.UserName.TabIndex = 0;
             this.UserName.Text = "Nazwa: ";
             // 
-            // ContactGroupBox
+            // logout
             // 
-            this.ContactGroupBox.Controls.Add(this.treeView1);
-            this.ContactGroupBox.Location = new System.Drawing.Point(3, 66);
-            this.ContactGroupBox.Name = "ContactGroupBox";
-            this.ContactGroupBox.Size = new System.Drawing.Size(139, 335);
-            this.ContactGroupBox.TabIndex = 2;
-            this.ContactGroupBox.TabStop = false;
-            this.ContactGroupBox.Text = "Kontakty";
-            // 
-            // treeView1
-            // 
-            this.treeView1.Location = new System.Drawing.Point(0, 19);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(138, 315);
-            this.treeView1.TabIndex = 0;
+            this.logout.Location = new System.Drawing.Point(18, 65);
+            this.logout.Name = "logout";
+            this.logout.Size = new System.Drawing.Size(63, 24);
+            this.logout.TabIndex = 3;
+            this.logout.Text = "Wyloguj";
+            this.logout.UseVisualStyleBackColor = true;
+            this.logout.Click += new System.EventHandler(this.logout_Click);
             // 
             // Form1
             // 
@@ -274,6 +358,8 @@
             this.LoginTab.PerformLayout();
             this.tmpTab.ResumeLayout(false);
             this.tmpTab.PerformLayout();
+            this.tabSendTextMessage.ResumeLayout(false);
+            this.tabSendTextMessage.PerformLayout();
             this.RightMenu.ResumeLayout(false);
             this.RightMenu.PerformLayout();
             this.ContactGroupBox.ResumeLayout(false);
@@ -304,6 +390,11 @@
         private System.Windows.Forms.Label tmpTest;
         private System.Windows.Forms.GroupBox ContactGroupBox;
         private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TabPage tabSendTextMessage;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox textMessageBox;
+        private System.Windows.Forms.TextBox textMessageContainer;
+        private System.Windows.Forms.Button logout;
     }
 }
 
