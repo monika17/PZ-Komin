@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.IO;
 
 namespace Komin
 {
@@ -39,6 +40,7 @@ namespace Komin
         public ContactLeftGroup onGroupLeave;
         public GroupClosedNotification onGroupClosed;
         public SomeError onError;
+        public ContactListChange onContactListChange;
 
         public KominClientSideConnection()
         {
@@ -67,6 +69,7 @@ namespace Komin
             onGroupLeave = null;
             onGroupClosed = null;
             onError = null;
+            onContactListChange = null;
         }
 
         public void Connect(string IP, int port)
@@ -107,10 +110,7 @@ namespace Komin
                 InsertPacketForSending(p);
                 while (packets_to_send.Count > 0) ;
 
-                commune.CancelAsync();
-                jobs.Restart();
-                server.Close();
-                server = null;
+                SelfStop();
             }
             catch (SocketException ex)
             {
@@ -119,6 +119,14 @@ namespace Komin
                 else
                     throw new KominClientErrorException("Nie można rozłączyć się z serwerem: błąd socketa", ex);
             }
+        }
+
+        private void SelfStop()
+        {
+            commune.CancelAsync();
+            jobs.Restart();
+            server.Close();
+            server = null;
         }
 
         private void serverCommune(object sender, DoWorkEventArgs e)
@@ -131,13 +139,15 @@ namespace Komin
 
             while (!commune.CancellationPending)
             {
-                while (server.Available <= 0)
+                while ((server.Available <= 0) && (!commune.CancellationPending))
                 {
                     if (packets_to_send.Count > 0)
                         SendPacketToServer();
                     else
                         Thread.Sleep(50);
                 }
+                if (commune.CancellationPending)
+                    break;
                 byte[] subbuffer = new byte[server.Available];
                 stream.Read(subbuffer, 0, server.Available);
                 Array.Resize<byte>(ref buffer, buffer.Length + subbuffer.Length);
@@ -158,6 +168,7 @@ namespace Komin
                 } while (packet_size != 0);
             }
 
+            stream.FlushAsync();
             stream.Close();
         }
 
@@ -167,7 +178,7 @@ namespace Komin
             if ((userdata.contact_id != 0) && (packet.command != (uint)KominProtocolCommands.Disconnect))
             {
                 bool passed = false;
-                if (packet.target == userdata.contact_id)
+                if ((packet.target == userdata.contact_id) && (packet.target_is_group == false))
                     passed = true;
                 else if (packet.target_is_group == true)
                 {
@@ -196,22 +207,22 @@ namespace Komin
                 /*case KominProtocolCommands.CreateContact: //client is not responsible for storing account data
                     break;*/
                 case KominProtocolCommands.Accept: //server/group or other user accepted something
-                    jobs.MarkNewArrival(packet.job_id, ref packet);
+                    jobs.MarkNewArrival(packet.job_id, packet);
                     break;
                 case KominProtocolCommands.Deny: //server/group or other user denied something
-                    jobs.MarkNewArrival(packet.job_id, ref packet);
+                    jobs.MarkNewArrival(packet.job_id, packet);
                     break;
                 case KominProtocolCommands.Error: //server notifies an error
-                    jobs.MarkNewArrival(packet.job_id, ref packet);
+                    jobs.MarkNewArrival(packet.job_id, packet);
                     break;
-                /*case KominProtocolCommands.AddContactToList: //client is not allowed to change contact lists
-                    break;
-                case KominProtocolCommands.RemoveContactFromList:
+                /*case KominProtocolCommands.AddContactToList: //server is not allowed to insert into contact lists
                     break;*/
+                case KominProtocolCommands.RemoveContactFromList: //server notifies that contacts account has been removed and therefore contact has been removed from list
+                    break;
                 case KominProtocolCommands.PingContactRequest: //server or other user requests ping
                     break;
                 case KominProtocolCommands.PingContactAnswer: //other user answers ping
-                    jobs.MarkNewArrival(packet.job_id, ref packet);
+                    jobs.MarkNewArrival(packet.job_id, packet);
                     break;
                 case KominProtocolCommands.SendMessage: //message from group or other client arrived
                     if ((packet.content & (uint)KominProtocolContentTypes.TextMessageData) != 0)
@@ -245,10 +256,10 @@ namespace Komin
                 case KominProtocolCommands.RequestFileTransfer: //other user requests file transfer or server notifies about group file presence
                     break;
                 case KominProtocolCommands.TimeoutFileTransfer: //server or other user notifies about file timeout
-                    jobs.MarkNewArrival(packet.job_id, ref packet);
+                    jobs.MarkNewArrival(packet.job_id, packet);
                     break;
                 case KominProtocolCommands.FinishFileTransfer: //server or other user has finished file transfer
-                    jobs.MarkNewArrival(packet.job_id, ref packet);
+                    jobs.MarkNewArrival(packet.job_id, packet);
                     break;
                 /*case KominProtocolCommands.CreateGroup: //client is not responsible of group creation
                     break;*/
@@ -258,11 +269,12 @@ namespace Komin
                     break;
                 case KominProtocolCommands.CloseGroup: //server notifies that group has been closed
                     break;
+                case KominProtocolCommands.GroupHolderChange: //server notifies that group holder has been changed
+                    break;
+                /*case KominProtocolCommands.RemoveContact: //server can't remove accounts by its own
+                    break;*/
                 case KominProtocolCommands.Disconnect: //server requests disconnecting
-                    commune.CancelAsync();
-                    jobs.Restart();
-                    server.Close();
-                    server = null;
+                    SelfStop();
                     break;
             }
         }
@@ -278,7 +290,20 @@ namespace Komin
                 return;
 
             byte[] packet_bytes = packets_to_send[0].PackForSending();
-            stream.Write(packet_bytes, 0, packet_bytes.Length);
+            stream.WriteTimeout = 100;
+            int attempts = 0;
+            while (attempts < 3)
+            {
+                try
+                {
+                    stream.Write(packet_bytes, 0, packet_bytes.Length);
+                    break;
+                }
+                catch (IOException)
+                {
+                    attempts++;
+                }
+            }
             packets_to_send.RemoveAt(0);
         }
 
@@ -406,10 +431,88 @@ namespace Komin
 
         public void SetStatus(uint new_status) //send status data to server
         {
+            if (userdata.contact_id == 0)
+                return;
+
+            KominNetworkJob job = jobs.AddJob();
+            bool finished = false;
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id; //client doesn't know its contact_id yet
+            packet.target = 0; //server
+            packet.target_is_group = false;
+            packet.job_id = job.JobID;
+            packet.command = (uint)KominProtocolCommands.SetStatus;
+            packet.DeleteContent();
+            packet.InsertContent(KominProtocolContentTypes.StatusData, new_status);
+            InsertPacketForSending(packet);
+
+            do
+            {
+                job.WaitForNewArrival();
+                packet = job.Packet;
+                switch ((KominProtocolCommands)packet.command)
+                {
+                    case KominProtocolCommands.Accept:
+                        finished = true;
+                        break;
+                    case KominProtocolCommands.Error:
+                        finished = true;
+                        jobs.FinishJob(job);
+                        if (onError != null)
+                        {
+                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
+                            break;
+                        }
+                        else
+                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                }
+            } while (!finished);
+
+            jobs.FinishJob(job);
         }
 
         public void SetPassword(string new_password) //send new password to server
         {
+            if (userdata.contact_id == 0)
+                return;
+
+            KominNetworkJob job = jobs.AddJob();
+            bool finished = false;
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id; //client doesn't know its contact_id yet
+            packet.target = 0; //server
+            packet.target_is_group = false;
+            packet.job_id = job.JobID;
+            packet.command = (uint)KominProtocolCommands.SetPassword;
+            packet.DeleteContent();
+            packet.InsertContent(KominProtocolContentTypes.PasswordData, new_password);
+            InsertPacketForSending(packet);
+
+            do
+            {
+                job.WaitForNewArrival();
+                packet = job.Packet;
+                switch ((KominProtocolCommands)packet.command)
+                {
+                    case KominProtocolCommands.Accept:
+                        finished = true;
+                        break;
+                    case KominProtocolCommands.Error:
+                        finished = true;
+                        jobs.FinishJob(job);
+                        if (onError != null)
+                        {
+                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
+                            break;
+                        }
+                        else
+                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                }
+            } while (!finished);
+
+            jobs.FinishJob(job);
         }
 
         public void CreateContact(string new_contact_name, string new_password) //request creation of new account
@@ -467,10 +570,96 @@ namespace Komin
 
         public void AddContactToList(string contact_name) //request new contact on private contact list
         {
+            if (userdata.contact_id == 0)
+                return;
+
+            KominNetworkJob job = jobs.AddJob();
+            bool finished = false;
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id; //client doesn't know its contact_id yet
+            packet.target = 0; //server
+            packet.target_is_group = false;
+            packet.job_id = job.JobID;
+            packet.command = (uint)KominProtocolCommands.AddContactToList;
+            packet.DeleteContent();
+            ContactData cd = new ContactData();
+            cd.contact_name = contact_name;
+            packet.InsertContent(KominProtocolContentTypes.ContactData, cd);
+            InsertPacketForSending(packet);
+
+            do
+            {
+                job.WaitForNewArrival();
+                packet = job.Packet;
+                switch ((KominProtocolCommands)packet.command)
+                {
+                    case KominProtocolCommands.Accept:
+                        if (onContactListChange != null)
+                            onContactListChange((UserData)packet.GetContent(KominProtocolContentTypes.UserData)[0]);
+                        finished = true;
+                        break;
+                    case KominProtocolCommands.Error:
+                        finished = true;
+                        jobs.FinishJob(job);
+                        if (onError != null)
+                        {
+                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
+                            break;
+                        }
+                        else
+                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                }
+            } while (!finished);
+
+            jobs.FinishJob(job);
         }
 
         public void RemoveContactFromList(string contact_name) //request to remove contact from private contact list
         {
+            if (userdata.contact_id == 0)
+                return;
+
+            KominNetworkJob job = jobs.AddJob();
+            bool finished = false;
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id; //client doesn't know its contact_id yet
+            packet.target = 0; //server
+            packet.target_is_group = false;
+            packet.job_id = job.JobID;
+            packet.command = (uint)KominProtocolCommands.RemoveContactFromList;
+            packet.DeleteContent();
+            ContactData cd = new ContactData();
+            cd.contact_name = contact_name;
+            packet.InsertContent(KominProtocolContentTypes.ContactData, cd);
+            InsertPacketForSending(packet);
+
+            do
+            {
+                job.WaitForNewArrival();
+                packet = job.Packet;
+                switch ((KominProtocolCommands)packet.command)
+                {
+                    case KominProtocolCommands.Accept:
+                        if (onContactListChange != null)
+                            onContactListChange((UserData)packet.GetContent(KominProtocolContentTypes.UserData)[0]);
+                        finished = true;
+                        break;
+                    case KominProtocolCommands.Error:
+                        finished = true;
+                        jobs.FinishJob(job);
+                        if (onError != null)
+                        {
+                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
+                            break;
+                        }
+                        else
+                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                }
+            } while (!finished);
+
+            jobs.FinishJob(job);
         }
 
         public ContactData PingContactRequest(uint contact_id, string contact_name="") //ask client about its status, capabilities etc.
@@ -653,12 +842,13 @@ namespace Komin
     public delegate void ContactLeftGroup(KominNetworkPacket packet);
     public delegate void GroupClosedNotification(KominNetworkPacket packet);
     public delegate void SomeError(string err_text, KominNetworkPacket packet);
+    public delegate void ContactListChange(UserData new_ud);
 
     public class KominClientErrorException : Exception
     {
         public KominClientErrorException() : base() { }
-        public KominClientErrorException(string message) : base("Operacja nie powiodła się\n" + message) { }
-        public KominClientErrorException(string message, Exception inner) : base("Operacja nie powiodła się\n" + message, inner) { }
+        public KominClientErrorException(string message) : base(message) { }
+        public KominClientErrorException(string message, Exception inner) : base(message, inner) { }
         protected KominClientErrorException(System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context) { }
     }

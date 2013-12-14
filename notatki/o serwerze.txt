@@ -171,13 +171,13 @@ number : char[9]
 length : uint
 chars : char[length]
 
-command field values (not complete because of missing error notifications)
-0 - NOP (no operation)
+command field values (not complete because of missing error notifications) (starred commands are already implemented and fully working)
+*0 - NOP (no operation)
 	command source: client/server
 		content bits: 000000000000
 		responese:
 			<none>
-1 - LOGIN
+*1 - LOGIN
 	command source: client
 		content bits: 000001000011
 		responses from server:
@@ -189,7 +189,7 @@ command field values (not complete because of missing error notifications)
 					B³êdne has³o
 					Nieprawid³owe dane ¿¹dania
 					B³êdny status
-2 - LOGOUT
+*2 - LOGOUT
 	command source: client
 		content bits: 000000000000
 		responses from server:
@@ -224,7 +224,7 @@ command field values (not complete because of missing error notifications)
 				error texts:
 					U¿ytkownik nie jest zalogowany
 					Nieprawid³owe dane ¿¹dania
-5 - CREATE_CONTACT
+*5 - CREATE_CONTACT
 	command source: client
 		content bits: 000001000001
 		responses from server:
@@ -233,7 +233,7 @@ command field values (not complete because of missing error notifications)
 				error texts:
 					U¿ytkownik ju¿ istnieje
 					Nieprawid³owe dane ¿¹dania
-6 - ACCEPT (also CONFIRM)
+*6 - ACCEPT (also CONFIRM)
 	command source: client
 		content bits: 000??0??0?00
 			bt8 - accept file transfer
@@ -256,7 +256,7 @@ command field values (not complete because of missing error notifications)
 		content bits: 000??0??0?00
 		responses:
 			<none>
-8 - ERROR
+*8 - ERROR
 	command source: server
 		content bits: ?01????????0
 		responses from client:
@@ -266,7 +266,7 @@ command field values (not complete because of missing error notifications)
 	command source: client
 		content bits: 000001000000
 		responses from server:
-			cmd=6,content=000001000000 (successed - add to contact private list)
+			cmd=6,content=010000000000 (successed - add to contact private list)
 			cmd=8,content=001001000000 (failed)
 				error texts:
 					U¿ytkownik nie istnieje
@@ -276,13 +276,13 @@ command field values (not complete because of missing error notifications)
 	command source: client
 		content bits: 000001000000
 		responses from server:
-			cmd=6,content=000001000000 (successed - remove from contact private list)
+			cmd=6,content=010000000000 (successed - remove from contact private list)
 			cmd=8,content=001001000000 (failed)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie znajduje siê na liœcie kontaktów
 					Nieprawid³owe dane ¿¹dania
-11 - PING_CONTACT (request)
+*11 - PING_CONTACT (request)
 	command source: server
 		content bits: 000000000100
 		responses from client:
@@ -301,7 +301,7 @@ command field values (not complete because of missing error notifications)
 					Nieprawid³owe dane ¿¹dania
 			<only when self-ping>
 			cmd=12,content=010000000100
-12 - PING_CONTACT (answer)
+*12 - PING_CONTACT (answer)
 	command source: client
 		content bits: 000011??1110
 			bt5+bt4 - client capabilities
@@ -312,13 +312,13 @@ command field values (not complete because of missing error notifications)
 			bt5+bt4 - client capabilities
 		responses:
 			<none>
-13 - SEND_MESSAGE
+*13 - SEND_MESSAGE
 	command source: client
 		content bits: ?00?00???000
 			note: message destination and type are determined by header fields
 		responses:
 			<none; for text messages: server can store contact related messages, group messages are not stored because group is destroyed when no user logged in>
-14 - PING_MESSAGES (check are there any messages destined for specified contact; used during login by client)
+*14 - PING_MESSAGES (check are there any messages destined for specified contact; used during login by client)
 	command source: client
 		content bits: 000000000000
 		responses from server:
@@ -420,7 +420,7 @@ command field values (not complete because of missing error notifications)
 		content bits: 0001?0000000
 		responses:
 			<none>
-23 - CREATE_GROUP
+23 - CREATE_GROUP (group capabilities not implemented yet)
 	command source: client
 		content bits: 000?10??0100
 			bt8+bt5+bt4 - group capabilities
@@ -486,7 +486,6 @@ command field values (not complete because of missing error notifications)
 		content bits: 000010000000
 		responses:
 			<none>
-//not yet implemented or provided
 27 - GROUP_HOLDER_CHANGE
 	command source: client
 		content bits: 000011000000
@@ -503,7 +502,7 @@ command field values (not complete because of missing error notifications)
 		responses from server:
 			cmd=6,content=000011000000 (successed)
 			cmd=8,content=001000000000 (failed - error)
-29 - DISCONNECT
+*29 - DISCONNECT
 	command source: client
 		content bits: 000000000000
 		responses from server:

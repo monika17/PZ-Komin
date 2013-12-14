@@ -40,7 +40,7 @@ namespace Komin
             job_id = 0;
         }
 
-        public void MarkNewArrival(uint job_id, ref KominNetworkPacket packet)
+        public void MarkNewArrival(uint job_id, KominNetworkPacket packet)
         {
             foreach(KominNetworkJob job in jobs)
                 if (job.JobID == job_id)

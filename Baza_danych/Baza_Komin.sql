@@ -53,8 +53,8 @@ create table oczekuj¹ce_wiadomoœci
 	(id_wiadomosci int not null primary key,
 	id_nadawcy int foreign key references konta(id_konta),
 	id_docelowy int,
-	czy_grupowy bit,
-	tresc_wiadomoci string1000 not null,
+	czy_grupowy int,
+	tresc_wiadomosci string1000 not null,
 	data_czas_wyslania datetime)
 go
 

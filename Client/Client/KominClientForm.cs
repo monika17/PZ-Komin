@@ -25,9 +25,22 @@ namespace Komin
         }
 
         private KominClientSideConnection connection;
+        //tab update
+        private System.Timers.Timer TabUpdateTimer;
+        private bool TabUpdateOnRun;
+        private List<TabPage> remove_page; //tab pages to be removed on next redraw
+        private List<TabPage> add_page; //tab pages to be added on next redraw
+        private TabPage next_page; //tab page to make visible on next redraw. set to null to avoid changing
 
         public KominClientForm()
         {
+            TabUpdateOnRun = false;
+            TabUpdateTimer = new System.Timers.Timer(50);
+            TabUpdateTimer.Elapsed += KominClientForm_TabUpdate;
+            TabUpdateTimer.SynchronizingObject = this;
+            remove_page = new List<TabPage>();
+            add_page = new List<TabPage>();
+            next_page = null;
             connection = new KominClientSideConnection();
             //#####    to powinno byc zmienione      ########################################################################
             try
@@ -45,6 +58,30 @@ namespace Komin
             MainTabPanel.TabPages.Clear();
             MainTabPanel.TabPages.Add(LoginTab);
             RightMenu.Enabled = false;
+            TabUpdateTimer.Start();
+        }
+
+        private void KominClientForm_TabUpdate(object sender, EventArgs e)
+        {
+            TabUpdateTimer.Enabled = false;
+            while (TabUpdateOnRun) ;
+            TabUpdateOnRun = true;
+            foreach (TabPage tp in remove_page)
+                MainTabPanel.TabPages.Remove(tp);
+            remove_page.Clear();
+            foreach (TabPage tp in add_page)
+                MainTabPanel.TabPages.Add(tp);
+            add_page.Clear();
+            if (next_page != null)
+                MainTabPanel.SelectedTab = next_page;
+            next_page = null;
+            TabUpdateOnRun = false;
+            TabUpdateTimer.Enabled = true;
+        }
+
+        private void WaitForTabUpdate()
+        {
+            while (remove_page.Count > 0 || add_page.Count > 0 || next_page != null) ;
         }
 
         private void LoginButton_Click(object sender, EventArgs e)
@@ -103,43 +140,6 @@ namespace Komin
         private void treeView1_NodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             OpenTabForContact(e.Node);
-            /*if (e.Node.Text == "Kontakty" || e.Node.Text == "Grupy")
-                return;
-            if (MainTabPanel.TabPages[0] == HomePage)
-            {
-                MainTabPanel.TabPages.Clear();
-                MainTabPanel.ContextMenuStrip = contactTabContextMenu;
-            }
-
-            //find is there a tab for this contact already opened
-            foreach (TabPage tp in MainTabPanel.TabPages)
-                if (tp.Text == e.Node.Text)
-                {
-                    MainTabPanel.SelectedTab = tp;
-                    return;
-                }
-
-            //create new tab page for text messaging
-            uint receiver_id = ((ContactTreeTag)e.Node.Tag).id;
-            bool receiver_is_group = ((ContactTreeTag)e.Node.Tag).is_group;
-
-            TextMessagingPanel tmp = new TextMessagingPanel(connection, receiver_id, receiver_is_group);
-            tmp.Anchor = (System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right);
-            tmp.Location = new System.Drawing.Point(3, 3);
-            tmp.Name = "TextMessagingPanel";
-            tmp.Size = new System.Drawing.Size(484, 386);
-            tmp.TabStop = true;
-
-            TabPage tpage = new TabPage();
-            tpage.Location = new System.Drawing.Point(4, 22);
-            tpage.Name = (receiver_is_group ? "G" : "C") + receiver_id;
-            tpage.Size = new System.Drawing.Size(490, 392);
-            tpage.TabIndex = 1;
-            tpage.Text = e.Node.Text;
-            tpage.UseVisualStyleBackColor = true;
-            tpage.Controls.Add(tmp);
-            MainTabPanel.TabPages.Add(tpage);
-            MainTabPanel.SelectedTab = tpage;*/
         }
 
         private void logout_Click(object sender, EventArgs e)
@@ -167,7 +167,7 @@ namespace Komin
             foreach (TabPage tabpage in MainTabPanel.TabPages)
                 if (tabpage.Text == HomePage.Text)
                 {
-                    MainTabPanel.TabPages.Remove(tabpage);
+                    remove_page.Add(tabpage);
                     break;
                 }
 
@@ -175,7 +175,7 @@ namespace Komin
             foreach (TabPage tp in MainTabPanel.TabPages)
                 if (tp.Text == tn.Text)
                 {
-                    MainTabPanel.SelectedTab = tp;
+                    next_page = tp;
                     return;
                 }
 
@@ -199,8 +199,8 @@ namespace Komin
             tpage.Text = tn.Text;
             tpage.UseVisualStyleBackColor = true;
             tpage.Controls.Add(tmp);
-            MainTabPanel.TabPages.Add(tpage);
-            MainTabPanel.SelectedTab = tpage;
+            add_page.Add(tpage);
+            next_page = tpage;
             MainTabPanel.ContextMenuStrip = contactTabContextMenu;
         }
 
@@ -227,9 +227,9 @@ namespace Komin
                                 }
                             //open tab page for this contact
                             OpenTabForContact(tn);
-                            //treeView1_NodeDoubleClick(treeView1, new TreeNodeMouseClickEventArgs(tn, System.Windows.Forms.MouseButtons.Left, 2, 0, 0));
+                            WaitForTabUpdate();
                             //insert message
-                            MainTabPanel.TabPages["C" + sender_id].Controls["TextMessagingPanel"].Controls["textMessageContainer"].Text += "[" + msg.send_date + "]  " + cd.contact_name + ":\n" + msg.message + "\n";
+                            ((TextMessagingPanel)MainTabPanel.TabPages["C" + sender_id].Controls["TextMessagingPanel"]).InsertText("[" + msg.send_date + "]  " + cd.contact_name + ":\r\n" + msg.message + "\r\n");
                             return;
                         }
                     //discard
@@ -259,9 +259,9 @@ namespace Komin
                             }
                         //open tab page for this group
                         OpenTabForContact(tn);
-                        //treeView1_NodeDoubleClick(treeView1, new TreeNodeMouseClickEventArgs(tn, System.Windows.Forms.MouseButtons.Left, 2, 0, 0));
+                        WaitForTabUpdate();
                         //insert message
-                        MainTabPanel.TabPages["G" + receiver_id].Controls["TextMessagingPanel"].Controls["textMessageContainer"].Text += "[" + msg.send_date + "]  " + cd.contact_name + ":\n" + msg.message + "\n";
+                        ((TextMessagingPanel)MainTabPanel.TabPages["G" + receiver_id].Controls["TextMessagingPanel"]).InsertText("[" + msg.send_date + "]  " + cd.contact_name + ":\r\n" + msg.message + "\r\n");
                         return;
                     }
                 //discard

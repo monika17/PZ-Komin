@@ -137,6 +137,22 @@ namespace Komin
         }
     }
 
+    public class DatabaseData //this class is used only between server and database
+    {
+        public List<UserData> users;
+        public List<GroupData> groups;
+        public List<GroupFileData> gfs;
+        public List<PendingMessage> pms;
+
+        public DatabaseData()
+        {
+            users = new List<UserData>();
+            groups = new List<GroupData>();
+            gfs = new List<GroupFileData>();
+            pms = new List<PendingMessage>();
+        }
+    }
+
     public class DataTesters
     {
         public static bool TestLoginOrGroupName(string contact_name) //check is login name correct

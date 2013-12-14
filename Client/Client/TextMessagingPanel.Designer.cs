@@ -1,6 +1,6 @@
 ﻿namespace Komin
 {
-    partial class TextMessagingPanel
+    public partial class TextMessagingPanel
     {
         /// <summary> 
         /// Required designer variable.
