@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using System.ComponentModel;
 using System.Net;
@@ -106,6 +103,8 @@ namespace Komin
             if (server == null)
                 return;
 
+            uint last_client_id = 0;
+
             while (!listener.CancellationPending)
             {
                 while (!server.Pending()) Thread.Sleep(50);
@@ -113,7 +112,7 @@ namespace Komin
                 conn.client = server.AcceptTcpClient();
                 conn.server = this;
                 conn.log = log;
-                conn.client_id = (uint)connections.Count + 1;
+                conn.client_id = ++last_client_id;
                 conn.commune.RunWorkerAsync();
                 connections.Add(conn);
             }
@@ -138,6 +137,9 @@ namespace Komin
         List<KominNetworkPacket> packets_to_send;
         public server_logging_routine log;
         public uint client_id;
+        byte enc_seed, dec_seed;
+        //System.Timers.Timer PingTimer;
+        //bool had_pinger_nop;
         //user data
         uint contact_id;
 
@@ -151,7 +153,26 @@ namespace Komin
             commune.WorkerSupportsCancellation = true;
             commune.DoWork += clientCommune;
             log = null;
+            enc_seed = dec_seed = KominCipherSuite.InitialSeed;
+            /*PingTimer = new System.Timers.Timer(3000);
+            PingTimer.AutoReset = true;
+            PingTimer.Elapsed += PingTimer_Elapsed;
+            had_pinger_nop = false;*/
         }
+
+        /*void PingTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            PingTimer.Enabled = false;
+            NoOperation();
+            if (!had_pinger_nop)
+            {
+                if (log != null) log("Client " + client_id + " lost connection");
+                SelfStop();
+                return;
+            }
+            had_pinger_nop = false;
+            PingTimer.Enabled = true;
+        }*/
 
         ~KominServerSideConnection()
         {
@@ -173,7 +194,6 @@ namespace Komin
             p.job_id = 0;
             p.DeleteContent();
             InsertPacketForSending(p);
-            while (packets_to_send.Count > 0) ;
 
             if (log != null) log("Client " + client_id + " disconnected");
 
@@ -182,6 +202,7 @@ namespace Komin
 
         private void SelfStop()
         {
+            while (packets_to_send.Count > 0) ;
             commune.CancelAsync();
             client.Close();
             client = null;
@@ -198,6 +219,9 @@ namespace Komin
             byte[] buffer = new byte[0];
             stream = client.GetStream();
 
+            //PingTimer.Enabled = true;
+            //NoOperation();
+
             if (log != null) log("Client " + client_id + " connected");
 
             while (!commune.CancellationPending)
@@ -211,6 +235,7 @@ namespace Komin
                 }
                 byte[] subbuffer = new byte[client.Available];
                 stream.Read(subbuffer, 0, client.Available);
+                dec_seed = KominCipherSuite.Decrypt(ref subbuffer, dec_seed);
                 Array.Resize<byte>(ref buffer, buffer.Length + subbuffer.Length);
                 Buffer.BlockCopy(subbuffer, 0, buffer, buffer.Length - subbuffer.Length, subbuffer.Length);
                 do
@@ -229,7 +254,10 @@ namespace Komin
                 } while (packet_size != 0);
             }
 
+            stream.FlushAsync();
             stream.Close();
+
+            //PingTimer.Enabled = false;
         }
 
         private void InterpretePacket(ref KominNetworkPacket packet)
@@ -239,7 +267,8 @@ namespace Komin
             if ((packet.sender != contact_id) ||
                 ((packet.sender == 0) && ((packet.command != (uint)KominProtocolCommands.Login) &&
                                           (packet.command != (uint)KominProtocolCommands.CreateContact) &&
-                                          (packet.command != (uint)KominProtocolCommands.Disconnect))))
+                                          (packet.command != (uint)KominProtocolCommands.Disconnect) &&
+                                          (packet.command != (uint)KominProtocolCommands.NoOperation))))
             {
                 //packet error - illegal attempt
                 return;
@@ -275,6 +304,7 @@ namespace Komin
             switch ((KominProtocolCommands)packet.command)
             {
                 case KominProtocolCommands.NoOperation:
+                    //had_pinger_nop = true;
                     break;
                 case KominProtocolCommands.Login: //client tries to log in
                     {
@@ -683,15 +713,64 @@ namespace Komin
                     server.jobs.MarkNewArrival(packet.job_id, packet);
                     break;
                 case KominProtocolCommands.CreateGroup: //user wants to create new group
-                    break;
+                    {
+                        if ((packet.content & 0x080) != 0x080)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.WrongRequestContent, packet);
+                            return;
+                        }
+                        uint new_group_holder = packet.sender;
+                        GroupData new_gd = (GroupData)packet.GetContent(KominProtocolContentTypes.GroupData)[0];
+                        ContactData cd = KominServer.database.GetContactData(new_group_holder);
+                        if(cd!=null)
+                            if ((cd.status & (uint)KominClientStatusCodes.Mask) == (uint)KominClientStatusCodes.NotAccessible)
+                            {
+                                packet.DeleteContent();
+                                Error(KominNetworkErrors.UserNotLoggedIn, packet);
+                                return;
+                            }
+                        uint capabilities = new_gd.communication_type & 0x130;
+                        //#################################################### to do: check server acceptance of capabilities
+                        switch (KominServer.database.CreateGroup(new_gd.group_name, new_group_holder, capabilities))
+                        {
+                            case 0:
+                                packet.DeleteContent();
+                                new_gd = KominServer.database.GetGroupData(new_gd.group_name);
+                                packet.InsertContent(KominProtocolContentTypes.GroupData, new_gd);
+                                Accept(packet);
+                                break;
+                            case -1:
+                                packet.DeleteContent();
+                                Error(KominNetworkErrors.UserNotExists, packet);
+                                return;
+                            case -2:
+                                packet.DeleteContent();
+                                Error(KominNetworkErrors.GroupAlreadyExists, packet);
+                                return;
+                            case -3:
+                                packet.DeleteContent();
+                                Error(KominNetworkErrors.ServerInternalError, packet);
+                                return;
+                        }
+                        break;
+                    }
                 case KominProtocolCommands.JoinGroup: //user wants to join an existing group
-                    break;
+                    {
+                        break;
+                    }
                 case KominProtocolCommands.LeaveGroup: //user wants to leave an existing group
-                    break;
+                    {
+                        break;
+                    }
                 case KominProtocolCommands.CloseGroup: //user wants to close group
-                    break;
+                    {
+                        break;
+                    }
                 case KominProtocolCommands.GroupHolderChange: //user wants to promote other user on group holder
-                    break;
+                    {
+                        break;
+                    }
                 case KominProtocolCommands.RemoveContact: //user wants to remove its account
                     break;
                 case KominProtocolCommands.Disconnect: //client notifies about disconnecting
@@ -711,6 +790,7 @@ namespace Komin
                 return;
 
             byte[] packet_bytes = packets_to_send[0].PackForSending();
+            enc_seed = KominCipherSuite.Encrypt(ref packet_bytes, enc_seed);
             int attempts = 0;
             stream.WriteTimeout = 100;
             while (attempts < 3)
@@ -739,21 +819,14 @@ namespace Komin
         //these methods are used when server wants to send something to client(s)
         public void NoOperation()
         {
-            if (contact_id == 0)
-                return;
-
-            KominNetworkJob job = server.jobs.AddJob();
-
             KominNetworkPacket packet = new KominNetworkPacket();
             packet.sender = 0; //server
             packet.target = contact_id;
             packet.target_is_group = false;
-            packet.job_id = job.JobID;
+            packet.job_id = 0;
             packet.command = (uint)KominProtocolCommands.NoOperation;
             packet.DeleteContent();
             InsertPacketForSending(packet);
-
-            server.jobs.FinishJob(job);
         }
 
         //public void Login() { } //server can't log any user in

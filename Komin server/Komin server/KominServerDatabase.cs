@@ -232,7 +232,7 @@ namespace Komin
 
             //create member list table
             if (CreateContactList("members" + group_id) != 0)
-                return -3; //error during creaation of members list
+                return -3; //error during creation of members list
             InsertContactIntoList(group_id, true, creators_id);
 
             //create group

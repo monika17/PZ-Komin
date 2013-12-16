@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using System.ComponentModel;
 using System.Net;
@@ -20,6 +17,9 @@ namespace Komin
         List<KominNetworkPacket> packets_to_send;
         public UserData userdata;
         KominNetworkJobHolder jobs;
+        byte enc_seed, dec_seed;
+        //System.Timers.Timer PingTimer;
+        //bool had_pinger_nop;
 
         //delegates
         public NewTextMessage onNewTextMessage;
@@ -51,6 +51,11 @@ namespace Komin
             commune = new BackgroundWorker();
             commune.WorkerSupportsCancellation = true;
             commune.DoWork += serverCommune;
+            enc_seed = dec_seed = KominCipherSuite.InitialSeed;
+            /*PingTimer = new System.Timers.Timer(3000);
+            PingTimer.AutoReset = true;
+            PingTimer.Elapsed += PingTimer_Elapsed;
+            had_pinger_nop = false;*/
             onNewTextMessage = null;
             onNewAudioMessage = null;
             onNewVideoMessage = null;
@@ -71,6 +76,20 @@ namespace Komin
             onError = null;
             onContactListChange = null;
         }
+
+        /*void PingTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            PingTimer.Enabled = false;
+            NoOperation(0, false);
+            if (!had_pinger_nop)
+            {
+                //###################################### to do: server lost connection error
+                SelfStop();
+                return;
+            }
+            had_pinger_nop = false;
+            PingTimer.Enabled = true;
+        }*/
 
         public void Connect(string IP, int port)
         {
@@ -108,7 +127,6 @@ namespace Komin
                 p.job_id = 0;
                 p.DeleteContent();
                 InsertPacketForSending(p);
-                while (packets_to_send.Count > 0) ;
 
                 SelfStop();
             }
@@ -123,6 +141,7 @@ namespace Komin
 
         private void SelfStop()
         {
+            while (packets_to_send.Count > 0) ;
             commune.CancelAsync();
             jobs.Restart();
             server.Close();
@@ -137,6 +156,9 @@ namespace Komin
             byte[] buffer = new byte[0];
             stream = server.GetStream();
 
+            //PingTimer.Enabled = true;
+            //NoOperation(0, false);
+
             while (!commune.CancellationPending)
             {
                 while ((server.Available <= 0) && (!commune.CancellationPending))
@@ -150,6 +172,7 @@ namespace Komin
                     break;
                 byte[] subbuffer = new byte[server.Available];
                 stream.Read(subbuffer, 0, server.Available);
+                dec_seed = KominCipherSuite.Decrypt(ref subbuffer, dec_seed);
                 Array.Resize<byte>(ref buffer, buffer.Length + subbuffer.Length);
                 Buffer.BlockCopy(subbuffer, 0, buffer, buffer.Length - subbuffer.Length, subbuffer.Length);
                 do
@@ -170,6 +193,8 @@ namespace Komin
 
             stream.FlushAsync();
             stream.Close();
+
+            //PingTimer.Enabled = false;
         }
 
         private void InterpretePacket(ref KominNetworkPacket packet)
@@ -195,6 +220,8 @@ namespace Komin
             switch ((KominProtocolCommands)packet.command)
             {
                 case KominProtocolCommands.NoOperation:
+                    /*if(packet.sender==0)
+                        had_pinger_nop = true;*/
                     break;
                 /*case KominProtocolCommands.Login: //client can't log other users into itself
                     break;*/
@@ -290,6 +317,7 @@ namespace Komin
                 return;
 
             byte[] packet_bytes = packets_to_send[0].PackForSending();
+            enc_seed = KominCipherSuite.Encrypt(ref packet_bytes, enc_seed);
             stream.WriteTimeout = 100;
             int attempts = 0;
             while (attempts < 3)
@@ -310,21 +338,14 @@ namespace Komin
         //these methods are used when client wants to send something to client(s) or server
         public void NoOperation(uint target, bool target_is_group)
         {
-            if (userdata.contact_id == 0)
-                return;
-
-            KominNetworkJob job = jobs.AddJob();
-
             KominNetworkPacket packet = new KominNetworkPacket();
             packet.sender = userdata.contact_id;
             packet.target = target;
             packet.target_is_group = target_is_group;
-            packet.job_id = job.JobID;
+            packet.job_id = 0;
             packet.command = (uint)KominProtocolCommands.NoOperation;
             packet.DeleteContent();
             InsertPacketForSending(packet);
-
-            jobs.FinishJob(job);
         }
 
         public void Login(string contact_name, string password, ref uint new_status) //send login data to server
@@ -807,8 +828,52 @@ namespace Komin
         {
         }
 
-        public void CreateGroup(string group_name/*, capabilities*/) //request group creation
+        public GroupData CreateGroup(string group_name, uint capabilities) //request group creation
         {
+            if (userdata.contact_id == 0)
+                return null;
+
+            KominNetworkJob job = jobs.AddJob();
+            bool finished = false;
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id;
+            packet.target = 0; //server
+            packet.target_is_group = false;
+            packet.job_id = job.JobID;
+            packet.command = (uint)KominProtocolCommands.CreateGroup;
+            packet.DeleteContent();
+            GroupData gd = new GroupData();
+            gd.creators_id = userdata.contact_id;
+            gd.group_name = group_name;
+            gd.communication_type = capabilities & 0x130;
+            packet.InsertContent(KominProtocolContentTypes.GroupData, gd);
+            InsertPacketForSending(packet);
+
+            do
+            {
+                job.WaitForNewArrival();
+                packet = job.Packet;
+                switch ((KominProtocolCommands)packet.command)
+                {
+                    case KominProtocolCommands.Accept:
+                        finished = true;
+                        break;
+                    case KominProtocolCommands.Error:
+                        finished = true;
+                        jobs.FinishJob(job);
+                        if (onError != null)
+                        {
+                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
+                            break;
+                        }
+                        else
+                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                }
+            } while (!finished);
+
+            jobs.FinishJob(job);
+            return (GroupData)packet.GetContent(KominProtocolContentTypes.GroupData)[0];
         }
 
         public void JoinGroup(uint id, bool invite = false) //ask group (own join) or contact (invite contact) to join group

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Komin
 {
     public class KominNetworkPacket
     {
+        public static int HeaderSize = sizeof(uint) * 6 + 1 /*sizeof(bool)*/;
+
         public uint sender; //contact_id (0 is server)
         public uint target; //contact_id (0 is server)
         public bool target_is_group;
@@ -124,18 +124,18 @@ namespace Komin
 
         public static uint CheckSize(ref byte[] buffer)
         {
-            if (buffer.Length < sizeof(uint) * 6 + 1 /*sizeof(bool)*/)
+            if (buffer.Length < HeaderSize)
                 return 0;
             uint content_length = ByteArrayToUInt(buffer, sizeof(uint) * 5 + 1/*sizeof(bool)*/);
-            if (buffer.Length < sizeof(uint) * 6 + 1 /*sizeof(bool)*/+ content_length)
+            if (buffer.Length < HeaderSize + content_length)
                 return 0;
-            return sizeof(uint) * 6 + 1 /*sizeof(bool)*/+ content_length;
+            return (uint)HeaderSize + content_length;
         }
 
         public byte[] PackForSending()
         {
             CreateDataBlock();
-            uint size = (uint)(sizeof(uint) * 6 + 1 /*sizeof(bool)*/ + data.Length);
+            uint size = (uint)(HeaderSize + data.Length);
             byte[] db = new byte[size];
             int offset = 0;
             Buffer.BlockCopy(UIntToByteArray(sender), 0, db, offset, sizeof(uint));

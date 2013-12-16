@@ -422,12 +422,10 @@ command field values (not complete because of missing error notifications) (star
 			<none>
 23 - CREATE_GROUP (group capabilities not implemented yet)
 	command source: client
-		content bits: 000?10??0100
-			bt8+bt5+bt4 - group capabilities
+		content bits: 000010000000
 		responses from server:
-			cmd=6,content=000?10??0100 (successed)
-				bt8+bt5+bt4 - accepted group capabilities
-			cmd=8,content=001010000100 (failed - error)
+			cmd=6,content=000010000000 (successed)
+			cmd=8,content=001000000000 (failed - error)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany

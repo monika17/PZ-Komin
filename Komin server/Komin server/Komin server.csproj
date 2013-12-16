@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="KominCipherSuite.cs" />
     <Compile Include="KominDatabaseStructures.cs" />
     <Compile Include="KominServerDatabase.cs" />
     <Compile Include="KominClientSideConnection.cs" />

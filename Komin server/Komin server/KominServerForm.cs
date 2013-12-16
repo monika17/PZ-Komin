@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using System.Text.RegularExpressions;
@@ -97,7 +92,7 @@ namespace Komin
             if (to_log == null)
                 to_log = "[" + DateTime.Now + "]" + msg + "\r\n";
             else
-                to_log += "[" + DateTime.Now + "]" + msg + "\r\n";
+                to_log = "[" + DateTime.Now + "]" + msg + "\r\n" + to_log;
         }
 
         private void onClearLog(object sender, EventArgs e)
@@ -108,14 +103,14 @@ namespace Komin
         private void onLogTimerUpdate(object sender, EventArgs e)
         {
             if (to_log != null)
-                logbox.Text += to_log;
+                logbox.Text = to_log + logbox.Text;
             to_log = null;
         }
 
         private void logbox_TextChanged(object sender, EventArgs e)
         {
             logbox.SelectionLength = 0;
-            logbox.SelectionStart = logbox.Text.Length;
+            logbox.SelectionStart = 0;
         }
     }
 }
