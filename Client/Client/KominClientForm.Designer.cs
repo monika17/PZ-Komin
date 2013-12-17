@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Kontakty");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Grupy");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Kontakty");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Grupy");
             this.MainTabPanel = new System.Windows.Forms.TabControl();
             this.LoginTab = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -313,13 +313,13 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(3, 16);
             this.treeView1.Name = "treeView1";
-            treeNode5.Name = "Kontakty";
-            treeNode5.Text = "Kontakty";
-            treeNode6.Name = "Grupy";
-            treeNode6.Text = "Grupy";
+            treeNode1.Name = "Kontakty";
+            treeNode1.Text = "Kontakty";
+            treeNode2.Name = "Grupy";
+            treeNode2.Text = "Grupy";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode5,
-            treeNode6});
+            treeNode1,
+            treeNode2});
             this.treeView1.Size = new System.Drawing.Size(154, 312);
             this.treeView1.TabIndex = 0;
             this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeDoubleClick);

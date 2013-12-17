@@ -15,6 +15,7 @@ namespace Komin
         private System.Timers.Timer TextInsertTimer;
         private bool on_inserting;
         private string text_insert;
+        private KominClientForm CallingForm;
 
         public TextMessagingPanel()
         {
@@ -31,7 +32,7 @@ namespace Komin
             this.Visible = true;
         }
 
-        public TextMessagingPanel(KominClientSideConnection conn, uint receiver_id, bool receiver_is_group)
+        public TextMessagingPanel(KominClientSideConnection conn, uint receiver_id, bool receiver_is_group, Form callingForm)
             : this()
         {
             /*this.TextInsertTimer = new System.Timers.Timer(50);
@@ -41,6 +42,8 @@ namespace Komin
             this.receiver_id = receiver_id;
             this.receiver_is_group = receiver_is_group;
             this.conn = conn;
+            this.CallingForm = callingForm as KominClientForm;
+            //if (CallingForm != null) CallingForm.AcceptButton = textSendButton;
             /*InitializeComponent();
             TextInsertTimer.Start();
             this.Visible = true;*/
@@ -78,5 +81,21 @@ namespace Komin
             //insert loopback
             InsertText("[" + tmsg.send_date + "]  " + conn.userdata.contact_name + ":\r\n" + tmsg.message + "\r\n");
         }
+
+        private void buttonAutoSend_Click(object sender, EventArgs e)
+        {
+            if (CallingForm.AcceptButton != textSendButton)
+            {
+                CallingForm.AcceptButton = textSendButton;
+                this.buttonAutoSend.ForeColor = System.Drawing.SystemColors.ControlText;
+            }
+            else
+            {
+                CallingForm.AcceptButton = null;
+                this.buttonAutoSend.ForeColor = System.Drawing.SystemColors.GrayText;
+            }
+        }
+
+ 
     }
 }

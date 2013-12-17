@@ -45,7 +45,7 @@ namespace Komin
             //#####    to powinno byc zmienione      ########################################################################
             try
             {
-                connection.Connect("127.0.0.1", 666);
+                connection.Connect("127.0.0.7", 8888);
             }
             catch (Exception)
             {
@@ -183,7 +183,7 @@ namespace Komin
             uint receiver_id = ((ContactTreeTag)tn.Tag).id;
             bool receiver_is_group = ((ContactTreeTag)tn.Tag).is_group;
 
-            TextMessagingPanel tmp = new TextMessagingPanel(connection, receiver_id, receiver_is_group);
+            TextMessagingPanel tmp = new TextMessagingPanel(connection, receiver_id, receiver_is_group, this);
             tmp.Anchor = (System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right);
             tmp.Location = new System.Drawing.Point(3, 3);
             tmp.Name = "TextMessagingPanel";

@@ -32,6 +32,7 @@
             this.textMessageInput = new System.Windows.Forms.TextBox();
             this.textMessageContainer = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.buttonAutoSend = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -40,7 +41,7 @@
             this.textSendButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.textSendButton.Location = new System.Drawing.Point(570, 443);
             this.textSendButton.Name = "textSendButton";
-            this.textSendButton.Size = new System.Drawing.Size(69, 58);
+            this.textSendButton.Size = new System.Drawing.Size(69, 27);
             this.textSendButton.TabIndex = 1;
             this.textSendButton.Text = "Wyślij";
             this.textSendButton.UseVisualStyleBackColor = true;
@@ -75,6 +76,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel1.Controls.Add(this.buttonAutoSend);
             this.panel1.Controls.Add(this.textMessageInput);
             this.panel1.Controls.Add(this.textSendButton);
             this.panel1.Controls.Add(this.textMessageContainer);
@@ -82,6 +84,18 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(642, 504);
             this.panel1.TabIndex = 6;
+            // 
+            // buttonAutoSend
+            // 
+            this.buttonAutoSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAutoSend.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.buttonAutoSend.Location = new System.Drawing.Point(570, 476);
+            this.buttonAutoSend.Name = "buttonAutoSend";
+            this.buttonAutoSend.Size = new System.Drawing.Size(69, 25);
+            this.buttonAutoSend.TabIndex = 3;
+            this.buttonAutoSend.Text = "auto enter";
+            this.buttonAutoSend.UseVisualStyleBackColor = true;
+            this.buttonAutoSend.Click += new System.EventHandler(this.buttonAutoSend_Click);
             // 
             // TextMessagingPanel
             // 
@@ -103,5 +117,6 @@
         private System.Windows.Forms.TextBox textMessageInput;
         private System.Windows.Forms.TextBox textMessageContainer;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button buttonAutoSend;
     }
 }
