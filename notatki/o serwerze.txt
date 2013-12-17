@@ -171,7 +171,7 @@ number : char[9]
 length : uint
 chars : char[length]
 
-command field values (not complete because of missing error notifications) (starred commands are already implemented and fully working)
+command field values (not complete because of missing error notifications) (starred commands are already implemented and fully working; plussed only implemented)
 *0 - NOP (no operation)
 	command source: client/server
 		content bits: 000000000000
@@ -202,7 +202,7 @@ command field values (not complete because of missing error notifications) (star
 		content bits: 000000000010
 		responses:
 			<none>
-3 - SET_STATUS
++3 - SET_STATUS
 	command source: client
 		content bits: 000000000010
 		responses from server:
@@ -215,7 +215,7 @@ command field values (not complete because of missing error notifications) (star
 		content bits: 000001000000
 		responses:
 			<none>
-4 - SET_PASSWORD
++4 - SET_PASSWORD
 	command source: client
 		content bits: 000000000001
 		responses from server:
@@ -262,7 +262,7 @@ command field values (not complete because of missing error notifications) (star
 		responses from client:
 			<none>
 			<next attempt>
-9 - ADD_CONTACT_TO_LIST
++9 - ADD_CONTACT_TO_LIST
 	command source: client
 		content bits: 000001000000
 		responses from server:
@@ -272,7 +272,7 @@ command field values (not complete because of missing error notifications) (star
 					U¿ytkownik nie istnieje
 					U¿ytkownik ju¿ znajduje siê na liœcie kontaktów
 					Nieprawid³owe dane ¿¹dania
-10 - REMOVE_CONTACT_FROM_LIST
++10 - REMOVE_CONTACT_FROM_LIST
 	command source: client
 		content bits: 000001000000
 		responses from server:
@@ -420,7 +420,7 @@ command field values (not complete because of missing error notifications) (star
 		content bits: 0001?0000000
 		responses:
 			<none>
-23 - CREATE_GROUP (group capabilities not implemented yet)
++23 - CREATE_GROUP (group capabilities not implemented yet)
 	command source: client
 		content bits: 000010000000
 		responses from server:
@@ -433,30 +433,26 @@ command field values (not complete because of missing error notifications) (star
 					Grupa ju¿ istnieje
 24 - JOIN_GROUP
 	command source: client
-		content bits: 000010000100
+		content bits: 000010000000
 		responses from server:
-			cmd=6,content=000010000100 (successed)
-			cmd=8,content=001010000100 (failed - error)
+			cmd=6,content=000010000000 (successed; new group state)
+			cmd=8,content=001000000000 (failed - error)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
 					Nieprawid³owe dane ¿¹dania
 					Grupa nie istnieje
 					U¿ytkownik nale¿y ju¿ do tej grupy
-		responses from client:
-			<bt7=1 only>
-			cmd=6,content=000011000000 (successed - contact accepted joining group)
-			cmd=7,content=000011000000 (failed - contact denied joining group)
 	command source: server (contact joined group notification)
-		content bits: 000001000000
+		content bits: 000010000000 (new group state)
 		responses:
 			<none>
-25 - LEAVE_GROUP
+25 - LEAVE_GROUP (also KICK_FROM_GROUP)
 	command source: client
-		content bits: 000000000100
+		content bits: 000011000000 (if contact data specified then kick request)
 		responses from server:
-			cmd=6,content=000000000100 (successed)
-			cmd=8,content=001000000100 (failed - error)
+			cmd=6,content=000010000000 (successed; new group state)
+			cmd=8,content=001000000000 (failed - error)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
@@ -469,10 +465,10 @@ command field values (not complete because of missing error notifications) (star
 			<none>
 26 - CLOSE_GROUP
 	command source: client
-		content bits: 000000000100
+		content bits: 000010000000
 		responses from server:
-			cmd=6,content=000000000100 (successed)
-			cmd=8,content=001000000100 (failed - error)
+			cmd=6,content=000000000000 (successed)
+			cmd=8,content=001000000000 (failed - error)
 				error texts:
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
@@ -488,7 +484,7 @@ command field values (not complete because of missing error notifications) (star
 	command source: client
 		content bits: 000011000000
 		responses from server:
-			cmd=6,content=000011000000 (successed)
+			cmd=6,content=000011000000 (successed; contactdata contains info about old group holder)
 			cmd=8,content=001000000000 (failed - error)
 	command source: server (group holder change notification)
 		content bits: 000010000000
@@ -501,6 +497,30 @@ command field values (not complete because of missing error notifications) (star
 			cmd=6,content=000011000000 (successed)
 			cmd=8,content=001000000000 (failed - error)
 *29 - DISCONNECT
+	command source: client
+		content bits: 000000000000
+		responses from server:
+			<none>
+30 - INVITE_TO_GROUP
+	command source: client (client sends contact invitation to server)
+		content bits: 000011000000 (group name and contact name/id valid only)
+		responses from server:
+			cmd=8,content=001000000000 (failed - error)
+			<over time>
+			cmd=7,content=000011000000 (contact denied joining the group; group name and contact name/id valid only)
+	command source: server (server passes invitation to group to user)
+		content bits: 000011000000 (group name and contact (invitor) name/id valid only)
+		responses from client:
+			cmd=7,content=000011000000 (contact denies joining the group)
+			<in parallel>
+			cmd=24,content=... (contact joins the group)
+31 - PERIODIC_PING_REQUEST (ping over 5 seconds; server sends ping every 3 seconds and awaits estimated in initial ping amount of time for answer)
+		(if no answer then client lost connection; client resolves server activity by awaiting 6 seconds for ping request - if none then server lost)
+	command source: server
+		content bits: 000000000000
+		responses from client:
+			cmd=32,content=000000000000
+32 - PERIODIC_PING_ANSWER
 	command source: client
 		content bits: 000000000000
 		responses from server:

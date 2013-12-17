@@ -29,9 +29,15 @@
 	rozwiazanie 1: wyjatki?
 	rozwiazanie 2: delegat ktory bedzie odbieral wszystkie bledy zglaszane przez ClientSideConnection
 	
-(rozwi¹zany do czasu)5. poki co serwer czeka na baze danych i ewentualnie klienta (klienta do testow moge sam zrobic w razie czego jakiegos konsolowego czy cuœ)
+(rozwi¹zany)5. poki co serwer czeka na baze danych i ewentualnie klienta (klienta do testow moge sam zrobic w razie czego jakiegos konsolowego czy cuœ)
 
-6. pojawilo mi sie pytanie co zrobic z ewentualnymi probami wielodostepu do bazy danych (proba odczytu z tej samej tablicy dwukrotnie bez zamykania
+(rozwi¹zany)6. pojawilo mi sie pytanie co zrobic z ewentualnymi probami wielodostepu do bazy danych (proba odczytu z tej samej tablicy dwukrotnie bez zamykania
 	reader'a wyrzuca wyjatek).
 		rozwiazanie 1: zmienic troche strukture klasy posredniczacej w komunikacji z baza w taki sposob zeby wartosc zwracana przez funkcje posredniczace
 		byla tez zawartoscia ktora moznaby odczytac z reader'a
+
+7. potrzeba rownoleglego przetwarzania transmisji serwer-klient dla wszystkich polecen (nie tylko dla sendmessage)
+		rozwiazanie 1: zrobiæ dodatkowy w¹tek (? - troche ich sie du¿o robi) który bêdzie przyjmowa³ zlecenia transakcji z drug¹ stron¹.
+			InterpretePacket jest stron¹ przyjmuj¹c¹ zlecenia.
+		rozwi¹zanie 2: zrobiæ funkcjê podobn¹ do InterpretePacket która sie tym zajmie ale bêdzie w stanie przerywaæ sie po zakoñczeniu pracy/w momencie
+			wymogu oczekiwania. musia³oby przegl¹daæ wszystkie aktywne JobID. mo¿e pojawiæ siê potrzeba synchronizowania JobID miêdzy klientem i serwerem
