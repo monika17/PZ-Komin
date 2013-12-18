@@ -41,19 +41,7 @@ namespace Komin
             remove_page = new List<TabPage>();
             add_page = new List<TabPage>();
             next_page = null;
-            connection = new KominClientSideConnection();
-            //#####    to powinno byc zmienione      ########################################################################
-            try
-            {
-                connection.Connect("127.0.0.7", 8888);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Nie udało się połączyć z serwerem", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                this.Close();
-                return;
-            }
-            connection.onNewTextMessage = onNewMessage;
+
             InitializeComponent();
             MainTabPanel.TabPages.Clear();
             MainTabPanel.TabPages.Add(LoginTab);
@@ -271,7 +259,27 @@ namespace Komin
 
         private void onClientClosing(object sender, FormClosingEventArgs e)
         {
-            connection.Disconnect();
+            if(connection != null)
+                connection.Disconnect();
+        }
+
+        private void buttonConnect_Click(object sender, EventArgs e)
+        {
+            connection = new KominClientSideConnection();
+
+            try
+            {
+                connection.Connect(textBoxhostIp.Text, Convert.ToInt32(textBoxPort.Text));
+                ConnectStatus.Text = "Połączono";
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Nie udało się połączyć z serwerem", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
+                return;
+            }
+            connection.onNewTextMessage = onNewMessage;
+
         }
     }
 }

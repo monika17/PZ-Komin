@@ -88,12 +88,12 @@
             // buttonAutoSend
             // 
             this.buttonAutoSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAutoSend.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.buttonAutoSend.ForeColor = System.Drawing.SystemColors.ControlText;
             this.buttonAutoSend.Location = new System.Drawing.Point(570, 476);
             this.buttonAutoSend.Name = "buttonAutoSend";
             this.buttonAutoSend.Size = new System.Drawing.Size(69, 25);
             this.buttonAutoSend.TabIndex = 3;
-            this.buttonAutoSend.Text = "auto enter";
+            this.buttonAutoSend.Text = "enter : off";
             this.buttonAutoSend.UseVisualStyleBackColor = true;
             this.buttonAutoSend.Click += new System.EventHandler(this.buttonAutoSend_Click);
             // 

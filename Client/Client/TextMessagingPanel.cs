@@ -87,12 +87,12 @@ namespace Komin
             if (CallingForm.AcceptButton != textSendButton)
             {
                 CallingForm.AcceptButton = textSendButton;
-                this.buttonAutoSend.ForeColor = System.Drawing.SystemColors.ControlText;
+                this.buttonAutoSend.Text = "enter : on";
             }
             else
             {
                 CallingForm.AcceptButton = null;
-                this.buttonAutoSend.ForeColor = System.Drawing.SystemColors.GrayText;
+                this.buttonAutoSend.Text = "enter : off";
             }
         }
 

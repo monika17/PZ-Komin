@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Kontakty");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Grupy");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Kontakty");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Grupy");
             this.MainTabPanel = new System.Windows.Forms.TabControl();
             this.LoginTab = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -58,6 +58,12 @@
             this.UserName = new System.Windows.Forms.Label();
             this.contactTabContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.zamknijToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelHostIp = new System.Windows.Forms.Label();
+            this.labelPort = new System.Windows.Forms.Label();
+            this.textBoxhostIp = new System.Windows.Forms.TextBox();
+            this.textBoxPort = new System.Windows.Forms.TextBox();
+            this.buttonConnect = new System.Windows.Forms.Button();
+            this.ConnectStatus = new System.Windows.Forms.Label();
             this.MainTabPanel.SuspendLayout();
             this.LoginTab.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -85,6 +91,12 @@
             // 
             // LoginTab
             // 
+            this.LoginTab.Controls.Add(this.ConnectStatus);
+            this.LoginTab.Controls.Add(this.buttonConnect);
+            this.LoginTab.Controls.Add(this.textBoxPort);
+            this.LoginTab.Controls.Add(this.textBoxhostIp);
+            this.LoginTab.Controls.Add(this.labelPort);
+            this.LoginTab.Controls.Add(this.labelHostIp);
             this.LoginTab.Controls.Add(this.panel1);
             this.LoginTab.Location = new System.Drawing.Point(4, 22);
             this.LoginTab.Name = "LoginTab";
@@ -313,13 +325,13 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(3, 16);
             this.treeView1.Name = "treeView1";
-            treeNode1.Name = "Kontakty";
-            treeNode1.Text = "Kontakty";
-            treeNode2.Name = "Grupy";
-            treeNode2.Text = "Grupy";
+            treeNode5.Name = "Kontakty";
+            treeNode5.Text = "Kontakty";
+            treeNode6.Name = "Grupy";
+            treeNode6.Text = "Grupy";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
+            treeNode5,
+            treeNode6});
             this.treeView1.Size = new System.Drawing.Size(154, 312);
             this.treeView1.TabIndex = 0;
             this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeDoubleClick);
@@ -357,6 +369,57 @@
             this.zamknijToolStripMenuItem.Text = "Zamknij";
             this.zamknijToolStripMenuItem.Click += new System.EventHandler(this.onCloseContactTabClick);
             // 
+            // labelHostIp
+            // 
+            this.labelHostIp.AutoSize = true;
+            this.labelHostIp.Location = new System.Drawing.Point(40, 33);
+            this.labelHostIp.Name = "labelHostIp";
+            this.labelHostIp.Size = new System.Drawing.Size(46, 13);
+            this.labelHostIp.TabIndex = 15;
+            this.labelHostIp.Text = "host IP: ";
+            // 
+            // labelPort
+            // 
+            this.labelPort.AutoSize = true;
+            this.labelPort.Location = new System.Drawing.Point(40, 65);
+            this.labelPort.Name = "labelPort";
+            this.labelPort.Size = new System.Drawing.Size(31, 13);
+            this.labelPort.TabIndex = 16;
+            this.labelPort.Text = "port: ";
+            // 
+            // textBoxhostIp
+            // 
+            this.textBoxhostIp.Location = new System.Drawing.Point(88, 30);
+            this.textBoxhostIp.Name = "textBoxhostIp";
+            this.textBoxhostIp.Size = new System.Drawing.Size(76, 20);
+            this.textBoxhostIp.TabIndex = 17;
+            // 
+            // textBoxPort
+            // 
+            this.textBoxPort.Location = new System.Drawing.Point(88, 62);
+            this.textBoxPort.Name = "textBoxPort";
+            this.textBoxPort.Size = new System.Drawing.Size(76, 20);
+            this.textBoxPort.TabIndex = 18;
+            // 
+            // buttonConnect
+            // 
+            this.buttonConnect.Location = new System.Drawing.Point(198, 54);
+            this.buttonConnect.Name = "buttonConnect";
+            this.buttonConnect.Size = new System.Drawing.Size(87, 28);
+            this.buttonConnect.TabIndex = 19;
+            this.buttonConnect.Text = "Połącz";
+            this.buttonConnect.UseVisualStyleBackColor = true;
+            this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
+            // 
+            // ConnectStatus
+            // 
+            this.ConnectStatus.AutoSize = true;
+            this.ConnectStatus.Location = new System.Drawing.Point(203, 28);
+            this.ConnectStatus.Name = "ConnectStatus";
+            this.ConnectStatus.Size = new System.Drawing.Size(64, 13);
+            this.ConnectStatus.TabIndex = 20;
+            this.ConnectStatus.Text = "Rozłączony";
+            // 
             // KominClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -370,6 +433,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.onClientClosing);
             this.MainTabPanel.ResumeLayout(false);
             this.LoginTab.ResumeLayout(false);
+            this.LoginTab.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.LoginGroupBox.ResumeLayout(false);
             this.LoginGroupBox.PerformLayout();
@@ -414,6 +478,12 @@
         private System.Windows.Forms.ContextMenuStrip contactTabContextMenu;
         private System.Windows.Forms.ToolStripMenuItem zamknijToolStripMenuItem;
         private System.Windows.Forms.ComboBox statusComboBox;
+        private System.Windows.Forms.Label labelHostIp;
+        private System.Windows.Forms.Label labelPort;
+        private System.Windows.Forms.TextBox textBoxPort;
+        private System.Windows.Forms.TextBox textBoxhostIp;
+        private System.Windows.Forms.Button buttonConnect;
+        private System.Windows.Forms.Label ConnectStatus;
     }
 }
 
