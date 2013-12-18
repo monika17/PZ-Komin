@@ -29,10 +29,16 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Kontakty");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Grupy");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Kontakty");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Grupy");
             this.MainTabPanel = new System.Windows.Forms.TabControl();
             this.LoginTab = new System.Windows.Forms.TabPage();
+            this.ConnectStatus = new System.Windows.Forms.Label();
+            this.buttonConnect = new System.Windows.Forms.Button();
+            this.textBoxPort = new System.Windows.Forms.TextBox();
+            this.textBoxhostIp = new System.Windows.Forms.TextBox();
+            this.labelPort = new System.Windows.Forms.Label();
+            this.labelHostIp = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.LoginGroupBox = new System.Windows.Forms.GroupBox();
             this.LoginNametextBox = new System.Windows.Forms.TextBox();
@@ -58,12 +64,14 @@
             this.UserName = new System.Windows.Forms.Label();
             this.contactTabContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.zamknijToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.labelHostIp = new System.Windows.Forms.Label();
-            this.labelPort = new System.Windows.Forms.Label();
-            this.textBoxhostIp = new System.Windows.Forms.TextBox();
-            this.textBoxPort = new System.Windows.Forms.TextBox();
-            this.buttonConnect = new System.Windows.Forms.Button();
-            this.ConnectStatus = new System.Windows.Forms.Label();
+            this.contextMenuStripContact = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.txtMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSendMessage = new System.Windows.Forms.ToolStripMenuItem();
+            this.njnnjToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mmmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.audioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wyślijPlikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainTabPanel.SuspendLayout();
             this.LoginTab.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -73,6 +81,7 @@
             this.RightMenu.SuspendLayout();
             this.ContactGroupBox.SuspendLayout();
             this.contactTabContextMenu.SuspendLayout();
+            this.contextMenuStripContact.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTabPanel
@@ -105,6 +114,57 @@
             this.LoginTab.TabIndex = 0;
             this.LoginTab.Text = "Logowanie i Rejestracja";
             this.LoginTab.UseVisualStyleBackColor = true;
+            // 
+            // ConnectStatus
+            // 
+            this.ConnectStatus.AutoSize = true;
+            this.ConnectStatus.Location = new System.Drawing.Point(203, 28);
+            this.ConnectStatus.Name = "ConnectStatus";
+            this.ConnectStatus.Size = new System.Drawing.Size(64, 13);
+            this.ConnectStatus.TabIndex = 20;
+            this.ConnectStatus.Text = "Rozłączony";
+            // 
+            // buttonConnect
+            // 
+            this.buttonConnect.Location = new System.Drawing.Point(198, 54);
+            this.buttonConnect.Name = "buttonConnect";
+            this.buttonConnect.Size = new System.Drawing.Size(87, 28);
+            this.buttonConnect.TabIndex = 19;
+            this.buttonConnect.Text = "Połącz";
+            this.buttonConnect.UseVisualStyleBackColor = true;
+            this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
+            // 
+            // textBoxPort
+            // 
+            this.textBoxPort.Location = new System.Drawing.Point(88, 62);
+            this.textBoxPort.Name = "textBoxPort";
+            this.textBoxPort.Size = new System.Drawing.Size(76, 20);
+            this.textBoxPort.TabIndex = 18;
+            // 
+            // textBoxhostIp
+            // 
+            this.textBoxhostIp.Location = new System.Drawing.Point(88, 30);
+            this.textBoxhostIp.Name = "textBoxhostIp";
+            this.textBoxhostIp.Size = new System.Drawing.Size(76, 20);
+            this.textBoxhostIp.TabIndex = 17;
+            // 
+            // labelPort
+            // 
+            this.labelPort.AutoSize = true;
+            this.labelPort.Location = new System.Drawing.Point(40, 65);
+            this.labelPort.Name = "labelPort";
+            this.labelPort.Size = new System.Drawing.Size(31, 13);
+            this.labelPort.TabIndex = 16;
+            this.labelPort.Text = "port: ";
+            // 
+            // labelHostIp
+            // 
+            this.labelHostIp.AutoSize = true;
+            this.labelHostIp.Location = new System.Drawing.Point(40, 33);
+            this.labelHostIp.Name = "labelHostIp";
+            this.labelHostIp.Size = new System.Drawing.Size(46, 13);
+            this.labelHostIp.TabIndex = 15;
+            this.labelHostIp.Text = "host IP: ";
             // 
             // panel1
             // 
@@ -325,16 +385,16 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(3, 16);
             this.treeView1.Name = "treeView1";
-            treeNode5.Name = "Kontakty";
-            treeNode5.Text = "Kontakty";
-            treeNode6.Name = "Grupy";
-            treeNode6.Text = "Grupy";
+            treeNode3.Name = "Kontakty";
+            treeNode3.Text = "Kontakty";
+            treeNode4.Name = "Grupy";
+            treeNode4.Text = "Grupy";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode5,
-            treeNode6});
+            treeNode3,
+            treeNode4});
             this.treeView1.Size = new System.Drawing.Size(154, 312);
             this.treeView1.TabIndex = 0;
-            this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeDoubleClick);
+            this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_GetNode);
             this.treeView1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.treeView1_KeyPress);
             // 
             // UserStatus
@@ -369,56 +429,61 @@
             this.zamknijToolStripMenuItem.Text = "Zamknij";
             this.zamknijToolStripMenuItem.Click += new System.EventHandler(this.onCloseContactTabClick);
             // 
-            // labelHostIp
+            // contextMenuStripContact
             // 
-            this.labelHostIp.AutoSize = true;
-            this.labelHostIp.Location = new System.Drawing.Point(40, 33);
-            this.labelHostIp.Name = "labelHostIp";
-            this.labelHostIp.Size = new System.Drawing.Size(46, 13);
-            this.labelHostIp.TabIndex = 15;
-            this.labelHostIp.Text = "host IP: ";
+            this.contextMenuStripContact.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.txtMessageToolStripMenuItem,
+            this.audioToolStripMenuItem,
+            this.wideoToolStripMenuItem,
+            this.wyślijPlikToolStripMenuItem});
+            this.contextMenuStripContact.Name = "contextMenuStripContact";
+            this.contextMenuStripContact.Size = new System.Drawing.Size(174, 92);
+            this.contextMenuStripContact.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
-            // labelPort
+            // txtMessageToolStripMenuItem
             // 
-            this.labelPort.AutoSize = true;
-            this.labelPort.Location = new System.Drawing.Point(40, 65);
-            this.labelPort.Name = "labelPort";
-            this.labelPort.Size = new System.Drawing.Size(31, 13);
-            this.labelPort.TabIndex = 16;
-            this.labelPort.Text = "port: ";
+            this.txtMessageToolStripMenuItem.Name = "txtMessageToolStripMenuItem";
+            this.txtMessageToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.txtMessageToolStripMenuItem.Text = "rozmowa tekstowa";
+            this.txtMessageToolStripMenuItem.Click += new System.EventHandler(this.txtMessageToolStripMenuItem_Click);
             // 
-            // textBoxhostIp
+            // toolStripMenuItemSendMessage
             // 
-            this.textBoxhostIp.Location = new System.Drawing.Point(88, 30);
-            this.textBoxhostIp.Name = "textBoxhostIp";
-            this.textBoxhostIp.Size = new System.Drawing.Size(76, 20);
-            this.textBoxhostIp.TabIndex = 17;
+            this.toolStripMenuItemSendMessage.Name = "toolStripMenuItemSendMessage";
+            this.toolStripMenuItemSendMessage.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemSendMessage.Text = "toolStripMenuItem1";
             // 
-            // textBoxPort
+            // njnnjToolStripMenuItem
             // 
-            this.textBoxPort.Location = new System.Drawing.Point(88, 62);
-            this.textBoxPort.Name = "textBoxPort";
-            this.textBoxPort.Size = new System.Drawing.Size(76, 20);
-            this.textBoxPort.TabIndex = 18;
+            this.njnnjToolStripMenuItem.Name = "njnnjToolStripMenuItem";
+            this.njnnjToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.njnnjToolStripMenuItem.Text = "njnnj";
             // 
-            // buttonConnect
+            // mmmToolStripMenuItem
             // 
-            this.buttonConnect.Location = new System.Drawing.Point(198, 54);
-            this.buttonConnect.Name = "buttonConnect";
-            this.buttonConnect.Size = new System.Drawing.Size(87, 28);
-            this.buttonConnect.TabIndex = 19;
-            this.buttonConnect.Text = "Połącz";
-            this.buttonConnect.UseVisualStyleBackColor = true;
-            this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
+            this.mmmToolStripMenuItem.Name = "mmmToolStripMenuItem";
+            this.mmmToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mmmToolStripMenuItem.Text = "mmm";
             // 
-            // ConnectStatus
+            // audioToolStripMenuItem
             // 
-            this.ConnectStatus.AutoSize = true;
-            this.ConnectStatus.Location = new System.Drawing.Point(203, 28);
-            this.ConnectStatus.Name = "ConnectStatus";
-            this.ConnectStatus.Size = new System.Drawing.Size(64, 13);
-            this.ConnectStatus.TabIndex = 20;
-            this.ConnectStatus.Text = "Rozłączony";
+            this.audioToolStripMenuItem.Enabled = false;
+            this.audioToolStripMenuItem.Name = "audioToolStripMenuItem";
+            this.audioToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.audioToolStripMenuItem.Text = "rozmowa audio";
+            // 
+            // wideoToolStripMenuItem
+            // 
+            this.wideoToolStripMenuItem.Enabled = false;
+            this.wideoToolStripMenuItem.Name = "wideoToolStripMenuItem";
+            this.wideoToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.wideoToolStripMenuItem.Text = "rozmowa wideo";
+            // 
+            // wyślijPlikToolStripMenuItem
+            // 
+            this.wyślijPlikToolStripMenuItem.Name = "wyślijPlikToolStripMenuItem";
+            this.wyślijPlikToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.wyślijPlikToolStripMenuItem.Text = "wyślij plik";
             // 
             // KominClientForm
             // 
@@ -445,6 +510,7 @@
             this.RightMenu.PerformLayout();
             this.ContactGroupBox.ResumeLayout(false);
             this.contactTabContextMenu.ResumeLayout(false);
+            this.contextMenuStripContact.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -484,6 +550,14 @@
         private System.Windows.Forms.TextBox textBoxhostIp;
         private System.Windows.Forms.Button buttonConnect;
         private System.Windows.Forms.Label ConnectStatus;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripContact;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSendMessage;
+        private System.Windows.Forms.ToolStripMenuItem njnnjToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mmmToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem txtMessageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem audioToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem wideoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem wyślijPlikToolStripMenuItem;
     }
 }
 

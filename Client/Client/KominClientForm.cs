@@ -31,6 +31,7 @@ namespace Komin
         private List<TabPage> remove_page; //tab pages to be removed on next redraw
         private List<TabPage> add_page; //tab pages to be added on next redraw
         private TabPage next_page; //tab page to make visible on next redraw. set to null to avoid changing
+        private TreeNode clickedContactNode; //get Node after mouse click in contacts list
 
         public KominClientForm()
         {
@@ -47,6 +48,11 @@ namespace Komin
             MainTabPanel.TabPages.Add(LoginTab);
             RightMenu.Enabled = false;
             TabUpdateTimer.Start();
+
+            //-------
+            textBoxhostIp.Text = "127.0.0.7";
+            textBoxPort.Text = "8888";
+            //-------
         }
 
         private void KominClientForm_TabUpdate(object sender, EventArgs e)
@@ -102,6 +108,7 @@ namespace Komin
             {
                 TreeNode tn = new TreeNode(cd.contact_name);
                 tn.Tag = new ContactTreeTag(cd.contact_id, false);
+                tn.ContextMenuStrip = contextMenuStripContact;
                 contacts.Nodes.Add(tn);
             }
             foreach (GroupData gd in connection.userdata.groups)
@@ -270,16 +277,29 @@ namespace Komin
             try
             {
                 connection.Connect(textBoxhostIp.Text, Convert.ToInt32(textBoxPort.Text));
-                ConnectStatus.Text = "Połączono";
             }
             catch (Exception)
             {
                 MessageBox.Show("Nie udało się połączyć z serwerem", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                this.Close();
                 return;
             }
             connection.onNewTextMessage = onNewMessage;
+            ConnectStatus.Text = "Połączono";
+            buttonConnect.Enabled = false;
+        }
 
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+        }
+
+        private void treeView1_GetNode(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            clickedContactNode = e.Node;
+        }
+
+        private void txtMessageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenTabForContact(this.clickedContactNode);
         }
     }
 }
