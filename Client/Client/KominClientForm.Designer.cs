@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Kontakty");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Grupy");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Kontakty");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Grupy");
             this.MainTabPanel = new System.Windows.Forms.TabControl();
             this.LoginTab = new System.Windows.Forms.TabPage();
             this.ConnectStatus = new System.Windows.Forms.Label();
@@ -72,6 +72,7 @@
             this.audioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wyślijPlikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sendFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.MainTabPanel.SuspendLayout();
             this.LoginTab.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -385,13 +386,13 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(3, 16);
             this.treeView1.Name = "treeView1";
-            treeNode3.Name = "Kontakty";
-            treeNode3.Text = "Kontakty";
-            treeNode4.Name = "Grupy";
-            treeNode4.Text = "Grupy";
+            treeNode1.Name = "Kontakty";
+            treeNode1.Text = "Kontakty";
+            treeNode2.Name = "Grupy";
+            treeNode2.Text = "Grupy";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3,
-            treeNode4});
+            treeNode1,
+            treeNode2});
             this.treeView1.Size = new System.Drawing.Size(154, 312);
             this.treeView1.TabIndex = 0;
             this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_GetNode);
@@ -437,7 +438,7 @@
             this.wideoToolStripMenuItem,
             this.wyślijPlikToolStripMenuItem});
             this.contextMenuStripContact.Name = "contextMenuStripContact";
-            this.contextMenuStripContact.Size = new System.Drawing.Size(174, 92);
+            this.contextMenuStripContact.Size = new System.Drawing.Size(174, 114);
             this.contextMenuStripContact.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // txtMessageToolStripMenuItem
@@ -482,8 +483,13 @@
             // wyślijPlikToolStripMenuItem
             // 
             this.wyślijPlikToolStripMenuItem.Name = "wyślijPlikToolStripMenuItem";
-            this.wyślijPlikToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.wyślijPlikToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.wyślijPlikToolStripMenuItem.Text = "wyślij plik";
+            this.wyślijPlikToolStripMenuItem.Click += new System.EventHandler(this.wyślijPlikToolStripMenuItem_Click);
+            // 
+            // sendFileDialog
+            // 
+            this.sendFileDialog.FileName = "sendFile";
             // 
             // KominClientForm
             // 
@@ -558,6 +564,7 @@
         private System.Windows.Forms.ToolStripMenuItem audioToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wideoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wyślijPlikToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog sendFileDialog;
     }
 }
 

@@ -301,5 +301,12 @@ namespace Komin
         {
             OpenTabForContact(this.clickedContactNode);
         }
+
+        private void wyślijPlikToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var file = sendFileDialog.ShowDialog();
+            //validate file
+            //send file
+        }
     }
 }
