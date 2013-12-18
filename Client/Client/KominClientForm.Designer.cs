@@ -73,6 +73,8 @@
             this.wideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wyślijPlikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sendFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.contextMenuStripAddContact = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addContactToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainTabPanel.SuspendLayout();
             this.LoginTab.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -83,6 +85,7 @@
             this.ContactGroupBox.SuspendLayout();
             this.contactTabContextMenu.SuspendLayout();
             this.contextMenuStripContact.SuspendLayout();
+            this.contextMenuStripAddContact.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTabPanel
@@ -383,6 +386,7 @@
             // 
             // treeView1
             // 
+            this.treeView1.ContextMenuStrip = this.contextMenuStripAddContact;
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(3, 16);
             this.treeView1.Name = "treeView1";
@@ -438,7 +442,7 @@
             this.wideoToolStripMenuItem,
             this.wyślijPlikToolStripMenuItem});
             this.contextMenuStripContact.Name = "contextMenuStripContact";
-            this.contextMenuStripContact.Size = new System.Drawing.Size(174, 114);
+            this.contextMenuStripContact.Size = new System.Drawing.Size(174, 92);
             this.contextMenuStripContact.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // txtMessageToolStripMenuItem
@@ -491,6 +495,19 @@
             // 
             this.sendFileDialog.FileName = "sendFile";
             // 
+            // contextMenuStripAddContact
+            // 
+            this.contextMenuStripAddContact.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addContactToolStripMenuItem});
+            this.contextMenuStripAddContact.Name = "contextMenuStripAddContact";
+            this.contextMenuStripAddContact.Size = new System.Drawing.Size(148, 26);
+            // 
+            // addContactToolStripMenuItem
+            // 
+            this.addContactToolStripMenuItem.Name = "addContactToolStripMenuItem";
+            this.addContactToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.addContactToolStripMenuItem.Text = "dodaj kontakt";
+            // 
             // KominClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -517,6 +534,7 @@
             this.ContactGroupBox.ResumeLayout(false);
             this.contactTabContextMenu.ResumeLayout(false);
             this.contextMenuStripContact.ResumeLayout(false);
+            this.contextMenuStripAddContact.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -565,6 +583,8 @@
         private System.Windows.Forms.ToolStripMenuItem wideoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wyślijPlikToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog sendFileDialog;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripAddContact;
+        private System.Windows.Forms.ToolStripMenuItem addContactToolStripMenuItem;
     }
 }
 
