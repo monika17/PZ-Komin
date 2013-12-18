@@ -49,7 +49,7 @@ namespace Komin
             RightMenu.Enabled = false;
             TabUpdateTimer.Start();
 
-            //-------
+            //------- Debug
             textBoxhostIp.Text = "127.0.0.7";
             textBoxPort.Text = "8888";
             //-------
@@ -273,7 +273,6 @@ namespace Komin
         private void buttonConnect_Click(object sender, EventArgs e)
         {
             connection = new KominClientSideConnection();
-
             try
             {
                 connection.Connect(textBoxhostIp.Text, Convert.ToInt32(textBoxPort.Text));

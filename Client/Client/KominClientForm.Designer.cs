@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Kontakty");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Grupy");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Kontakty");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Grupy");
             this.MainTabPanel = new System.Windows.Forms.TabControl();
             this.LoginTab = new System.Windows.Forms.TabPage();
             this.ConnectStatus = new System.Windows.Forms.Label();
@@ -390,13 +390,13 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(3, 16);
             this.treeView1.Name = "treeView1";
-            treeNode1.Name = "Kontakty";
-            treeNode1.Text = "Kontakty";
-            treeNode2.Name = "Grupy";
-            treeNode2.Text = "Grupy";
+            treeNode3.Name = "Kontakty";
+            treeNode3.Text = "Kontakty";
+            treeNode4.Name = "Grupy";
+            treeNode4.Text = "Grupy";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
+            treeNode3,
+            treeNode4});
             this.treeView1.Size = new System.Drawing.Size(154, 312);
             this.treeView1.TabIndex = 0;
             this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_GetNode);
@@ -493,7 +493,7 @@
             // 
             // sendFileDialog
             // 
-            this.sendFileDialog.FileName = "sendFile";
+            this.sendFileDialog.FileName = "file";
             // 
             // contextMenuStripAddContact
             // 
