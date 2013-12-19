@@ -54,9 +54,16 @@
             this.logbox = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.SQLExecPage = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
+            this.sqlCommandText = new System.Windows.Forms.TextBox();
+            this.sqlExec = new System.Windows.Forms.Button();
+            this.readerexec = new System.Windows.Forms.CheckBox();
+            this.sqlReaderOutput = new System.Windows.Forms.ListView();
             this.tabControl1.SuspendLayout();
             this.SummaryPage.SuspendLayout();
             this.LogPage.SuspendLayout();
+            this.SQLExecPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // comboBox1
@@ -117,6 +124,7 @@
             // 
             this.tabControl1.Controls.Add(this.SummaryPage);
             this.tabControl1.Controls.Add(this.LogPage);
+            this.tabControl1.Controls.Add(this.SQLExecPage);
             this.tabControl1.Location = new System.Drawing.Point(12, 39);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -266,6 +274,72 @@
             this.timer2.Enabled = true;
             this.timer2.Tick += new System.EventHandler(this.onLogTimerUpdate);
             // 
+            // SQLExecPage
+            // 
+            this.SQLExecPage.Controls.Add(this.sqlReaderOutput);
+            this.SQLExecPage.Controls.Add(this.readerexec);
+            this.SQLExecPage.Controls.Add(this.sqlExec);
+            this.SQLExecPage.Controls.Add(this.sqlCommandText);
+            this.SQLExecPage.Controls.Add(this.label4);
+            this.SQLExecPage.Location = new System.Drawing.Point(4, 22);
+            this.SQLExecPage.Name = "SQLExecPage";
+            this.SQLExecPage.Padding = new System.Windows.Forms.Padding(3);
+            this.SQLExecPage.Size = new System.Drawing.Size(1114, 480);
+            this.SQLExecPage.TabIndex = 2;
+            this.SQLExecPage.Text = "Execute SQL";
+            this.SQLExecPage.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 11);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(57, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Command:";
+            // 
+            // sqlCommandText
+            // 
+            this.sqlCommandText.Location = new System.Drawing.Point(72, 8);
+            this.sqlCommandText.Name = "sqlCommandText";
+            this.sqlCommandText.Size = new System.Drawing.Size(879, 20);
+            this.sqlCommandText.TabIndex = 1;
+            this.sqlCommandText.TextChanged += new System.EventHandler(this.sqlCommandText_TextChanged);
+            // 
+            // sqlExec
+            // 
+            this.sqlExec.Location = new System.Drawing.Point(1033, 6);
+            this.sqlExec.Name = "sqlExec";
+            this.sqlExec.Size = new System.Drawing.Size(75, 23);
+            this.sqlExec.TabIndex = 3;
+            this.sqlExec.Text = "Execute";
+            this.sqlExec.UseVisualStyleBackColor = true;
+            this.sqlExec.Click += new System.EventHandler(this.sqlExec_Click);
+            // 
+            // readerexec
+            // 
+            this.readerexec.AutoSize = true;
+            this.readerexec.Location = new System.Drawing.Point(957, 10);
+            this.readerexec.Name = "readerexec";
+            this.readerexec.Size = new System.Drawing.Size(70, 17);
+            this.readerexec.TabIndex = 2;
+            this.readerexec.Text = "as reader";
+            this.readerexec.UseVisualStyleBackColor = true;
+            this.readerexec.CheckedChanged += new System.EventHandler(this.readerexec_CheckedChanged);
+            // 
+            // sqlReaderOutput
+            // 
+            this.sqlReaderOutput.Enabled = false;
+            this.sqlReaderOutput.FullRowSelect = true;
+            this.sqlReaderOutput.GridLines = true;
+            this.sqlReaderOutput.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.sqlReaderOutput.Location = new System.Drawing.Point(12, 34);
+            this.sqlReaderOutput.Name = "sqlReaderOutput";
+            this.sqlReaderOutput.Size = new System.Drawing.Size(1096, 440);
+            this.sqlReaderOutput.TabIndex = 4;
+            this.sqlReaderOutput.UseCompatibleStateImageBehavior = false;
+            this.sqlReaderOutput.View = System.Windows.Forms.View.Details;
+            // 
             // KominServerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -288,6 +362,8 @@
             this.SummaryPage.PerformLayout();
             this.LogPage.ResumeLayout(false);
             this.LogPage.PerformLayout();
+            this.SQLExecPage.ResumeLayout(false);
+            this.SQLExecPage.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -320,6 +396,12 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox logbox;
         private System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.TabPage SQLExecPage;
+        private System.Windows.Forms.ListView sqlReaderOutput;
+        private System.Windows.Forms.CheckBox readerexec;
+        private System.Windows.Forms.Button sqlExec;
+        private System.Windows.Forms.TextBox sqlCommandText;
+        private System.Windows.Forms.Label label4;
 
     }
 }

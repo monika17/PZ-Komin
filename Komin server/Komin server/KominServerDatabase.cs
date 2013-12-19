@@ -17,8 +17,8 @@ namespace Komin
         private bool RequestTimerLock;
         private List<string> reqtexts; //first letter means request type: R - reader, E - execute
         private uint done_req_count;
-        private bool error_during_req;
-        private SqlDataReader ReqRdr;
+        public bool error_during_req;
+        public SqlDataReader ReqRdr;
         private bool req_finished; //variable for threads to inform that reader can be closed and next request can be executed
 
         public KominServerDatabase()
@@ -40,24 +40,24 @@ namespace Komin
             RequestTimer.Enabled = true;
         }
 
-        uint MakeReaderRequest(string reqtext)
+        public uint MakeReaderRequest(string reqtext)
         {
             reqtexts.Add("R" + reqtext);
             return done_req_count + (uint)reqtexts.Count;
         }
 
-        uint MakeExecuteRequest(string reqtext)
+        public uint MakeExecuteRequest(string reqtext)
         {
             reqtexts.Add("E" + reqtext);
             return done_req_count + (uint)reqtexts.Count;
         }
 
-        void WaitForRequestExecution(uint reqid)
+        public void WaitForRequestExecution(uint reqid)
         {
             while (done_req_count != reqid) System.Threading.Thread.Sleep(10);
         }
 
-        void MarkReaderRequestCompleted()
+        public void MarkReaderRequestCompleted()
         {
             req_finished = true;
         }
@@ -78,7 +78,7 @@ namespace Komin
                     req_finished = false;
                     reqtexts.RemoveAt(0);
                     done_req_count++;
-                    while (!req_finished) ;
+                    while (!req_finished) System.Threading.Thread.Sleep(10);
                     ReqRdr.Close();
                     ReqRdr = null;
                 }
@@ -325,7 +325,7 @@ namespace Komin
             bool found = false;
             while (ReqRdr.Read())
             {
-                if ((uint)((int)ReqRdr["id_konta"]) == contact_id)
+                if ((uint)((int)ReqRdr["id_kontaktu"]) == contact_id)
                 {
                     found = true;
                     break;

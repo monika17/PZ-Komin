@@ -29,7 +29,7 @@ namespace Komin
             if (button1.Text == "start")
             {
                 if (textBox1.Text == "")
-                    textBox1.Text = "666";
+                    textBox1.Text = "8888";
                 server.Start(comboBox1.Text, int.Parse(textBox1.Text));
                 comboBox1.Enabled = false;
                 textBox1.Enabled = false;
@@ -57,7 +57,7 @@ namespace Komin
         private void onLocalhostStart(object sender, EventArgs e)
         {
             comboBox1.Text = "127.0.0.1";
-            textBox1.Text = "666";
+            textBox1.Text = "8888";
             onStartStopListening(sender, e);
         }
 
@@ -111,6 +111,71 @@ namespace Komin
         {
             logbox.SelectionLength = 0;
             logbox.SelectionStart = 0;
+        }
+
+        private void sqlCommandText_TextChanged(object sender, EventArgs e)
+        {
+            sqlExec.Enabled = (sqlCommandText.Text != "");
+        }
+
+        private void readerexec_CheckedChanged(object sender, EventArgs e)
+        {
+            sqlReaderOutput.Enabled = readerexec.Checked;
+        }
+
+        private void sqlExec_Click(object sender, EventArgs e)
+        {
+            if (!readerexec.Checked)
+            {
+                KominServer.database.WaitForRequestExecution(KominServer.database.MakeExecuteRequest(sqlCommandText.Text));
+                if (KominServer.database.error_during_req)
+                    MessageBox.Show("Some error occured during execution", "SQL Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                KominServer.database.WaitForRequestExecution(KominServer.database.MakeReaderRequest(sqlCommandText.Text));
+                if (KominServer.database.error_during_req)
+                    MessageBox.Show("Some error occured during execution", "SQL Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                else
+                {
+                    sqlReaderOutput.Clear();
+                    System.Data.SqlClient.SqlDataReader rdr = KominServer.database.ReqRdr;
+                    bool is_first = true;
+                    while (rdr.Read())
+                    {
+                        if (is_first)
+                        {
+                            int i = 0;
+                            try
+                            {
+                                while (true)
+                                {
+                                    sqlReaderOutput.Columns.Add(rdr.GetName(i));
+                                    i++;
+                                }
+                            }
+                            catch (Exception) { }
+                            is_first = false;
+                        }
+                        ListViewItem lvi = new ListViewItem(rdr[0].ToString());
+                        try
+                        {
+                            int i = 1;
+                            while (true)
+                            {
+                                lvi.SubItems.Add(rdr[i].ToString());
+                                i++;
+                            }
+                        }
+                        catch (Exception) { }
+                        sqlReaderOutput.Items.Add(lvi);
+                    }
+                    KominServer.database.MarkReaderRequestCompleted();
+                }
+            }
+            sqlCommandText.SelectionStart = 0;
+            sqlCommandText.SelectionLength = sqlCommandText.Text.Length;
+            sqlCommandText.Focus();
         }
     }
 }

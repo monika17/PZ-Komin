@@ -60,21 +60,24 @@
             this.logout = new System.Windows.Forms.Button();
             this.ContactGroupBox = new System.Windows.Forms.GroupBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.contextMenuStripContactsNode = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addContactToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UserStatus = new System.Windows.Forms.Label();
             this.UserName = new System.Windows.Forms.Label();
             this.contactTabContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.zamknijToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripContact = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.txtMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemSendMessage = new System.Windows.Forms.ToolStripMenuItem();
-            this.njnnjToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mmmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.audioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wyślijPlikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSendMessage = new System.Windows.Forms.ToolStripMenuItem();
+            this.njnnjToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mmmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sendFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.contextMenuStripAddContact = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addContactToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RegisterNameAcceptableLabel = new System.Windows.Forms.Label();
+            this.RegisterNameValidityTimer = new System.Windows.Forms.Timer(this.components);
+            this.RegisterNameTextBoxToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.MainTabPanel.SuspendLayout();
             this.LoginTab.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -83,9 +86,9 @@
             this.HomePage.SuspendLayout();
             this.RightMenu.SuspendLayout();
             this.ContactGroupBox.SuspendLayout();
+            this.contextMenuStripContactsNode.SuspendLayout();
             this.contactTabContextMenu.SuspendLayout();
             this.contextMenuStripContact.SuspendLayout();
-            this.contextMenuStripAddContact.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTabPanel
@@ -178,7 +181,7 @@
             this.panel1.Controls.Add(this.RegisterGroupBox);
             this.panel1.Location = new System.Drawing.Point(33, 143);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(428, 104);
+            this.panel1.Size = new System.Drawing.Size(428, 122);
             this.panel1.TabIndex = 14;
             // 
             // LoginGroupBox
@@ -192,7 +195,7 @@
             this.LoginGroupBox.Controls.Add(this.LoginPasstextBox);
             this.LoginGroupBox.Location = new System.Drawing.Point(0, 0);
             this.LoginGroupBox.Name = "LoginGroupBox";
-            this.LoginGroupBox.Size = new System.Drawing.Size(184, 104);
+            this.LoginGroupBox.Size = new System.Drawing.Size(184, 122);
             this.LoginGroupBox.TabIndex = 12;
             this.LoginGroupBox.TabStop = false;
             this.LoginGroupBox.Text = "Logowanie";
@@ -224,7 +227,7 @@
             // 
             // LoginButton
             // 
-            this.LoginButton.Location = new System.Drawing.Point(87, 71);
+            this.LoginButton.Location = new System.Drawing.Point(87, 90);
             this.LoginButton.Name = "LoginButton";
             this.LoginButton.Size = new System.Drawing.Size(91, 26);
             this.LoginButton.TabIndex = 10;
@@ -244,6 +247,7 @@
             // 
             this.RegisterGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.RegisterGroupBox.Controls.Add(this.RegisterNameAcceptableLabel);
             this.RegisterGroupBox.Controls.Add(this.RegisterNameTextBox);
             this.RegisterGroupBox.Controls.Add(this.RegisterPassTextBox);
             this.RegisterGroupBox.Controls.Add(this.RegisterButton);
@@ -251,7 +255,7 @@
             this.RegisterGroupBox.Controls.Add(this.RegisterPasslabel);
             this.RegisterGroupBox.Location = new System.Drawing.Point(244, 0);
             this.RegisterGroupBox.Name = "RegisterGroupBox";
-            this.RegisterGroupBox.Size = new System.Drawing.Size(184, 104);
+            this.RegisterGroupBox.Size = new System.Drawing.Size(184, 122);
             this.RegisterGroupBox.TabIndex = 13;
             this.RegisterGroupBox.TabStop = false;
             this.RegisterGroupBox.Text = "Zarejestruj";
@@ -262,6 +266,7 @@
             this.RegisterNameTextBox.Name = "RegisterNameTextBox";
             this.RegisterNameTextBox.Size = new System.Drawing.Size(123, 20);
             this.RegisterNameTextBox.TabIndex = 8;
+            this.RegisterNameTextBox.TextChanged += new System.EventHandler(this.RegisterNameTextBox_TextChanged);
             // 
             // RegisterPassTextBox
             // 
@@ -270,15 +275,18 @@
             this.RegisterPassTextBox.Size = new System.Drawing.Size(123, 20);
             this.RegisterPassTextBox.TabIndex = 9;
             this.RegisterPassTextBox.UseSystemPasswordChar = true;
+            this.RegisterPassTextBox.TextChanged += new System.EventHandler(this.RegisterPassTextBox_TextChanged);
             // 
             // RegisterButton
             // 
-            this.RegisterButton.Location = new System.Drawing.Point(87, 71);
+            this.RegisterButton.Location = new System.Drawing.Point(87, 90);
             this.RegisterButton.Name = "RegisterButton";
             this.RegisterButton.Size = new System.Drawing.Size(91, 26);
             this.RegisterButton.TabIndex = 11;
             this.RegisterButton.Text = "Zarejestruj";
             this.RegisterButton.UseVisualStyleBackColor = true;
+            this.RegisterButton.Click += new System.EventHandler(this.RegisterButton_Click);
+            this.RegisterButton.Paint += new System.Windows.Forms.PaintEventHandler(this.RegisterButton_Paint);
             // 
             // RegisterNamelabel
             // 
@@ -386,7 +394,7 @@
             // 
             // treeView1
             // 
-            this.treeView1.ContextMenuStrip = this.contextMenuStripAddContact;
+            this.treeView1.ContextMenuStrip = this.contextMenuStripContactsNode;
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(3, 16);
             this.treeView1.Name = "treeView1";
@@ -401,6 +409,20 @@
             this.treeView1.TabIndex = 0;
             this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_GetNode);
             this.treeView1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.treeView1_KeyPress);
+            // 
+            // contextMenuStripContactsNode
+            // 
+            this.contextMenuStripContactsNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addContactToolStripMenuItem});
+            this.contextMenuStripContactsNode.Name = "contextMenuStripAddContact";
+            this.contextMenuStripContactsNode.Size = new System.Drawing.Size(148, 26);
+            // 
+            // addContactToolStripMenuItem
+            // 
+            this.addContactToolStripMenuItem.Name = "addContactToolStripMenuItem";
+            this.addContactToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.addContactToolStripMenuItem.Text = "dodaj kontakt";
+            this.addContactToolStripMenuItem.Click += new System.EventHandler(this.addContactToolStripMenuItem_Click);
             // 
             // UserStatus
             // 
@@ -452,24 +474,6 @@
             this.txtMessageToolStripMenuItem.Text = "rozmowa tekstowa";
             this.txtMessageToolStripMenuItem.Click += new System.EventHandler(this.txtMessageToolStripMenuItem_Click);
             // 
-            // toolStripMenuItemSendMessage
-            // 
-            this.toolStripMenuItemSendMessage.Name = "toolStripMenuItemSendMessage";
-            this.toolStripMenuItemSendMessage.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemSendMessage.Text = "toolStripMenuItem1";
-            // 
-            // njnnjToolStripMenuItem
-            // 
-            this.njnnjToolStripMenuItem.Name = "njnnjToolStripMenuItem";
-            this.njnnjToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.njnnjToolStripMenuItem.Text = "njnnj";
-            // 
-            // mmmToolStripMenuItem
-            // 
-            this.mmmToolStripMenuItem.Name = "mmmToolStripMenuItem";
-            this.mmmToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.mmmToolStripMenuItem.Text = "mmm";
-            // 
             // audioToolStripMenuItem
             // 
             this.audioToolStripMenuItem.Enabled = false;
@@ -491,28 +495,52 @@
             this.wyślijPlikToolStripMenuItem.Text = "wyślij plik";
             this.wyślijPlikToolStripMenuItem.Click += new System.EventHandler(this.wyślijPlikToolStripMenuItem_Click);
             // 
+            // toolStripMenuItemSendMessage
+            // 
+            this.toolStripMenuItemSendMessage.Name = "toolStripMenuItemSendMessage";
+            this.toolStripMenuItemSendMessage.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemSendMessage.Text = "toolStripMenuItem1";
+            // 
+            // njnnjToolStripMenuItem
+            // 
+            this.njnnjToolStripMenuItem.Name = "njnnjToolStripMenuItem";
+            this.njnnjToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.njnnjToolStripMenuItem.Text = "njnnj";
+            // 
+            // mmmToolStripMenuItem
+            // 
+            this.mmmToolStripMenuItem.Name = "mmmToolStripMenuItem";
+            this.mmmToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mmmToolStripMenuItem.Text = "mmm";
+            // 
             // sendFileDialog
             // 
             this.sendFileDialog.FileName = "file";
             // 
-            // contextMenuStripAddContact
+            // RegisterNameAcceptableLabel
             // 
-            this.contextMenuStripAddContact.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addContactToolStripMenuItem});
-            this.contextMenuStripAddContact.Name = "contextMenuStripAddContact";
-            this.contextMenuStripAddContact.Size = new System.Drawing.Size(148, 26);
+            this.RegisterNameAcceptableLabel.AutoSize = true;
+            this.RegisterNameAcceptableLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.RegisterNameAcceptableLabel.Location = new System.Drawing.Point(52, 68);
+            this.RegisterNameAcceptableLabel.Name = "RegisterNameAcceptableLabel";
+            this.RegisterNameAcceptableLabel.Size = new System.Drawing.Size(0, 13);
+            this.RegisterNameAcceptableLabel.TabIndex = 12;
             // 
-            // addContactToolStripMenuItem
+            // RegisterNameValidityTimer
             // 
-            this.addContactToolStripMenuItem.Name = "addContactToolStripMenuItem";
-            this.addContactToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
-            this.addContactToolStripMenuItem.Text = "dodaj kontakt";
+            this.RegisterNameValidityTimer.Interval = 1500;
+            this.RegisterNameValidityTimer.Tick += new System.EventHandler(this.RegisterNameValidityTimer_Tick);
+            // 
+            // RegisterNameTextBoxToolTip
+            // 
+            this.RegisterNameTextBoxToolTip.IsBalloon = true;
+            this.RegisterNameTextBoxToolTip.ToolTipTitle = "Prawidłowa forma nazwy:";
             // 
             // KominClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(684, 442);
+            this.ClientSize = new System.Drawing.Size(692, 456);
             this.Controls.Add(this.RightMenu);
             this.Controls.Add(this.MainTabPanel);
             this.MinimumSize = new System.Drawing.Size(700, 480);
@@ -532,9 +560,9 @@
             this.RightMenu.ResumeLayout(false);
             this.RightMenu.PerformLayout();
             this.ContactGroupBox.ResumeLayout(false);
+            this.contextMenuStripContactsNode.ResumeLayout(false);
             this.contactTabContextMenu.ResumeLayout(false);
             this.contextMenuStripContact.ResumeLayout(false);
-            this.contextMenuStripAddContact.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -583,8 +611,11 @@
         private System.Windows.Forms.ToolStripMenuItem wideoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wyślijPlikToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog sendFileDialog;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStripAddContact;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripContactsNode;
         private System.Windows.Forms.ToolStripMenuItem addContactToolStripMenuItem;
+        private System.Windows.Forms.Label RegisterNameAcceptableLabel;
+        private System.Windows.Forms.Timer RegisterNameValidityTimer;
+        private System.Windows.Forms.ToolTip RegisterNameTextBoxToolTip;
     }
 }
 

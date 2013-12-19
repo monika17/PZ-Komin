@@ -604,7 +604,8 @@ namespace Komin
                             if (packet.sender == (uint)packet.GetContent(KominProtocolContentTypes.ContactIDData)[0])
                             {
                                 packet.DeleteContent((uint)KominProtocolContentTypes.ContactIDData, true);
-                                packet.InsertContent(KominProtocolContentTypes.UserData, KominServer.database.GetUserData(KominServer.database.GetContactData(packet.sender).contact_name));
+                                packet.InsertContent(KominProtocolContentTypes.ContactData, KominServer.database.GetContactData(packet.sender));
+                                packet.InsertContent(KominProtocolContentTypes.UserData, KominServer.database.GetUserData(packet.sender));
                             }
                             else //foreign ping
                             {
@@ -634,7 +635,8 @@ namespace Komin
                             //self-ping
                             if (packet.sender == req_user.contact_id)
                             {
-                                packet.InsertContent(KominProtocolContentTypes.UserData, KominServer.database.GetUserData(KominServer.database.GetContactData(packet.sender).contact_name));
+                                packet.InsertContent(KominProtocolContentTypes.ContactData, KominServer.database.GetContactData(packet.sender));
+                                packet.InsertContent(KominProtocolContentTypes.UserData, KominServer.database.GetUserData(packet.sender));
                             }
                             else //foreign ping
                             {

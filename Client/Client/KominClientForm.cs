@@ -48,11 +48,17 @@ namespace Komin
             MainTabPanel.TabPages.Add(LoginTab);
             RightMenu.Enabled = false;
             TabUpdateTimer.Start();
+            RegisterNameTextBoxToolTip.SetToolTip(RegisterNameTextBox, "Pierwsza litera duża, później ciąg złożyny z liter (dużych i małych), cyfr i znaku podkreślenia _");
 
             //------- Debug
-            textBoxhostIp.Text = "127.0.0.7";
+            textBoxhostIp.Text = "127.0.0.1";
             textBoxPort.Text = "8888";
             //-------
+
+            //configure connection structure - don't attempt to connect yet
+            connection = new KominClientSideConnection();
+            connection.onNewTextMessage = onNewMessage;
+            connection.onContactListChange = onContactListChange;
         }
 
         private void KominClientForm_TabUpdate(object sender, EventArgs e)
@@ -61,13 +67,16 @@ namespace Komin
             while (TabUpdateOnRun) ;
             TabUpdateOnRun = true;
             foreach (TabPage tp in remove_page)
-                MainTabPanel.TabPages.Remove(tp);
+                try { MainTabPanel.TabPages.Remove(tp); }
+                catch (Exception) { }
             remove_page.Clear();
             foreach (TabPage tp in add_page)
-                MainTabPanel.TabPages.Add(tp);
+                try { MainTabPanel.TabPages.Add(tp); }
+                catch (Exception) { }
             add_page.Clear();
             if (next_page != null)
-                MainTabPanel.SelectedTab = next_page;
+                try { MainTabPanel.SelectedTab = next_page; }
+                catch (Exception) { }
             next_page = null;
             TabUpdateOnRun = false;
             TabUpdateTimer.Enabled = true;
@@ -104,6 +113,7 @@ namespace Komin
             //update contact and group list
             TreeNode contacts = treeView1.Nodes["Kontakty"];
             TreeNode groups = treeView1.Nodes["Grupy"];
+            connection.userdata.contacts.Sort(ContactDataComparison_ByNameAsc);
             foreach (ContactData cd in connection.userdata.contacts)
             {
                 TreeNode tn = new TreeNode(cd.contact_name);
@@ -139,9 +149,25 @@ namespace Komin
 
         private void logout_Click(object sender, EventArgs e)
         {
+            try
+            {
+                connection.Logout();
+            }
+            catch (KominClientErrorException ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            remove_page.Clear();
+            add_page.Clear();
+            next_page = null;
             MainTabPanel.TabPages.Clear();
             MainTabPanel.ContextMenuStrip = null;
             MainTabPanel.TabPages.Add(LoginTab);
+            UserName.Text = "Nazwa: ";
+            statusComboBox.Text = "";
+            treeView1.Nodes["Kontakty"].Nodes.Clear();
+            treeView1.Nodes["Grupy"].Nodes.Clear();
             RightMenu.Enabled = false;
         }
 
@@ -264,6 +290,61 @@ namespace Komin
             }
         }
 
+        private void onContactListChange(UserData new_ud)
+        {
+            connection.userdata.contacts = new_ud.contacts;
+
+            TreeNode contacts = treeView1.Nodes["Kontakty"];
+
+            //remove contacts
+            List<int> to_remove = new List<int>();
+            for (int i = 0; i < contacts.Nodes.Count; i++)
+            {
+                bool found = false;
+                foreach (ContactData cd in connection.userdata.contacts)
+                {
+                    if (((ContactTreeTag)contacts.Nodes[i].Tag).id == cd.contact_id)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                    to_remove.Insert(0, i);
+            }
+            foreach (int i in to_remove)
+            {
+                foreach (TabPage tp in MainTabPanel.TabPages)
+                    if (tp.Text == contacts.Nodes[i].Text)
+                    {
+                        if (MainTabPanel.TabPages.Count == 1)
+                        {
+                            add_page.Add(HomePage);
+                            next_page = HomePage;
+                        }
+                        remove_page.Add(tp);
+                        WaitForTabUpdate();
+                        break;
+                    }
+            }
+            contacts.Nodes.Clear();
+
+            //add contacts
+            connection.userdata.contacts.Sort(ContactDataComparison_ByNameAsc);
+            foreach (ContactData cd in connection.userdata.contacts)
+            {
+                TreeNode tn = new TreeNode(cd.contact_name);
+                tn.Tag = new ContactTreeTag(cd.contact_id, false);
+                tn.ContextMenuStrip = contextMenuStripContact;
+                contacts.Nodes.Add(tn);
+            }
+        }
+
+        int ContactDataComparison_ByNameAsc(ContactData _1, ContactData _2)
+        {
+            return _1.contact_name.CompareTo(_2.contact_name);
+        }
+
         private void onClientClosing(object sender, FormClosingEventArgs e)
         {
             if(connection != null)
@@ -272,7 +353,6 @@ namespace Komin
 
         private void buttonConnect_Click(object sender, EventArgs e)
         {
-            connection = new KominClientSideConnection();
             try
             {
                 connection.Connect(textBoxhostIp.Text, Convert.ToInt32(textBoxPort.Text));
@@ -282,7 +362,6 @@ namespace Komin
                 MessageBox.Show("Nie udało się połączyć z serwerem", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            connection.onNewTextMessage = onNewMessage;
             ConnectStatus.Text = "Połączono";
             buttonConnect.Enabled = false;
         }
@@ -306,6 +385,75 @@ namespace Komin
             var file = sendFileDialog.ShowDialog();
             //validate file
             //send file
+        }
+
+        private void addContactToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddContactForm acf = new AddContactForm(connection);
+            acf.ShowDialog();
+        }
+
+        private void RegisterNameValidityTimer_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!DataTesters.TestLoginOrGroupName(RegisterNameTextBox.Text))
+                {
+                    RegisterNameAcceptableLabel.Text = "nazwa jest niepoprawna";
+                    RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(255, 0, 0);
+                    throw new Exception();
+                }
+                ContactData cd = connection.PingContactRequest(0, RegisterNameTextBox.Text);
+                if (cd != null)
+                {
+                    RegisterNameAcceptableLabel.Text = "nazwa jest zajęta";
+                    RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(255, 0, 0);
+                }
+                else
+                {
+                    RegisterNameAcceptableLabel.Text = "nazwa jest wolna";
+                    RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(0, 255, 0);
+                }
+            }
+            catch (KominClientErrorException)
+            {
+                RegisterNameAcceptableLabel.Text = "nazwa jest wolna";
+                RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(0, 255, 0);
+            }
+            catch (Exception) { }
+            RegisterNameValidityTimer.Enabled = false;
+        }
+
+        private void RegisterNameTextBox_TextChanged(object sender, EventArgs e)
+        {
+            RegisterNameAcceptableLabel.Text = "";
+            RegisterNameValidityTimer.Enabled = false;
+            if (RegisterNameTextBox.Text != "")
+                RegisterNameValidityTimer.Enabled = true;
+            RegisterButton.Enabled = ((RegisterNameTextBox.Text != "") && (RegisterPassTextBox.Text != ""));
+        }
+
+        private void RegisterPassTextBox_TextChanged(object sender, EventArgs e)
+        {
+            RegisterButton.Enabled = ((RegisterNameTextBox.Text != "") && (RegisterPassTextBox.Text != ""));
+        }
+
+        private void RegisterButton_Paint(object sender, PaintEventArgs e)
+        {
+            RegisterButton.Enabled = ((RegisterNameTextBox.Text != "") && (RegisterPassTextBox.Text != ""));
+        }
+
+        private void RegisterButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                connection.CreateContact(RegisterNameTextBox.Text, RegisterPassTextBox.Text);
+            }
+            catch (KominClientErrorException ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
     }
 }
