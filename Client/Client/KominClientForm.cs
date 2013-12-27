@@ -48,7 +48,6 @@ namespace Komin
             MainTabPanel.TabPages.Add(LoginTab);
             RightMenu.Enabled = false;
             TabUpdateTimer.Start();
-            RegisterNameTextBoxToolTip.SetToolTip(RegisterNameTextBox, "Pierwsza litera duża, później ciąg złożyny z liter (dużych i małych), cyfr i znaku podkreślenia _");
 
             //------- Debug
             textBoxhostIp.Text = "127.0.0.1";
@@ -59,6 +58,49 @@ namespace Komin
             connection = new KominClientSideConnection();
             connection.onNewTextMessage = onNewMessage;
             connection.onContactListChange = onContactListChange;
+
+            var ConnectForm = new ConnectForm(connection, this);
+            ConnectForm.Visible = true;
+        }
+
+        public void LoginSuccess()
+        {
+            uint new_status = (uint)KominClientStatusCodes.Accessible;
+
+            UserName.Text = "Nazwa: " + connection.userdata.contact_name;
+            //UserStatus.Text = "Status: dostępny";
+            statusComboBox.SelectedIndex = (int)new_status;
+
+            MainTabPanel.TabPages.Remove(LoginTab);
+            MainTabPanel.TabPages.Add(HomePage);
+
+            tmpTest.Text = "Zalogowany jako: " + connection.userdata.contact_name;
+
+            //update contact and group list
+            TreeNode contacts = treeView1.Nodes["Kontakty"];
+            TreeNode groups = treeView1.Nodes["Grupy"];
+            connection.userdata.contacts.Sort(ContactDataComparison_ByNameAsc);
+            foreach (ContactData cd in connection.userdata.contacts)
+            {
+                TreeNode tn = new TreeNode(cd.contact_name);
+                tn.Tag = new ContactTreeTag(cd.contact_id, false);
+                tn.ContextMenuStrip = contextMenuStripContact;
+                contacts.Nodes.Add(tn);
+            }
+            foreach (GroupData gd in connection.userdata.groups)
+            {
+                TreeNode gtn = new TreeNode(gd.group_name);
+                gtn.Tag = new ContactTreeTag(gd.group_id, true);
+                foreach (ContactData cd in gd.members)
+                {
+                    TreeNode tn = new TreeNode(cd.contact_name);
+                    tn.Tag = new ContactTreeTag(cd.contact_id, false);
+                    gtn.Nodes.Add(tn);
+                }
+                groups.Nodes.Add(gtn);
+            }
+
+            RightMenu.Enabled = true;
         }
 
         private void KominClientForm_TabUpdate(object sender, EventArgs e)
@@ -139,7 +181,6 @@ namespace Komin
 
         private void tabTmp_Test(object sender, EventArgs e)
         {
-            tmpTest.Text += UserInfo.Name;
         }
 
         private void treeView1_NodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)

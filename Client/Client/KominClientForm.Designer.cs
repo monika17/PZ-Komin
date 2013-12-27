@@ -47,6 +47,7 @@
             this.LoginButton = new System.Windows.Forms.Button();
             this.LoginPasstextBox = new System.Windows.Forms.TextBox();
             this.RegisterGroupBox = new System.Windows.Forms.GroupBox();
+            this.RegisterNameAcceptableLabel = new System.Windows.Forms.Label();
             this.RegisterNameTextBox = new System.Windows.Forms.TextBox();
             this.RegisterPassTextBox = new System.Windows.Forms.TextBox();
             this.RegisterButton = new System.Windows.Forms.Button();
@@ -75,12 +76,10 @@
             this.njnnjToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mmmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sendFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.RegisterNameAcceptableLabel = new System.Windows.Forms.Label();
             this.RegisterNameValidityTimer = new System.Windows.Forms.Timer(this.components);
             this.RegisterNameTextBoxToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.MainTabPanel.SuspendLayout();
             this.LoginTab.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.LoginGroupBox.SuspendLayout();
             this.RegisterGroupBox.SuspendLayout();
             this.HomePage.SuspendLayout();
@@ -107,6 +106,8 @@
             // 
             // LoginTab
             // 
+            this.LoginTab.Controls.Add(this.RegisterGroupBox);
+            this.LoginTab.Controls.Add(this.LoginGroupBox);
             this.LoginTab.Controls.Add(this.ConnectStatus);
             this.LoginTab.Controls.Add(this.buttonConnect);
             this.LoginTab.Controls.Add(this.textBoxPort);
@@ -177,9 +178,7 @@
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel1.Controls.Add(this.LoginGroupBox);
-            this.panel1.Controls.Add(this.RegisterGroupBox);
-            this.panel1.Location = new System.Drawing.Point(33, 143);
+            this.panel1.Location = new System.Drawing.Point(32, 249);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(428, 122);
             this.panel1.TabIndex = 14;
@@ -193,7 +192,7 @@
             this.LoginGroupBox.Controls.Add(this.LoginName);
             this.LoginGroupBox.Controls.Add(this.LoginButton);
             this.LoginGroupBox.Controls.Add(this.LoginPasstextBox);
-            this.LoginGroupBox.Location = new System.Drawing.Point(0, 0);
+            this.LoginGroupBox.Location = new System.Drawing.Point(23, 102);
             this.LoginGroupBox.Name = "LoginGroupBox";
             this.LoginGroupBox.Size = new System.Drawing.Size(184, 122);
             this.LoginGroupBox.TabIndex = 12;
@@ -253,12 +252,21 @@
             this.RegisterGroupBox.Controls.Add(this.RegisterButton);
             this.RegisterGroupBox.Controls.Add(this.RegisterNamelabel);
             this.RegisterGroupBox.Controls.Add(this.RegisterPasslabel);
-            this.RegisterGroupBox.Location = new System.Drawing.Point(244, 0);
+            this.RegisterGroupBox.Location = new System.Drawing.Point(276, 102);
             this.RegisterGroupBox.Name = "RegisterGroupBox";
             this.RegisterGroupBox.Size = new System.Drawing.Size(184, 122);
             this.RegisterGroupBox.TabIndex = 13;
             this.RegisterGroupBox.TabStop = false;
             this.RegisterGroupBox.Text = "Zarejestruj";
+            // 
+            // RegisterNameAcceptableLabel
+            // 
+            this.RegisterNameAcceptableLabel.AutoSize = true;
+            this.RegisterNameAcceptableLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.RegisterNameAcceptableLabel.Location = new System.Drawing.Point(52, 68);
+            this.RegisterNameAcceptableLabel.Name = "RegisterNameAcceptableLabel";
+            this.RegisterNameAcceptableLabel.Size = new System.Drawing.Size(0, 13);
+            this.RegisterNameAcceptableLabel.TabIndex = 12;
             // 
             // RegisterNameTextBox
             // 
@@ -517,15 +525,6 @@
             // 
             this.sendFileDialog.FileName = "file";
             // 
-            // RegisterNameAcceptableLabel
-            // 
-            this.RegisterNameAcceptableLabel.AutoSize = true;
-            this.RegisterNameAcceptableLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.RegisterNameAcceptableLabel.Location = new System.Drawing.Point(52, 68);
-            this.RegisterNameAcceptableLabel.Name = "RegisterNameAcceptableLabel";
-            this.RegisterNameAcceptableLabel.Size = new System.Drawing.Size(0, 13);
-            this.RegisterNameAcceptableLabel.TabIndex = 12;
-            // 
             // RegisterNameValidityTimer
             // 
             this.RegisterNameValidityTimer.Interval = 1500;
@@ -550,7 +549,6 @@
             this.MainTabPanel.ResumeLayout(false);
             this.LoginTab.ResumeLayout(false);
             this.LoginTab.PerformLayout();
-            this.panel1.ResumeLayout(false);
             this.LoginGroupBox.ResumeLayout(false);
             this.LoginGroupBox.PerformLayout();
             this.RegisterGroupBox.ResumeLayout(false);

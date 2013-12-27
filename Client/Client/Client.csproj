@@ -50,6 +50,12 @@
     <Compile Include="AddContactForm.Designer.cs">
       <DependentUpon>AddContactForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConnectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConnectForm.Designer.cs">
+      <DependentUpon>ConnectForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="KominCipherSuite.cs" />
     <Compile Include="KominClientForm.cs">
       <SubType>Form</SubType>
@@ -69,9 +75,11 @@
     <Compile Include="TextMessagingPanel.Designer.cs">
       <DependentUpon>TextMessagingPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserInfo.cs" />
     <EmbeddedResource Include="AddContactForm.resx">
       <DependentUpon>AddContactForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConnectForm.resx">
+      <DependentUpon>ConnectForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="KominClientForm.resx">
       <DependentUpon>KominClientForm.cs</DependentUpon>
