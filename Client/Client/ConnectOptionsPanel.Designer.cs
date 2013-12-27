@@ -1,0 +1,232 @@
+﻿namespace Komin
+{
+    partial class ConnectOptionsPanel
+    {
+        /// <summary> 
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Component Designer generated code
+
+        /// <summary> 
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.LoginPanel = new System.Windows.Forms.Panel();
+            this.buttonNewUser = new System.Windows.Forms.Button();
+            this.LoginGroupBox = new System.Windows.Forms.GroupBox();
+            this.LoginNametextBox = new System.Windows.Forms.TextBox();
+            this.LoginPass = new System.Windows.Forms.Label();
+            this.LoginName = new System.Windows.Forms.Label();
+            this.LoginPasstextBox = new System.Windows.Forms.TextBox();
+            this.LoginButton = new System.Windows.Forms.Button();
+            this.ConnectPanel = new System.Windows.Forms.Panel();
+            this.buttonConnect = new System.Windows.Forms.Button();
+            this.textBoxPort = new System.Windows.Forms.TextBox();
+            this.textBoxhostIp = new System.Windows.Forms.TextBox();
+            this.labelPort = new System.Windows.Forms.Label();
+            this.labelHostIp = new System.Windows.Forms.Label();
+            this.BackButton = new System.Windows.Forms.Button();
+            this.LoginPanel.SuspendLayout();
+            this.LoginGroupBox.SuspendLayout();
+            this.ConnectPanel.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // LoginPanel
+            // 
+            this.LoginPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.LoginPanel.Controls.Add(this.BackButton);
+            this.LoginPanel.Controls.Add(this.buttonNewUser);
+            this.LoginPanel.Controls.Add(this.LoginGroupBox);
+            this.LoginPanel.Controls.Add(this.LoginButton);
+            this.LoginPanel.Location = new System.Drawing.Point(103, 114);
+            this.LoginPanel.Name = "LoginPanel";
+            this.LoginPanel.Size = new System.Drawing.Size(328, 182);
+            this.LoginPanel.TabIndex = 4;
+            this.LoginPanel.Visible = false;
+            // 
+            // buttonNewUser
+            // 
+            this.buttonNewUser.Location = new System.Drawing.Point(204, 126);
+            this.buttonNewUser.Name = "buttonNewUser";
+            this.buttonNewUser.Size = new System.Drawing.Size(121, 26);
+            this.buttonNewUser.TabIndex = 14;
+            this.buttonNewUser.Text = "Dodaj nowe konto";
+            this.buttonNewUser.UseVisualStyleBackColor = true;
+            this.buttonNewUser.Click += new System.EventHandler(this.buttonNewUser_Click);
+            // 
+            // LoginGroupBox
+            // 
+            this.LoginGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.LoginGroupBox.Controls.Add(this.LoginNametextBox);
+            this.LoginGroupBox.Controls.Add(this.LoginPass);
+            this.LoginGroupBox.Controls.Add(this.LoginName);
+            this.LoginGroupBox.Controls.Add(this.LoginPasstextBox);
+            this.LoginGroupBox.Location = new System.Drawing.Point(12, 17);
+            this.LoginGroupBox.Name = "LoginGroupBox";
+            this.LoginGroupBox.Size = new System.Drawing.Size(313, 84);
+            this.LoginGroupBox.TabIndex = 13;
+            this.LoginGroupBox.TabStop = false;
+            this.LoginGroupBox.Text = "Logowanie";
+            // 
+            // LoginNametextBox
+            // 
+            this.LoginNametextBox.Location = new System.Drawing.Point(131, 19);
+            this.LoginNametextBox.Name = "LoginNametextBox";
+            this.LoginNametextBox.Size = new System.Drawing.Size(123, 20);
+            this.LoginNametextBox.TabIndex = 4;
+            // 
+            // LoginPass
+            // 
+            this.LoginPass.AutoSize = true;
+            this.LoginPass.Location = new System.Drawing.Point(81, 48);
+            this.LoginPass.Name = "LoginPass";
+            this.LoginPass.Size = new System.Drawing.Size(42, 13);
+            this.LoginPass.TabIndex = 3;
+            this.LoginPass.Text = "Hasło: ";
+            // 
+            // LoginName
+            // 
+            this.LoginName.AutoSize = true;
+            this.LoginName.Location = new System.Drawing.Point(81, 22);
+            this.LoginName.Name = "LoginName";
+            this.LoginName.Size = new System.Drawing.Size(43, 13);
+            this.LoginName.TabIndex = 2;
+            this.LoginName.Text = "Nazwa:";
+            // 
+            // LoginPasstextBox
+            // 
+            this.LoginPasstextBox.Location = new System.Drawing.Point(131, 45);
+            this.LoginPasstextBox.Name = "LoginPasstextBox";
+            this.LoginPasstextBox.Size = new System.Drawing.Size(123, 20);
+            this.LoginPasstextBox.TabIndex = 5;
+            this.LoginPasstextBox.UseSystemPasswordChar = true;
+            // 
+            // LoginButton
+            // 
+            this.LoginButton.Location = new System.Drawing.Point(109, 126);
+            this.LoginButton.Name = "LoginButton";
+            this.LoginButton.Size = new System.Drawing.Size(90, 26);
+            this.LoginButton.TabIndex = 10;
+            this.LoginButton.Text = "Zaloguj";
+            this.LoginButton.UseVisualStyleBackColor = true;
+            this.LoginButton.Click += new System.EventHandler(this.LoginButton_Click);
+            // 
+            // ConnectPanel
+            // 
+            this.ConnectPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.ConnectPanel.Controls.Add(this.buttonConnect);
+            this.ConnectPanel.Controls.Add(this.textBoxPort);
+            this.ConnectPanel.Controls.Add(this.textBoxhostIp);
+            this.ConnectPanel.Controls.Add(this.labelPort);
+            this.ConnectPanel.Controls.Add(this.labelHostIp);
+            this.ConnectPanel.Location = new System.Drawing.Point(103, 28);
+            this.ConnectPanel.Name = "ConnectPanel";
+            this.ConnectPanel.Size = new System.Drawing.Size(328, 80);
+            this.ConnectPanel.TabIndex = 3;
+            // 
+            // buttonConnect
+            // 
+            this.buttonConnect.Location = new System.Drawing.Point(238, 49);
+            this.buttonConnect.Name = "buttonConnect";
+            this.buttonConnect.Size = new System.Drawing.Size(87, 28);
+            this.buttonConnect.TabIndex = 25;
+            this.buttonConnect.Text = "Dalej";
+            this.buttonConnect.UseVisualStyleBackColor = true;
+            this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
+            // 
+            // textBoxPort
+            // 
+            this.textBoxPort.Location = new System.Drawing.Point(216, 14);
+            this.textBoxPort.Name = "textBoxPort";
+            this.textBoxPort.Size = new System.Drawing.Size(76, 20);
+            this.textBoxPort.TabIndex = 24;
+            // 
+            // textBoxhostIp
+            // 
+            this.textBoxhostIp.Location = new System.Drawing.Point(77, 14);
+            this.textBoxhostIp.Name = "textBoxhostIp";
+            this.textBoxhostIp.Size = new System.Drawing.Size(76, 20);
+            this.textBoxhostIp.TabIndex = 23;
+            // 
+            // labelPort
+            // 
+            this.labelPort.AutoSize = true;
+            this.labelPort.Location = new System.Drawing.Point(168, 17);
+            this.labelPort.Name = "labelPort";
+            this.labelPort.Size = new System.Drawing.Size(31, 13);
+            this.labelPort.TabIndex = 22;
+            this.labelPort.Text = "port: ";
+            // 
+            // labelHostIp
+            // 
+            this.labelHostIp.AutoSize = true;
+            this.labelHostIp.Location = new System.Drawing.Point(29, 17);
+            this.labelHostIp.Name = "labelHostIp";
+            this.labelHostIp.Size = new System.Drawing.Size(46, 13);
+            this.labelHostIp.TabIndex = 21;
+            this.labelHostIp.Text = "host IP: ";
+            // 
+            // BackButton
+            // 
+            this.BackButton.Location = new System.Drawing.Point(12, 126);
+            this.BackButton.Name = "BackButton";
+            this.BackButton.Size = new System.Drawing.Size(91, 26);
+            this.BackButton.TabIndex = 15;
+            this.BackButton.Text = "Wstecz";
+            this.BackButton.UseVisualStyleBackColor = true;
+            this.BackButton.Click += new System.EventHandler(this.BackButton_Click);
+            // 
+            // ConnectOptionsPanel
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.LoginPanel);
+            this.Controls.Add(this.ConnectPanel);
+            this.Name = "ConnectOptionsPanel";
+            this.Size = new System.Drawing.Size(534, 335);
+            this.LoginPanel.ResumeLayout(false);
+            this.LoginGroupBox.ResumeLayout(false);
+            this.LoginGroupBox.PerformLayout();
+            this.ConnectPanel.ResumeLayout(false);
+            this.ConnectPanel.PerformLayout();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Panel LoginPanel;
+        private System.Windows.Forms.Button buttonNewUser;
+        private System.Windows.Forms.GroupBox LoginGroupBox;
+        private System.Windows.Forms.TextBox LoginNametextBox;
+        private System.Windows.Forms.Label LoginPass;
+        private System.Windows.Forms.Label LoginName;
+        private System.Windows.Forms.TextBox LoginPasstextBox;
+        private System.Windows.Forms.Button LoginButton;
+        private System.Windows.Forms.Panel ConnectPanel;
+        private System.Windows.Forms.Button buttonConnect;
+        private System.Windows.Forms.TextBox textBoxPort;
+        private System.Windows.Forms.TextBox textBoxhostIp;
+        private System.Windows.Forms.Label labelPort;
+        private System.Windows.Forms.Label labelHostIp;
+        private System.Windows.Forms.Button BackButton;
+    }
+}

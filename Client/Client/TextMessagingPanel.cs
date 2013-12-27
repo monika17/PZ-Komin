@@ -85,15 +85,9 @@ namespace Komin
         private void buttonAutoSend_Click(object sender, EventArgs e)
         {
             if (CallingForm.AcceptButton != textSendButton)
-            {
                 CallingForm.AcceptButton = textSendButton;
-                this.buttonAutoSend.Text = "enter : on";
-            }
             else
-            {
                 CallingForm.AcceptButton = null;
-                this.buttonAutoSend.Text = "enter : off";
-            }
         }
 
  

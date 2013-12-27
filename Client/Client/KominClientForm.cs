@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Komin
@@ -49,18 +44,11 @@ namespace Komin
             RightMenu.Enabled = false;
             TabUpdateTimer.Start();
 
-            //------- Debug
-            textBoxhostIp.Text = "127.0.0.1";
-            textBoxPort.Text = "8888";
-            //-------
-
             //configure connection structure - don't attempt to connect yet
             connection = new KominClientSideConnection();
             connection.onNewTextMessage = onNewMessage;
             connection.onContactListChange = onContactListChange;
-
-            var ConnectForm = new ConnectForm(connection, this);
-            ConnectForm.Visible = true;
+            ShowConnectOptionsOnLoginTab();
         }
 
         public void LoginSuccess()
@@ -129,56 +117,6 @@ namespace Komin
             while (remove_page.Count > 0 || add_page.Count > 0 || next_page != null) ;
         }
 
-        private void LoginButton_Click(object sender, EventArgs e)
-        {
-            uint new_status = (uint)KominClientStatusCodes.Accessible;
-
-            try
-            {
-                connection.Login(LoginNametextBox.Text, LoginPasstextBox.Text, ref new_status);
-            }
-            catch (KominClientErrorException ex)
-            {
-                MessageBox.Show(ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            UserName.Text = "Nazwa: " + connection.userdata.contact_name;
-            //UserStatus.Text = "Status: dostępny";
-            statusComboBox.SelectedIndex = (int)new_status;
-
-            MainTabPanel.TabPages.Remove(LoginTab);
-            MainTabPanel.TabPages.Add(HomePage);
-
-            tmpTest.Text = "Zalogowany jako: " + connection.userdata.contact_name;
-
-            //update contact and group list
-            TreeNode contacts = treeView1.Nodes["Kontakty"];
-            TreeNode groups = treeView1.Nodes["Grupy"];
-            connection.userdata.contacts.Sort(ContactDataComparison_ByNameAsc);
-            foreach (ContactData cd in connection.userdata.contacts)
-            {
-                TreeNode tn = new TreeNode(cd.contact_name);
-                tn.Tag = new ContactTreeTag(cd.contact_id, false);
-                tn.ContextMenuStrip = contextMenuStripContact;
-                contacts.Nodes.Add(tn);
-            }
-            foreach (GroupData gd in connection.userdata.groups)
-            {
-                TreeNode gtn = new TreeNode(gd.group_name);
-                gtn.Tag = new ContactTreeTag(gd.group_id, true);
-                foreach (ContactData cd in gd.members)
-                {
-                    TreeNode tn = new TreeNode(cd.contact_name);
-                    tn.Tag = new ContactTreeTag(cd.contact_id, false);
-                    gtn.Nodes.Add(tn);
-                }
-                groups.Nodes.Add(gtn);
-            }
-
-            RightMenu.Enabled = true;
-        }
-
         private void tabTmp_Test(object sender, EventArgs e)
         {
         }
@@ -199,6 +137,26 @@ namespace Komin
                 MessageBox.Show(ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            ResetPanel();
+        }
+
+        private void DisconnectButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                connection.Disconnect();
+            }
+            catch (KominClientErrorException ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            ResetPanel();
+            ShowConnectOptionsOnLoginTab();
+        }
+
+        private void ResetPanel()
+        {
             remove_page.Clear();
             add_page.Clear();
             next_page = null;
@@ -209,7 +167,7 @@ namespace Komin
             statusComboBox.Text = "";
             treeView1.Nodes["Kontakty"].Nodes.Clear();
             treeView1.Nodes["Grupy"].Nodes.Clear();
-            RightMenu.Enabled = false;
+            RightMenu.Enabled = false; 
         }
 
         private void onCloseContactTabClick(object sender, EventArgs e)
@@ -220,6 +178,15 @@ namespace Komin
         {
             if(e.KeyChar=='\r')
                 treeView1_NodeDoubleClick(sender, new TreeNodeMouseClickEventArgs(((TreeView)sender).SelectedNode, System.Windows.Forms.MouseButtons.Left, 2, 0, 0));
+        }
+
+        private void ShowConnectOptionsOnLoginTab()
+        {
+            var connectOptionsPanel = new ConnectOptionsPanel(connection, this);
+            connectOptionsPanel.Location = new System.Drawing.Point(75, 80);
+
+            LoginTab.Controls.Clear();
+            LoginTab.Controls.Add(connectOptionsPanel);
         }
 
         private void OpenTabForContact(TreeNode tn)
@@ -392,21 +359,6 @@ namespace Komin
                 connection.Disconnect();
         }
 
-        private void buttonConnect_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                connection.Connect(textBoxhostIp.Text, Convert.ToInt32(textBoxPort.Text));
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Nie udało się połączyć z serwerem", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            ConnectStatus.Text = "Połączono";
-            buttonConnect.Enabled = false;
-        }
-
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
         }
@@ -432,69 +384,6 @@ namespace Komin
         {
             AddContactForm acf = new AddContactForm(connection);
             acf.ShowDialog();
-        }
-
-        private void RegisterNameValidityTimer_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!DataTesters.TestLoginOrGroupName(RegisterNameTextBox.Text))
-                {
-                    RegisterNameAcceptableLabel.Text = "nazwa jest niepoprawna";
-                    RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(255, 0, 0);
-                    throw new Exception();
-                }
-                ContactData cd = connection.PingContactRequest(0, RegisterNameTextBox.Text);
-                if (cd != null)
-                {
-                    RegisterNameAcceptableLabel.Text = "nazwa jest zajęta";
-                    RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(255, 0, 0);
-                }
-                else
-                {
-                    RegisterNameAcceptableLabel.Text = "nazwa jest wolna";
-                    RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(0, 255, 0);
-                }
-            }
-            catch (KominClientErrorException)
-            {
-                RegisterNameAcceptableLabel.Text = "nazwa jest wolna";
-                RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(0, 255, 0);
-            }
-            catch (Exception) { }
-            RegisterNameValidityTimer.Enabled = false;
-        }
-
-        private void RegisterNameTextBox_TextChanged(object sender, EventArgs e)
-        {
-            RegisterNameAcceptableLabel.Text = "";
-            RegisterNameValidityTimer.Enabled = false;
-            if (RegisterNameTextBox.Text != "")
-                RegisterNameValidityTimer.Enabled = true;
-            RegisterButton.Enabled = ((RegisterNameTextBox.Text != "") && (RegisterPassTextBox.Text != ""));
-        }
-
-        private void RegisterPassTextBox_TextChanged(object sender, EventArgs e)
-        {
-            RegisterButton.Enabled = ((RegisterNameTextBox.Text != "") && (RegisterPassTextBox.Text != ""));
-        }
-
-        private void RegisterButton_Paint(object sender, PaintEventArgs e)
-        {
-            RegisterButton.Enabled = ((RegisterNameTextBox.Text != "") && (RegisterPassTextBox.Text != ""));
-        }
-
-        private void RegisterButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                connection.CreateContact(RegisterNameTextBox.Text, RegisterPassTextBox.Text);
-            }
-            catch (KominClientErrorException ex)
-            {
-                MessageBox.Show(ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
         }
     }
 }

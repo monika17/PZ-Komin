@@ -32,16 +32,16 @@
             this.textMessageInput = new System.Windows.Forms.TextBox();
             this.textMessageContainer = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.buttonAutoSend = new System.Windows.Forms.Button();
+            this.buttonAutoSend = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // textSendButton
             // 
             this.textSendButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.textSendButton.Location = new System.Drawing.Point(570, 443);
+            this.textSendButton.Location = new System.Drawing.Point(583, 443);
             this.textSendButton.Name = "textSendButton";
-            this.textSendButton.Size = new System.Drawing.Size(69, 27);
+            this.textSendButton.Size = new System.Drawing.Size(56, 27);
             this.textSendButton.TabIndex = 1;
             this.textSendButton.Text = "Wyślij";
             this.textSendButton.UseVisualStyleBackColor = true;
@@ -54,7 +54,7 @@
             this.textMessageInput.Location = new System.Drawing.Point(3, 443);
             this.textMessageInput.Multiline = true;
             this.textMessageInput.Name = "textMessageInput";
-            this.textMessageInput.Size = new System.Drawing.Size(561, 58);
+            this.textMessageInput.Size = new System.Drawing.Size(574, 58);
             this.textMessageInput.TabIndex = 0;
             this.textMessageInput.TextChanged += new System.EventHandler(this.onTextInputContentChanged);
             // 
@@ -88,12 +88,13 @@
             // buttonAutoSend
             // 
             this.buttonAutoSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAutoSend.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.buttonAutoSend.Location = new System.Drawing.Point(570, 476);
+            this.buttonAutoSend.Appearance = System.Windows.Forms.Appearance.Button;
+            this.buttonAutoSend.AutoSize = true;
+            this.buttonAutoSend.Location = new System.Drawing.Point(583, 476);
             this.buttonAutoSend.Name = "buttonAutoSend";
-            this.buttonAutoSend.Size = new System.Drawing.Size(69, 25);
-            this.buttonAutoSend.TabIndex = 3;
-            this.buttonAutoSend.Text = "enter : off";
+            this.buttonAutoSend.Size = new System.Drawing.Size(56, 23);
+            this.buttonAutoSend.TabIndex = 4;
+            this.buttonAutoSend.Text = "on-enter";
             this.buttonAutoSend.UseVisualStyleBackColor = true;
             this.buttonAutoSend.Click += new System.EventHandler(this.buttonAutoSend_Click);
             // 
@@ -117,6 +118,6 @@
         private System.Windows.Forms.TextBox textMessageInput;
         private System.Windows.Forms.TextBox textMessageContainer;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button buttonAutoSend;
+        private System.Windows.Forms.CheckBox buttonAutoSend;
     }
 }
