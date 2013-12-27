@@ -47,7 +47,6 @@
             // 
             this.RegisterPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.RegisterPanel.Controls.Add(this.RegisterGroupBox);
-            this.RegisterPanel.Controls.Add(this.RegisterButton);
             this.RegisterPanel.Location = new System.Drawing.Point(16, 2);
             this.RegisterPanel.Name = "RegisterPanel";
             this.RegisterPanel.Size = new System.Drawing.Size(228, 136);
@@ -58,13 +57,14 @@
             this.RegisterGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RegisterGroupBox.Controls.Add(this.RegisterNameAcceptableLabel);
+            this.RegisterGroupBox.Controls.Add(this.RegisterButton);
             this.RegisterGroupBox.Controls.Add(this.RegisterNameTextBox);
             this.RegisterGroupBox.Controls.Add(this.RegisterPassTextBox);
             this.RegisterGroupBox.Controls.Add(this.RegisterNamelabel);
             this.RegisterGroupBox.Controls.Add(this.RegisterPasslabel);
             this.RegisterGroupBox.Location = new System.Drawing.Point(9, 3);
             this.RegisterGroupBox.Name = "RegisterGroupBox";
-            this.RegisterGroupBox.Size = new System.Drawing.Size(184, 89);
+            this.RegisterGroupBox.Size = new System.Drawing.Size(184, 121);
             this.RegisterGroupBox.TabIndex = 14;
             this.RegisterGroupBox.TabStop = false;
             this.RegisterGroupBox.Text = "Zarejestruj";
@@ -114,7 +114,7 @@
             // 
             // RegisterButton
             // 
-            this.RegisterButton.Location = new System.Drawing.Point(60, 98);
+            this.RegisterButton.Location = new System.Drawing.Point(46, 84);
             this.RegisterButton.Name = "RegisterButton";
             this.RegisterButton.Size = new System.Drawing.Size(91, 26);
             this.RegisterButton.TabIndex = 11;

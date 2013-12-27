@@ -63,7 +63,7 @@ namespace Komin
         {
             try
             {
-                //connection.CreateContact(RegisterNameTextBox.Text, RegisterPassTextBox.Text);
+                connection.CreateContact(RegisterNameTextBox.Text, RegisterPassTextBox.Text);
             }
             catch (KominClientErrorException ex)
             {

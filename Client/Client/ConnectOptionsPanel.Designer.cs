@@ -43,18 +43,17 @@
             this.labelPort = new System.Windows.Forms.Label();
             this.labelHostIp = new System.Windows.Forms.Label();
             this.BackButton = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.LoginPanel.SuspendLayout();
             this.LoginGroupBox.SuspendLayout();
             this.ConnectPanel.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // LoginPanel
             // 
             this.LoginPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.LoginPanel.Controls.Add(this.BackButton);
-            this.LoginPanel.Controls.Add(this.buttonNewUser);
             this.LoginPanel.Controls.Add(this.LoginGroupBox);
-            this.LoginPanel.Controls.Add(this.LoginButton);
             this.LoginPanel.Location = new System.Drawing.Point(103, 114);
             this.LoginPanel.Name = "LoginPanel";
             this.LoginPanel.Size = new System.Drawing.Size(328, 182);
@@ -63,9 +62,9 @@
             // 
             // buttonNewUser
             // 
-            this.buttonNewUser.Location = new System.Drawing.Point(204, 126);
+            this.buttonNewUser.Location = new System.Drawing.Point(199, 88);
             this.buttonNewUser.Name = "buttonNewUser";
-            this.buttonNewUser.Size = new System.Drawing.Size(121, 26);
+            this.buttonNewUser.Size = new System.Drawing.Size(108, 26);
             this.buttonNewUser.TabIndex = 14;
             this.buttonNewUser.Text = "Dodaj nowe konto";
             this.buttonNewUser.UseVisualStyleBackColor = true;
@@ -75,13 +74,16 @@
             // 
             this.LoginGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.LoginGroupBox.Controls.Add(this.buttonNewUser);
+            this.LoginGroupBox.Controls.Add(this.BackButton);
             this.LoginGroupBox.Controls.Add(this.LoginNametextBox);
+            this.LoginGroupBox.Controls.Add(this.LoginButton);
             this.LoginGroupBox.Controls.Add(this.LoginPass);
             this.LoginGroupBox.Controls.Add(this.LoginName);
             this.LoginGroupBox.Controls.Add(this.LoginPasstextBox);
             this.LoginGroupBox.Location = new System.Drawing.Point(12, 17);
             this.LoginGroupBox.Name = "LoginGroupBox";
-            this.LoginGroupBox.Size = new System.Drawing.Size(313, 84);
+            this.LoginGroupBox.Size = new System.Drawing.Size(313, 120);
             this.LoginGroupBox.TabIndex = 13;
             this.LoginGroupBox.TabStop = false;
             this.LoginGroupBox.Text = "Logowanie";
@@ -121,7 +123,7 @@
             // 
             // LoginButton
             // 
-            this.LoginButton.Location = new System.Drawing.Point(109, 126);
+            this.LoginButton.Location = new System.Drawing.Point(103, 88);
             this.LoginButton.Name = "LoginButton";
             this.LoginButton.Size = new System.Drawing.Size(90, 26);
             this.LoginButton.TabIndex = 10;
@@ -132,19 +134,15 @@
             // ConnectPanel
             // 
             this.ConnectPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.ConnectPanel.Controls.Add(this.buttonConnect);
-            this.ConnectPanel.Controls.Add(this.textBoxPort);
-            this.ConnectPanel.Controls.Add(this.textBoxhostIp);
-            this.ConnectPanel.Controls.Add(this.labelPort);
-            this.ConnectPanel.Controls.Add(this.labelHostIp);
-            this.ConnectPanel.Location = new System.Drawing.Point(103, 28);
+            this.ConnectPanel.Controls.Add(this.groupBox1);
+            this.ConnectPanel.Location = new System.Drawing.Point(103, 3);
             this.ConnectPanel.Name = "ConnectPanel";
-            this.ConnectPanel.Size = new System.Drawing.Size(328, 80);
+            this.ConnectPanel.Size = new System.Drawing.Size(328, 105);
             this.ConnectPanel.TabIndex = 3;
             // 
             // buttonConnect
             // 
-            this.buttonConnect.Location = new System.Drawing.Point(238, 49);
+            this.buttonConnect.Location = new System.Drawing.Point(192, 59);
             this.buttonConnect.Name = "buttonConnect";
             this.buttonConnect.Size = new System.Drawing.Size(87, 28);
             this.buttonConnect.TabIndex = 25;
@@ -154,14 +152,14 @@
             // 
             // textBoxPort
             // 
-            this.textBoxPort.Location = new System.Drawing.Point(216, 14);
+            this.textBoxPort.Location = new System.Drawing.Point(180, 22);
             this.textBoxPort.Name = "textBoxPort";
             this.textBoxPort.Size = new System.Drawing.Size(76, 20);
             this.textBoxPort.TabIndex = 24;
             // 
             // textBoxhostIp
             // 
-            this.textBoxhostIp.Location = new System.Drawing.Point(77, 14);
+            this.textBoxhostIp.Location = new System.Drawing.Point(58, 22);
             this.textBoxhostIp.Name = "textBoxhostIp";
             this.textBoxhostIp.Size = new System.Drawing.Size(76, 20);
             this.textBoxhostIp.TabIndex = 23;
@@ -169,7 +167,7 @@
             // labelPort
             // 
             this.labelPort.AutoSize = true;
-            this.labelPort.Location = new System.Drawing.Point(168, 17);
+            this.labelPort.Location = new System.Drawing.Point(143, 25);
             this.labelPort.Name = "labelPort";
             this.labelPort.Size = new System.Drawing.Size(31, 13);
             this.labelPort.TabIndex = 22;
@@ -178,7 +176,7 @@
             // labelHostIp
             // 
             this.labelHostIp.AutoSize = true;
-            this.labelHostIp.Location = new System.Drawing.Point(29, 17);
+            this.labelHostIp.Location = new System.Drawing.Point(6, 25);
             this.labelHostIp.Name = "labelHostIp";
             this.labelHostIp.Size = new System.Drawing.Size(46, 13);
             this.labelHostIp.TabIndex = 21;
@@ -186,13 +184,27 @@
             // 
             // BackButton
             // 
-            this.BackButton.Location = new System.Drawing.Point(12, 126);
+            this.BackButton.Location = new System.Drawing.Point(6, 88);
             this.BackButton.Name = "BackButton";
             this.BackButton.Size = new System.Drawing.Size(91, 26);
             this.BackButton.TabIndex = 15;
             this.BackButton.Text = "Wstecz";
             this.BackButton.UseVisualStyleBackColor = true;
             this.BackButton.Click += new System.EventHandler(this.BackButton_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.textBoxPort);
+            this.groupBox1.Controls.Add(this.buttonConnect);
+            this.groupBox1.Controls.Add(this.textBoxhostIp);
+            this.groupBox1.Controls.Add(this.labelPort);
+            this.groupBox1.Controls.Add(this.labelHostIp);
+            this.groupBox1.Location = new System.Drawing.Point(25, 9);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(285, 93);
+            this.groupBox1.TabIndex = 26;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Połącz z serwerem";
             // 
             // ConnectOptionsPanel
             // 
@@ -206,7 +218,8 @@
             this.LoginGroupBox.ResumeLayout(false);
             this.LoginGroupBox.PerformLayout();
             this.ConnectPanel.ResumeLayout(false);
-            this.ConnectPanel.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -228,5 +241,6 @@
         private System.Windows.Forms.Label labelPort;
         private System.Windows.Forms.Label labelHostIp;
         private System.Windows.Forms.Button BackButton;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
