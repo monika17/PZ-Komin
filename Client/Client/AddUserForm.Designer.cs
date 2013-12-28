@@ -32,11 +32,11 @@
             this.RegisterPanel = new System.Windows.Forms.Panel();
             this.RegisterGroupBox = new System.Windows.Forms.GroupBox();
             this.RegisterNameAcceptableLabel = new System.Windows.Forms.Label();
+            this.RegisterButton = new System.Windows.Forms.Button();
             this.RegisterNameTextBox = new System.Windows.Forms.TextBox();
             this.RegisterPassTextBox = new System.Windows.Forms.TextBox();
             this.RegisterNamelabel = new System.Windows.Forms.Label();
             this.RegisterPasslabel = new System.Windows.Forms.Label();
-            this.RegisterButton = new System.Windows.Forms.Button();
             this.RegisterNameTextBoxToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.RegisterNameValidityTimer = new System.Windows.Forms.Timer(this.components);
             this.RegisterPanel.SuspendLayout();
@@ -78,6 +78,16 @@
             this.RegisterNameAcceptableLabel.Size = new System.Drawing.Size(0, 13);
             this.RegisterNameAcceptableLabel.TabIndex = 12;
             // 
+            // RegisterButton
+            // 
+            this.RegisterButton.Location = new System.Drawing.Point(46, 84);
+            this.RegisterButton.Name = "RegisterButton";
+            this.RegisterButton.Size = new System.Drawing.Size(91, 26);
+            this.RegisterButton.TabIndex = 11;
+            this.RegisterButton.Text = "Dodaj";
+            this.RegisterButton.UseVisualStyleBackColor = true;
+            this.RegisterButton.Click += new System.EventHandler(this.RegisterButton_Click);
+            // 
             // RegisterNameTextBox
             // 
             this.RegisterNameTextBox.Location = new System.Drawing.Point(55, 19);
@@ -93,6 +103,7 @@
             this.RegisterPassTextBox.Size = new System.Drawing.Size(123, 20);
             this.RegisterPassTextBox.TabIndex = 9;
             this.RegisterPassTextBox.UseSystemPasswordChar = true;
+            this.RegisterPassTextBox.TextChanged += new System.EventHandler(this.RegisterPassTextBox_TextChanged);
             // 
             // RegisterNamelabel
             // 
@@ -112,17 +123,6 @@
             this.RegisterPasslabel.TabIndex = 7;
             this.RegisterPasslabel.Text = "Hasło: ";
             // 
-            // RegisterButton
-            // 
-            this.RegisterButton.Location = new System.Drawing.Point(46, 84);
-            this.RegisterButton.Name = "RegisterButton";
-            this.RegisterButton.Size = new System.Drawing.Size(91, 26);
-            this.RegisterButton.TabIndex = 11;
-            this.RegisterButton.Text = "Dodaj";
-            this.RegisterButton.UseVisualStyleBackColor = true;
-            this.RegisterButton.Click += new System.EventHandler(this.RegisterButton_Click);
-            this.RegisterButton.Paint += new System.Windows.Forms.PaintEventHandler(this.RegisterButton_Paint);
-            // 
             // RegisterNameTextBoxToolTip
             // 
             this.RegisterNameTextBoxToolTip.IsBalloon = true;
@@ -139,7 +139,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(256, 138);
             this.Controls.Add(this.RegisterPanel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "AddUserForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Dodaj użytkownika";
             this.RegisterPanel.ResumeLayout(false);
             this.RegisterGroupBox.ResumeLayout(false);

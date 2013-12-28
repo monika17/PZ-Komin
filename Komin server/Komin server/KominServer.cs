@@ -206,6 +206,7 @@ namespace Komin
             commune.CancelAsync();
             client.Close();
             client = null;
+            enc_seed = dec_seed = KominCipherSuite.InitialSeed;
             server.connections.Remove(this);
 
             if (log != null) log("Client " + client_id + " removed");
@@ -267,6 +268,7 @@ namespace Komin
             if ((packet.sender != contact_id) ||
                 ((packet.sender == 0) && ((packet.command != (uint)KominProtocolCommands.Login) &&
                                           (packet.command != (uint)KominProtocolCommands.CreateContact) &&
+                                          (packet.command != (uint)KominProtocolCommands.PingContactRequest) &&
                                           (packet.command != (uint)KominProtocolCommands.Disconnect) &&
                                           (packet.command != (uint)KominProtocolCommands.NoOperation))))
             {
@@ -561,7 +563,7 @@ namespace Komin
                             return;
                         }
                         ContactData cd = (ContactData)packet.GetContent(KominProtocolContentTypes.ContactData)[0];
-                        cd = KominServer.database.GetContactData(cd.contact_id);
+                        cd = KominServer.database.GetContactData(cd.contact_name);
                         if (cd == null)
                         {
                             packet.DeleteContent();

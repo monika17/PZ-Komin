@@ -27,9 +27,20 @@ namespace Komin
         {
             try
             {
-                connection.Connect(textBoxhostIp.Text, Convert.ToInt32(textBoxPort.Text));
+                if (!DataTesters.TestIPAddress(textBoxhostIp.Text))
+                {
+                    MessageBox.Show("Niepoprawny format adresu IP", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                int port_no = Convert.ToInt32(textBoxPort.Text);
+                if ((port_no < 1) || (port_no > 9999))
+                {
+                    MessageBox.Show("Niepoprawny numer portu (poprawne są z przedziału [1, 9999])", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                connection.Connect(textBoxhostIp.Text, port_no);
             }
-            catch (Exception)
+            catch (KominClientErrorException)
             {
                 MessageBox.Show("Nie udało się połączyć z serwerem", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -58,8 +69,8 @@ namespace Komin
 
         private void buttonNewUser_Click(object sender, EventArgs e)
         {
-            var addUserForm = new AddUserForm(connection);
-            addUserForm.Visible = true;
+            AddUserForm addUserForm = new AddUserForm(connection);
+            addUserForm.ShowDialog();
         }
 
         private void BackButton_Click(object sender, EventArgs e)
@@ -70,6 +81,27 @@ namespace Komin
             LoginPanel.Visible = false;
             clientForm.AcceptButton = buttonConnect;
             textBoxhostIp.Focus();
+            textBoxhostIp.Select(0, textBoxhostIp.Text.Length);
+        }
+
+        private void LoginNametextBox_TextChanged(object sender, EventArgs e)
+        {
+            LoginButton.Enabled = ((LoginNametextBox.Text != "") && (LoginPasstextBox.Text != ""));
+        }
+
+        private void LoginPasstextBox_TextChanged(object sender, EventArgs e)
+        {
+            LoginButton.Enabled = ((LoginNametextBox.Text != "") && (LoginPasstextBox.Text != ""));
+        }
+
+        private void textBoxhostIp_TextChanged(object sender, EventArgs e)
+        {
+            buttonConnect.Enabled = ((textBoxhostIp.Text != "") && (textBoxPort.Text != ""));
+        }
+
+        private void textBoxPort_TextChanged(object sender, EventArgs e)
+        {
+            buttonConnect.Enabled = ((textBoxhostIp.Text != "") && (textBoxPort.Text != ""));
         }
 
     }

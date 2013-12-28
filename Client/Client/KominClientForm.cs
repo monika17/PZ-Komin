@@ -359,10 +359,6 @@ namespace Komin
                 connection.Disconnect();
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
-        {
-        }
-
         private void treeView1_GetNode(object sender, TreeNodeMouseClickEventArgs e)
         {
             clickedContactNode = e.Node;
@@ -384,6 +380,14 @@ namespace Komin
         {
             AddContactForm acf = new AddContactForm(connection);
             acf.ShowDialog();
+        }
+
+        private void deleteContactToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Czy napewno chcesz usunąć kontakt?\n\nKontakt: " + clickedContactNode.Text, "Potwierdzenie", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                connection.RemoveContactFromList(clickedContactNode.Text);
+            }
         }
     }
 }

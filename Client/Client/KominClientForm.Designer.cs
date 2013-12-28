@@ -33,6 +33,8 @@
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Grupy");
             this.contextMenuStripContactsNode = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addContactToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripGroups = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainTabPanel = new System.Windows.Forms.TabControl();
             this.LoginTab = new System.Windows.Forms.TabPage();
             this.HomePage = new System.Windows.Forms.TabPage();
@@ -53,21 +55,20 @@
             this.audioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wyślijPlikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteContactToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSendMessage = new System.Windows.Forms.ToolStripMenuItem();
             this.njnnjToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mmmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sendFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.contextMenuStripGroups = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripContactsNode.SuspendLayout();
+            this.contextMenuStripGroups.SuspendLayout();
             this.MainTabPanel.SuspendLayout();
             this.HomePage.SuspendLayout();
             this.RightMenu.SuspendLayout();
             this.ContactGroupBox.SuspendLayout();
             this.contactTabContextMenu.SuspendLayout();
             this.contextMenuStripContact.SuspendLayout();
-            this.contextMenuStripGroups.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStripContactsNode
@@ -75,14 +76,28 @@
             this.contextMenuStripContactsNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addContactToolStripMenuItem});
             this.contextMenuStripContactsNode.Name = "contextMenuStripAddContact";
-            this.contextMenuStripContactsNode.Size = new System.Drawing.Size(148, 26);
+            this.contextMenuStripContactsNode.Size = new System.Drawing.Size(140, 26);
             // 
             // addContactToolStripMenuItem
             // 
             this.addContactToolStripMenuItem.Name = "addContactToolStripMenuItem";
-            this.addContactToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.addContactToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.addContactToolStripMenuItem.Text = "dodaj kontakt";
             this.addContactToolStripMenuItem.Click += new System.EventHandler(this.addContactToolStripMenuItem_Click);
+            // 
+            // contextMenuStripGroups
+            // 
+            this.contextMenuStripGroups.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addGroupToolStripMenuItem});
+            this.contextMenuStripGroups.Name = "contextMenuStripGroups";
+            this.contextMenuStripGroups.Size = new System.Drawing.Size(133, 26);
+            // 
+            // addGroupToolStripMenuItem
+            // 
+            this.addGroupToolStripMenuItem.Enabled = false;
+            this.addGroupToolStripMenuItem.Name = "addGroupToolStripMenuItem";
+            this.addGroupToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.addGroupToolStripMenuItem.Text = "Dodaj grupę";
             // 
             // MainTabPanel
             // 
@@ -248,12 +263,12 @@
             this.contactTabContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.zamknijToolStripMenuItem});
             this.contactTabContextMenu.Name = "contactTabContextMenu";
-            this.contactTabContextMenu.Size = new System.Drawing.Size(118, 26);
+            this.contactTabContextMenu.Size = new System.Drawing.Size(112, 26);
             // 
             // zamknijToolStripMenuItem
             // 
             this.zamknijToolStripMenuItem.Name = "zamknijToolStripMenuItem";
-            this.zamknijToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.zamknijToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
             this.zamknijToolStripMenuItem.Text = "Zamknij";
             this.zamknijToolStripMenuItem.Click += new System.EventHandler(this.onCloseContactTabClick);
             // 
@@ -264,15 +279,15 @@
             this.audioToolStripMenuItem,
             this.wideoToolStripMenuItem,
             this.wyślijPlikToolStripMenuItem,
+            this.toolStripSeparator1,
             this.deleteContactToolStripMenuItem});
             this.contextMenuStripContact.Name = "contextMenuStripContact";
-            this.contextMenuStripContact.Size = new System.Drawing.Size(174, 114);
-            this.contextMenuStripContact.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            this.contextMenuStripContact.Size = new System.Drawing.Size(163, 142);
             // 
             // txtMessageToolStripMenuItem
             // 
             this.txtMessageToolStripMenuItem.Name = "txtMessageToolStripMenuItem";
-            this.txtMessageToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.txtMessageToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.txtMessageToolStripMenuItem.Text = "rozmowa tekstowa";
             this.txtMessageToolStripMenuItem.Click += new System.EventHandler(this.txtMessageToolStripMenuItem_Click);
             // 
@@ -280,29 +295,34 @@
             // 
             this.audioToolStripMenuItem.Enabled = false;
             this.audioToolStripMenuItem.Name = "audioToolStripMenuItem";
-            this.audioToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.audioToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.audioToolStripMenuItem.Text = "rozmowa audio";
             // 
             // wideoToolStripMenuItem
             // 
             this.wideoToolStripMenuItem.Enabled = false;
             this.wideoToolStripMenuItem.Name = "wideoToolStripMenuItem";
-            this.wideoToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.wideoToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.wideoToolStripMenuItem.Text = "rozmowa wideo";
             // 
             // wyślijPlikToolStripMenuItem
             // 
             this.wyślijPlikToolStripMenuItem.Name = "wyślijPlikToolStripMenuItem";
-            this.wyślijPlikToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.wyślijPlikToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.wyślijPlikToolStripMenuItem.Text = "wyślij plik";
             this.wyślijPlikToolStripMenuItem.Click += new System.EventHandler(this.wyślijPlikToolStripMenuItem_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(159, 6);
+            // 
             // deleteContactToolStripMenuItem
             // 
-            this.deleteContactToolStripMenuItem.Enabled = false;
             this.deleteContactToolStripMenuItem.Name = "deleteContactToolStripMenuItem";
-            this.deleteContactToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.deleteContactToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.deleteContactToolStripMenuItem.Text = "usuń kontakt";
+            this.deleteContactToolStripMenuItem.Click += new System.EventHandler(this.deleteContactToolStripMenuItem_Click);
             // 
             // toolStripMenuItemSendMessage
             // 
@@ -326,20 +346,6 @@
             // 
             this.sendFileDialog.FileName = "file";
             // 
-            // contextMenuStripGroups
-            // 
-            this.contextMenuStripGroups.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addGroupToolStripMenuItem});
-            this.contextMenuStripGroups.Name = "contextMenuStripGroups";
-            this.contextMenuStripGroups.Size = new System.Drawing.Size(140, 26);
-            // 
-            // addGroupToolStripMenuItem
-            // 
-            this.addGroupToolStripMenuItem.Enabled = false;
-            this.addGroupToolStripMenuItem.Name = "addGroupToolStripMenuItem";
-            this.addGroupToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
-            this.addGroupToolStripMenuItem.Text = "Dodaj grupę";
-            // 
             // KominClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -352,6 +358,7 @@
             this.Text = "Komin v0.1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.onClientClosing);
             this.contextMenuStripContactsNode.ResumeLayout(false);
+            this.contextMenuStripGroups.ResumeLayout(false);
             this.MainTabPanel.ResumeLayout(false);
             this.HomePage.ResumeLayout(false);
             this.HomePage.PerformLayout();
@@ -360,7 +367,6 @@
             this.ContactGroupBox.ResumeLayout(false);
             this.contactTabContextMenu.ResumeLayout(false);
             this.contextMenuStripContact.ResumeLayout(false);
-            this.contextMenuStripGroups.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -396,6 +402,7 @@
         private System.Windows.Forms.ToolStripMenuItem deleteContactToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripGroups;
         private System.Windows.Forms.ToolStripMenuItem addGroupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
 

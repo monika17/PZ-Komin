@@ -84,10 +84,11 @@ namespace Komin
                 }
                 catch (SqlException)
                 {
+                    error_during_req = true;
                     req_finished = true;
                     reqtexts.RemoveAt(0);
                     done_req_count++;
-                    error_during_req = true;
+                    ReqRdr = null;
                 }
             }
             else if(reqtexts[0][0]=='E')

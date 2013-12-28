@@ -47,14 +47,14 @@ namespace Komin
 
         private void RegisterNameTextBox_TextChanged(object sender, EventArgs e)
         {
+            RegisterButton.Enabled = ((RegisterNameTextBox.Text != "") && (RegisterPassTextBox.Text != ""));
             RegisterNameAcceptableLabel.Text = "";
             RegisterNameValidityTimer.Enabled = false;
             if (RegisterNameTextBox.Text != "")
                 RegisterNameValidityTimer.Enabled = true;
-            RegisterButton.Enabled = ((RegisterNameTextBox.Text != "") && (RegisterPassTextBox.Text != ""));
         }
 
-        private void RegisterButton_Paint(object sender, PaintEventArgs e)
+        private void RegisterPassTextBox_TextChanged(object sender, EventArgs e)
         {
             RegisterButton.Enabled = ((RegisterNameTextBox.Text != "") && (RegisterPassTextBox.Text != ""));
         }

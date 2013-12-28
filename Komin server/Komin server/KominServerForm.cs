@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-using System.Text.RegularExpressions;
-
 namespace Komin
 {
     public partial class KominServerForm : Form
@@ -20,8 +18,7 @@ namespace Komin
 
         private void onStartStopListening(object sender, EventArgs e)
         {
-            Regex regexp = new Regex("(0|(1([0-9]?[0-9])?)|(2((5[0-5]?)|([0-4]?[0-9]))?)|([3-9][0-9]?))\\.(0|(1([0-9]?[0-9])?)|(2((5[0-5]?)|([0-4]?[0-9]))?)|([3-9][0-9]?))\\.(0|(1([0-9]?[0-9])?)|(2((5[0-5]?)|([0-4]?[0-9]))?)|([3-9][0-9]?))\\.(0|(1([0-9]?[0-9])?)|(2((5[0-5]?)|([0-4]?[0-9]))?)|([3-9][0-9]?))");
-            if (regexp.Matches(comboBox1.Text).Count != 1)
+            if (!DataTesters.TestIPAddress(comboBox1.Text))
             {
                 MessageBox.Show("Niepoprawny format adresu IP", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;

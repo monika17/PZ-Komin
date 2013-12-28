@@ -103,6 +103,7 @@ namespace Komin
             }
             catch (SocketException ex)
             {
+                server = null;
                 if(onError!=null)
                     onError("Nie można połączyć się z serwerem: błąd socketa", null);
                 else
@@ -146,6 +147,7 @@ namespace Komin
             jobs.Restart();
             server.Close();
             server = null;
+            enc_seed = dec_seed = KominCipherSuite.InitialSeed;
         }
 
         private void serverCommune(object sender, DoWorkEventArgs e)
@@ -685,9 +687,6 @@ namespace Komin
 
         public ContactData PingContactRequest(uint contact_id, string contact_name="") //ask client about its status, capabilities etc.
         {
-            if (userdata.contact_id == 0)
-                return null;
-
             KominNetworkJob job = jobs.AddJob();
             bool finished = false;
 
@@ -724,7 +723,7 @@ namespace Komin
                         if (onError != null)
                         {
                             onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
-                            break;
+                            return null;
                         }
                         else
                             throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);

@@ -29,21 +29,21 @@
         private void InitializeComponent()
         {
             this.LoginPanel = new System.Windows.Forms.Panel();
-            this.buttonNewUser = new System.Windows.Forms.Button();
             this.LoginGroupBox = new System.Windows.Forms.GroupBox();
+            this.buttonNewUser = new System.Windows.Forms.Button();
+            this.BackButton = new System.Windows.Forms.Button();
             this.LoginNametextBox = new System.Windows.Forms.TextBox();
+            this.LoginButton = new System.Windows.Forms.Button();
             this.LoginPass = new System.Windows.Forms.Label();
             this.LoginName = new System.Windows.Forms.Label();
             this.LoginPasstextBox = new System.Windows.Forms.TextBox();
-            this.LoginButton = new System.Windows.Forms.Button();
             this.ConnectPanel = new System.Windows.Forms.Panel();
-            this.buttonConnect = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.textBoxPort = new System.Windows.Forms.TextBox();
+            this.buttonConnect = new System.Windows.Forms.Button();
             this.textBoxhostIp = new System.Windows.Forms.TextBox();
             this.labelPort = new System.Windows.Forms.Label();
             this.labelHostIp = new System.Windows.Forms.Label();
-            this.BackButton = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.LoginPanel.SuspendLayout();
             this.LoginGroupBox.SuspendLayout();
             this.ConnectPanel.SuspendLayout();
@@ -59,16 +59,6 @@
             this.LoginPanel.Size = new System.Drawing.Size(328, 182);
             this.LoginPanel.TabIndex = 4;
             this.LoginPanel.Visible = false;
-            // 
-            // buttonNewUser
-            // 
-            this.buttonNewUser.Location = new System.Drawing.Point(199, 88);
-            this.buttonNewUser.Name = "buttonNewUser";
-            this.buttonNewUser.Size = new System.Drawing.Size(108, 26);
-            this.buttonNewUser.TabIndex = 14;
-            this.buttonNewUser.Text = "Dodaj nowe konto";
-            this.buttonNewUser.UseVisualStyleBackColor = true;
-            this.buttonNewUser.Click += new System.EventHandler(this.buttonNewUser_Click);
             // 
             // LoginGroupBox
             // 
@@ -88,12 +78,43 @@
             this.LoginGroupBox.TabStop = false;
             this.LoginGroupBox.Text = "Logowanie";
             // 
+            // buttonNewUser
+            // 
+            this.buttonNewUser.Location = new System.Drawing.Point(199, 88);
+            this.buttonNewUser.Name = "buttonNewUser";
+            this.buttonNewUser.Size = new System.Drawing.Size(108, 26);
+            this.buttonNewUser.TabIndex = 14;
+            this.buttonNewUser.Text = "Dodaj nowe konto";
+            this.buttonNewUser.UseVisualStyleBackColor = true;
+            this.buttonNewUser.Click += new System.EventHandler(this.buttonNewUser_Click);
+            // 
+            // BackButton
+            // 
+            this.BackButton.Location = new System.Drawing.Point(6, 88);
+            this.BackButton.Name = "BackButton";
+            this.BackButton.Size = new System.Drawing.Size(91, 26);
+            this.BackButton.TabIndex = 15;
+            this.BackButton.Text = "Wstecz";
+            this.BackButton.UseVisualStyleBackColor = true;
+            this.BackButton.Click += new System.EventHandler(this.BackButton_Click);
+            // 
             // LoginNametextBox
             // 
             this.LoginNametextBox.Location = new System.Drawing.Point(131, 19);
             this.LoginNametextBox.Name = "LoginNametextBox";
             this.LoginNametextBox.Size = new System.Drawing.Size(123, 20);
             this.LoginNametextBox.TabIndex = 4;
+            this.LoginNametextBox.TextChanged += new System.EventHandler(this.LoginNametextBox_TextChanged);
+            // 
+            // LoginButton
+            // 
+            this.LoginButton.Location = new System.Drawing.Point(103, 88);
+            this.LoginButton.Name = "LoginButton";
+            this.LoginButton.Size = new System.Drawing.Size(90, 26);
+            this.LoginButton.TabIndex = 10;
+            this.LoginButton.Text = "Zaloguj";
+            this.LoginButton.UseVisualStyleBackColor = true;
+            this.LoginButton.Click += new System.EventHandler(this.LoginButton_Click);
             // 
             // LoginPass
             // 
@@ -120,16 +141,7 @@
             this.LoginPasstextBox.Size = new System.Drawing.Size(123, 20);
             this.LoginPasstextBox.TabIndex = 5;
             this.LoginPasstextBox.UseSystemPasswordChar = true;
-            // 
-            // LoginButton
-            // 
-            this.LoginButton.Location = new System.Drawing.Point(103, 88);
-            this.LoginButton.Name = "LoginButton";
-            this.LoginButton.Size = new System.Drawing.Size(90, 26);
-            this.LoginButton.TabIndex = 10;
-            this.LoginButton.Text = "Zaloguj";
-            this.LoginButton.UseVisualStyleBackColor = true;
-            this.LoginButton.Click += new System.EventHandler(this.LoginButton_Click);
+            this.LoginPasstextBox.TextChanged += new System.EventHandler(this.LoginPasstextBox_TextChanged);
             // 
             // ConnectPanel
             // 
@@ -139,6 +151,28 @@
             this.ConnectPanel.Name = "ConnectPanel";
             this.ConnectPanel.Size = new System.Drawing.Size(328, 105);
             this.ConnectPanel.TabIndex = 3;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.textBoxPort);
+            this.groupBox1.Controls.Add(this.buttonConnect);
+            this.groupBox1.Controls.Add(this.textBoxhostIp);
+            this.groupBox1.Controls.Add(this.labelPort);
+            this.groupBox1.Controls.Add(this.labelHostIp);
+            this.groupBox1.Location = new System.Drawing.Point(25, 9);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(285, 93);
+            this.groupBox1.TabIndex = 26;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Połącz z serwerem";
+            // 
+            // textBoxPort
+            // 
+            this.textBoxPort.Location = new System.Drawing.Point(180, 22);
+            this.textBoxPort.Name = "textBoxPort";
+            this.textBoxPort.Size = new System.Drawing.Size(76, 20);
+            this.textBoxPort.TabIndex = 24;
+            this.textBoxPort.TextChanged += new System.EventHandler(this.textBoxPort_TextChanged);
             // 
             // buttonConnect
             // 
@@ -150,19 +184,13 @@
             this.buttonConnect.UseVisualStyleBackColor = true;
             this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
             // 
-            // textBoxPort
-            // 
-            this.textBoxPort.Location = new System.Drawing.Point(180, 22);
-            this.textBoxPort.Name = "textBoxPort";
-            this.textBoxPort.Size = new System.Drawing.Size(76, 20);
-            this.textBoxPort.TabIndex = 24;
-            // 
             // textBoxhostIp
             // 
             this.textBoxhostIp.Location = new System.Drawing.Point(58, 22);
             this.textBoxhostIp.Name = "textBoxhostIp";
             this.textBoxhostIp.Size = new System.Drawing.Size(76, 20);
             this.textBoxhostIp.TabIndex = 23;
+            this.textBoxhostIp.TextChanged += new System.EventHandler(this.textBoxhostIp_TextChanged);
             // 
             // labelPort
             // 
@@ -181,30 +209,6 @@
             this.labelHostIp.Size = new System.Drawing.Size(46, 13);
             this.labelHostIp.TabIndex = 21;
             this.labelHostIp.Text = "host IP: ";
-            // 
-            // BackButton
-            // 
-            this.BackButton.Location = new System.Drawing.Point(6, 88);
-            this.BackButton.Name = "BackButton";
-            this.BackButton.Size = new System.Drawing.Size(91, 26);
-            this.BackButton.TabIndex = 15;
-            this.BackButton.Text = "Wstecz";
-            this.BackButton.UseVisualStyleBackColor = true;
-            this.BackButton.Click += new System.EventHandler(this.BackButton_Click);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.textBoxPort);
-            this.groupBox1.Controls.Add(this.buttonConnect);
-            this.groupBox1.Controls.Add(this.textBoxhostIp);
-            this.groupBox1.Controls.Add(this.labelPort);
-            this.groupBox1.Controls.Add(this.labelHostIp);
-            this.groupBox1.Location = new System.Drawing.Point(25, 9);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(285, 93);
-            this.groupBox1.TabIndex = 26;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Połącz z serwerem";
             // 
             // ConnectOptionsPanel
             // 

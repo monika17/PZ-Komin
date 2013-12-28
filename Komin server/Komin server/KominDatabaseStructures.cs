@@ -157,9 +157,20 @@ namespace Komin
     {
         public static bool TestLoginOrGroupName(string contact_name) //check is login name correct
         {
-            Regex regexp = new Regex("[A-Z][A-Za-z0-9_]*");
+            Regex regexp = new Regex("^[A-Z][A-Za-z0-9_]*$");
 
             if (regexp.Matches(contact_name).Count != 1)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TestIPAddress(string ip) //check is IP address in correct format
+        {
+            Regex regexp = new Regex("^(0|(1[0-9]?[0-9]?)|(2([0-9]|(5[0-5])|([0-4][0-9]))?)|([3-9][0-9]?))\\.(0|(1[0-9]?[0-9]?)|(2([0-9]|(5[0-5])|([0-4][0-9]))?)|([3-9][0-9]?))\\.(0|(1[0-9]?[0-9]?)|(2([0-9]|(5[0-5])|([0-4][0-9]))?)|([3-9][0-9]?))\\.(0|(1[0-9]?[0-9]?)|(2([0-9]|(5[0-5])|([0-4][0-9]))?)|([3-9][0-9]?))$");
+
+            if (regexp.Matches(ip).Count != 1)
             {
                 return false;
             }
