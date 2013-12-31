@@ -50,16 +50,17 @@
             this.connections_count = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.LogPage = new System.Windows.Forms.TabPage();
+            this.savelog = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.logbox = new System.Windows.Forms.TextBox();
+            this.SQLExecPage = new System.Windows.Forms.TabPage();
+            this.sqlReaderOutput = new System.Windows.Forms.ListView();
+            this.readerexec = new System.Windows.Forms.CheckBox();
+            this.sqlExec = new System.Windows.Forms.Button();
+            this.sqlCommandText = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.SQLExecPage = new System.Windows.Forms.TabPage();
-            this.label4 = new System.Windows.Forms.Label();
-            this.sqlCommandText = new System.Windows.Forms.TextBox();
-            this.sqlExec = new System.Windows.Forms.Button();
-            this.readerexec = new System.Windows.Forms.CheckBox();
-            this.sqlReaderOutput = new System.Windows.Forms.ListView();
             this.tabControl1.SuspendLayout();
             this.SummaryPage.SuspendLayout();
             this.LogPage.SuspendLayout();
@@ -231,6 +232,7 @@
             // 
             // LogPage
             // 
+            this.LogPage.Controls.Add(this.savelog);
             this.LogPage.Controls.Add(this.button2);
             this.LogPage.Controls.Add(this.logbox);
             this.LogPage.Location = new System.Drawing.Point(4, 22);
@@ -241,8 +243,20 @@
             this.LogPage.Text = "Log";
             this.LogPage.UseVisualStyleBackColor = true;
             // 
+            // savelog
+            // 
+            this.savelog.Enabled = false;
+            this.savelog.Location = new System.Drawing.Point(952, 451);
+            this.savelog.Name = "savelog";
+            this.savelog.Size = new System.Drawing.Size(75, 23);
+            this.savelog.TabIndex = 2;
+            this.savelog.Text = "save to file";
+            this.savelog.UseVisualStyleBackColor = true;
+            this.savelog.Click += new System.EventHandler(this.savelog_Click);
+            // 
             // button2
             // 
+            this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(1033, 451);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
@@ -263,17 +277,6 @@
             this.logbox.TabIndex = 0;
             this.logbox.TextChanged += new System.EventHandler(this.logbox_TextChanged);
             // 
-            // timer1
-            // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 2000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // timer2
-            // 
-            this.timer2.Enabled = true;
-            this.timer2.Tick += new System.EventHandler(this.onLogTimerUpdate);
-            // 
             // SQLExecPage
             // 
             this.SQLExecPage.Controls.Add(this.sqlReaderOutput);
@@ -289,44 +292,6 @@
             this.SQLExecPage.Text = "Execute SQL";
             this.SQLExecPage.UseVisualStyleBackColor = true;
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 11);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(57, 13);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "Command:";
-            // 
-            // sqlCommandText
-            // 
-            this.sqlCommandText.Location = new System.Drawing.Point(72, 8);
-            this.sqlCommandText.Name = "sqlCommandText";
-            this.sqlCommandText.Size = new System.Drawing.Size(879, 20);
-            this.sqlCommandText.TabIndex = 1;
-            this.sqlCommandText.TextChanged += new System.EventHandler(this.sqlCommandText_TextChanged);
-            // 
-            // sqlExec
-            // 
-            this.sqlExec.Location = new System.Drawing.Point(1033, 6);
-            this.sqlExec.Name = "sqlExec";
-            this.sqlExec.Size = new System.Drawing.Size(75, 23);
-            this.sqlExec.TabIndex = 3;
-            this.sqlExec.Text = "Execute";
-            this.sqlExec.UseVisualStyleBackColor = true;
-            this.sqlExec.Click += new System.EventHandler(this.sqlExec_Click);
-            // 
-            // readerexec
-            // 
-            this.readerexec.AutoSize = true;
-            this.readerexec.Location = new System.Drawing.Point(957, 10);
-            this.readerexec.Name = "readerexec";
-            this.readerexec.Size = new System.Drawing.Size(70, 17);
-            this.readerexec.TabIndex = 2;
-            this.readerexec.Text = "as reader";
-            this.readerexec.UseVisualStyleBackColor = true;
-            this.readerexec.CheckedChanged += new System.EventHandler(this.readerexec_CheckedChanged);
-            // 
             // sqlReaderOutput
             // 
             this.sqlReaderOutput.Enabled = false;
@@ -339,6 +304,55 @@
             this.sqlReaderOutput.TabIndex = 4;
             this.sqlReaderOutput.UseCompatibleStateImageBehavior = false;
             this.sqlReaderOutput.View = System.Windows.Forms.View.Details;
+            // 
+            // readerexec
+            // 
+            this.readerexec.AutoSize = true;
+            this.readerexec.Location = new System.Drawing.Point(957, 10);
+            this.readerexec.Name = "readerexec";
+            this.readerexec.Size = new System.Drawing.Size(70, 17);
+            this.readerexec.TabIndex = 2;
+            this.readerexec.Text = "as reader";
+            this.readerexec.UseVisualStyleBackColor = true;
+            this.readerexec.CheckedChanged += new System.EventHandler(this.readerexec_CheckedChanged);
+            // 
+            // sqlExec
+            // 
+            this.sqlExec.Location = new System.Drawing.Point(1033, 6);
+            this.sqlExec.Name = "sqlExec";
+            this.sqlExec.Size = new System.Drawing.Size(75, 23);
+            this.sqlExec.TabIndex = 3;
+            this.sqlExec.Text = "Execute";
+            this.sqlExec.UseVisualStyleBackColor = true;
+            this.sqlExec.Click += new System.EventHandler(this.sqlExec_Click);
+            // 
+            // sqlCommandText
+            // 
+            this.sqlCommandText.Location = new System.Drawing.Point(72, 8);
+            this.sqlCommandText.Name = "sqlCommandText";
+            this.sqlCommandText.Size = new System.Drawing.Size(879, 20);
+            this.sqlCommandText.TabIndex = 1;
+            this.sqlCommandText.TextChanged += new System.EventHandler(this.sqlCommandText_TextChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 11);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(57, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Command:";
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 2000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // timer2
+            // 
+            this.timer2.Enabled = true;
+            this.timer2.Tick += new System.EventHandler(this.onLogTimerUpdate);
             // 
             // KominServerForm
             // 
@@ -402,6 +416,7 @@
         private System.Windows.Forms.Button sqlExec;
         private System.Windows.Forms.TextBox sqlCommandText;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button savelog;
 
     }
 }

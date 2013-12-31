@@ -195,6 +195,7 @@
             this.statusComboBox.Name = "statusComboBox";
             this.statusComboBox.Size = new System.Drawing.Size(111, 21);
             this.statusComboBox.TabIndex = 4;
+            this.statusComboBox.SelectedIndexChanged += new System.EventHandler(this.statusComboBox_SelectedIndexChanged);
             // 
             // logout
             // 
@@ -282,7 +283,7 @@
             this.toolStripSeparator1,
             this.deleteContactToolStripMenuItem});
             this.contextMenuStripContact.Name = "contextMenuStripContact";
-            this.contextMenuStripContact.Size = new System.Drawing.Size(163, 142);
+            this.contextMenuStripContact.Size = new System.Drawing.Size(163, 120);
             // 
             // txtMessageToolStripMenuItem
             // 

@@ -23,6 +23,14 @@ namespace Komin
 
         public KominServer()
         {
+            /*byte[] msg1 = { 1, 2, 3, 4, 5 };
+            byte[] msg2 = { 6, 7, 8, 9, 0 };
+            byte[] msg3 = new byte[10];
+            byte enc_seed = KominCipherSuite.Encrypt(ref msg1);
+            enc_seed = KominCipherSuite.Encrypt(ref msg2, enc_seed);
+            for (int i = 0; i < 10; i++)
+                if (i < 5) msg3[i] = msg1[i]; else msg3[i] = msg2[i - 5];
+            byte dec_seed = KominCipherSuite.Decrypt(ref msg3);*/
             server = null;
             listener = new BackgroundWorker();
             connections = new List<KominServerSideConnection>();
@@ -263,7 +271,7 @@ namespace Komin
 
         private void InterpretePacket(ref KominNetworkPacket packet)
         {
-            if (log != null) log("Client " + client_id + "=>Server: sender=" + packet.sender + "   receiver=" + packet.target + "   is_group=" + (packet.target_is_group ? "true" : "false") + "   cmd=" + ((KominProtocolCommands)packet.command).ToString().ToUpper() + "   jobID=" + packet.job_id + "   content=" + packet.content);
+            if (log != null) log("{E:" + enc_seed + ",D:" + dec_seed + "} Client " + client_id + "=>Server: sender=" + packet.sender + "   receiver=" + packet.target + "   is_group=" + (packet.target_is_group ? "true" : "false") + "   cmd=" + ((KominProtocolCommands)packet.command).ToString().ToUpper() + "   jobID=" + packet.job_id + "   content=" + packet.content);
 
             if ((packet.sender != contact_id) ||
                 ((packet.sender == 0) && ((packet.command != (uint)KominProtocolCommands.Login) &&
@@ -811,11 +819,11 @@ namespace Komin
             }
             if (attempts == 3)
             {
-                if (log != null) log("Server=>Client " + client_id + ": write timeout - packet discarded");
+                if (log != null) log("{E:" + enc_seed + ",D:" + dec_seed + "} Server=>Client " + client_id + ": write timeout - packet discarded");
             }
             else
             {
-                if (log != null) log("Server=>Client " + client_id + ": sender=" + packets_to_send[0].sender + "   receiver=" + packets_to_send[0].target + "   is_group=" + (packets_to_send[0].target_is_group ? "true" : "false") + "   cmd=" + ((KominProtocolCommands)packets_to_send[0].command).ToString().ToUpper() + "   jobID=" + packets_to_send[0].job_id + "   content=" + packets_to_send[0].content);
+                if (log != null) log("{E:" + enc_seed + ",D:" + dec_seed + "} Server=>Client " + client_id + ": sender=" + packets_to_send[0].sender + "   receiver=" + packets_to_send[0].target + "   is_group=" + (packets_to_send[0].target_is_group ? "true" : "false") + "   cmd=" + ((KominProtocolCommands)packets_to_send[0].command).ToString().ToUpper() + "   jobID=" + packets_to_send[0].job_id + "   content=" + packets_to_send[0].content);
             }
             packets_to_send.RemoveAt(0);
         }
@@ -853,7 +861,6 @@ namespace Komin
             packet.job_id = job.JobID;
             packet.command = (uint)KominProtocolCommands.Logout;
             packet.DeleteContent();
-            packet.InsertContent(KominProtocolContentTypes.StatusData, (uint)KominClientStatusCodes.NotAccessible);
             InsertPacketForSending(packet);
 
             //check is new state influ on group existence
@@ -875,6 +882,7 @@ namespace Komin
 
         public void SetStatus(uint status = uint.MaxValue) //server sends user status change notification to all users
         //if status==uint.MaxValue then no changes in database
+        //clients have to resolve is this notification valid for them
         {
             if (contact_id == 0)
                 return;
@@ -894,30 +902,28 @@ namespace Komin
             {
                 foreach (ContactData contact in cdl)
                 {
-                    if ((contact.contact_id != contact_id) &&
+                    if ((contact.contact_id!=contact_id)&&
                         ((contact.status & (uint)KominClientStatusCodes.Mask) != (uint)KominClientStatusCodes.NotAccessible))
                         contact_ids.Add(contact.contact_id);
                 }
             }
 
             //send status notifications to contacts
-            KominNetworkPacket packet = new KominNetworkPacket();
-            packet.sender = 0; //server
-            packet.target_is_group = false;
-            packet.job_id = job.JobID;
-            packet.command = (uint)KominProtocolCommands.SetStatus;
-            packet.DeleteContent();
-            packet.InsertContent(KominProtocolContentTypes.ContactData, cd);
             foreach (uint contact in contact_ids)
-            {
-                packet.target = contact;
                 foreach (KominServerSideConnection con in server.connections)
                     if (con.contact_id == contact)
                     {
+                        KominNetworkPacket packet = new KominNetworkPacket();
+                        packet.sender = 0; //server
+                        packet.target = con.contact_id;
+                        packet.target_is_group = false;
+                        packet.job_id = job.JobID;
+                        packet.command = (uint)KominProtocolCommands.SetStatus;
+                        packet.DeleteContent();
+                        packet.InsertContent(KominProtocolContentTypes.ContactData, cd);
                         con.InsertPacketForSending(packet);
                         break;
                     }
-            }
 
             server.jobs.FinishJob(job);
         }

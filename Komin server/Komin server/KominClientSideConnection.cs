@@ -104,7 +104,7 @@ namespace Komin
             catch (SocketException ex)
             {
                 server = null;
-                if(onError!=null)
+                if (onError != null)
                     onError("Nie można połączyć się z serwerem: błąd socketa", null);
                 else
                     throw new KominClientErrorException("Nie można połączyć się z serwerem: błąd socketa", ex);
@@ -228,8 +228,38 @@ namespace Komin
                 /*case KominProtocolCommands.Login: //client can't log other users into itself
                     break;*/
                 case KominProtocolCommands.Logout: //client was forced to log out by server
+                    if (packet.content == 0)
+                    {
+                        if (onServerLogout != null)
+                            onServerLogout();
+                    }
                     break;
                 case KominProtocolCommands.SetStatus: //server sent status change notification
+                    if (packet.content == (uint)KominProtocolContentTypes.ContactData)
+                    {
+                        bool present = false;
+                        ContactData c = (ContactData)packet.GetContent(KominProtocolContentTypes.ContactData)[0];
+                        //check is this contact listed on contact list
+                        foreach (ContactData cd in userdata.contacts)
+                            if (cd.contact_id == c.contact_id)
+                            {
+                                cd.status = c.status;
+                                present = true;
+                                break;
+                            }
+                        //check is this contact listed on any group members list
+                        foreach (GroupData gd in userdata.groups)
+                            foreach (ContactData cd in userdata.contacts)
+                                if (cd.contact_id == c.contact_id)
+                                {
+                                    cd.status = c.status;
+                                    present = true;
+                                    break;
+                                }
+
+                        if (present && onStatusNotification != null)
+                            onStatusNotification(c);
+                    }
                     break;
                 /*case KominProtocolCommands.SetPassword: //client doesn't store any passwords
                     break;*/
@@ -319,6 +349,7 @@ namespace Komin
                 return;
 
             byte[] packet_bytes = packets_to_send[0].PackForSending();
+            packets_to_send.RemoveAt(0);
             enc_seed = KominCipherSuite.Encrypt(ref packet_bytes, enc_seed);
             stream.WriteTimeout = 100;
             int attempts = 0;
@@ -334,7 +365,6 @@ namespace Komin
                     attempts++;
                 }
             }
-            packets_to_send.RemoveAt(0);
         }
 
         //these methods are used when client wants to send something to client(s) or server
@@ -461,7 +491,7 @@ namespace Komin
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
-            packet.sender = userdata.contact_id; //client doesn't know its contact_id yet
+            packet.sender = userdata.contact_id;
             packet.target = 0; //server
             packet.target_is_group = false;
             packet.job_id = job.JobID;
@@ -685,7 +715,7 @@ namespace Komin
             jobs.FinishJob(job);
         }
 
-        public ContactData PingContactRequest(uint contact_id, string contact_name="") //ask client about its status, capabilities etc.
+        public ContactData PingContactRequest(uint contact_id, string contact_name = "") //ask client about its status, capabilities etc.
         {
             KominNetworkJob job = jobs.AddJob();
             bool finished = false;
@@ -892,7 +922,7 @@ namespace Komin
     public delegate void NewAudioMessage(uint sender, uint receiver, bool receiver_is_group, byte[] msg);
     public delegate void NewVideoMessage(uint sender, uint receiver, bool receiver_is_group, byte[] msg);
     public delegate void ServerForcedLogout();
-    public delegate void StatusNotificationArrived(KominNetworkPacket packet);
+    public delegate void StatusNotificationArrived(ContactData changed_contact);
     public delegate bool AudioCallRequest(KominNetworkPacket packet);
     public delegate bool VideoCallRequest(KominNetworkPacket packet);
     public delegate void CloseCallNotification(KominNetworkPacket packet);

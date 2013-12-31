@@ -41,17 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="KominCipherSuite.cs" />
+    <Compile Include="KominClientSideConnection.cs" />
+    <Compile Include="KominDatabaseStructures.cs" />
+    <Compile Include="KominNetworkJob.cs" />
+    <Compile Include="KominNetworkPacket.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Komin server\Komin server.csproj">
-      <Project>{a4c94b5d-8fea-4bd3-80ce-9da108361da6}</Project>
-      <Name>Komin server</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

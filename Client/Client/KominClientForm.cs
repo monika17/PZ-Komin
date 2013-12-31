@@ -386,7 +386,28 @@ namespace Komin
         {
             if (MessageBox.Show("Czy napewno chcesz usunąć kontakt?\n\nKontakt: " + clickedContactNode.Text, "Potwierdzenie", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                connection.RemoveContactFromList(clickedContactNode.Text);
+                try
+                {
+                    connection.RemoveContactFromList(clickedContactNode.Text);
+                }
+                catch (KominClientErrorException ex)
+                {
+                    MessageBox.Show(ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+        }
+
+        private void statusComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                connection.SetStatus((uint)statusComboBox.SelectedIndex);
+            }
+            catch (KominClientErrorException ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
         }
     }

@@ -199,10 +199,10 @@ command field values (not complete because of missing error notifications) (star
 					U¿ytkownik nie istnieje
 					U¿ytkownik nie jest zalogowany
 	command source: server
-		content bits: 000000000010
+		content bits: 000000000000
 		responses:
 			<none>
-+3 - SET_STATUS
+*3 - SET_STATUS
 	command source: client
 		content bits: 000000000010
 		responses from server:
@@ -262,7 +262,7 @@ command field values (not complete because of missing error notifications) (star
 		responses from client:
 			<none>
 			<next attempt>
-+9 - ADD_CONTACT_TO_LIST
+*9 - ADD_CONTACT_TO_LIST
 	command source: client
 		content bits: 000001000000
 		responses from server:
@@ -272,7 +272,7 @@ command field values (not complete because of missing error notifications) (star
 					U¿ytkownik nie istnieje
 					U¿ytkownik ju¿ znajduje siê na liœcie kontaktów
 					Nieprawid³owe dane ¿¹dania
-+10 - REMOVE_CONTACT_FROM_LIST
+*10 - REMOVE_CONTACT_FROM_LIST
 	command source: client
 		content bits: 000001000000
 		responses from server:
@@ -514,7 +514,7 @@ command field values (not complete because of missing error notifications) (star
 			cmd=7,content=000011000000 (contact denies joining the group)
 			<in parallel>
 			cmd=24,content=... (contact joins the group)
-31 - PERIODIC_PING_REQUEST (ping over 5 seconds; server sends ping every 3 seconds and awaits estimated in initial ping amount of time for answer)
+31 - PERIODIC_PING_REQUEST (ping over 3 seconds; server sends ping every 3 seconds and awaits estimated in initial ping amount of time for answer)
 		(if no answer then client lost connection; client resolves server activity by awaiting 6 seconds for ping request - if none then server lost)
 	command source: server
 		content bits: 000000000000

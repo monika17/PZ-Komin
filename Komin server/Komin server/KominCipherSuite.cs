@@ -62,9 +62,6 @@ namespace Komin
 
                 bt[i] = crypttab[(w << 4) | k];
 
-                if ((i & 1) != 0)
-                    bt[i] = (byte)(bt[i] ^ 0x2E);
-
                 if (i == 0)
                     bt[i] ^= last_seed;
                 else
@@ -86,9 +83,6 @@ namespace Komin
                     bt[i] ^= last_seed;
                 else
                     bt[i] ^= bt[i - 1];
-
-                if ((i & 1) != 0)
-                    bt[i] = (byte)(bt[i] ^ 0x2E);
 
                 b = decrypttab[bt[i]];
 

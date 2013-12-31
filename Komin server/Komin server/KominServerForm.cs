@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
+using System.IO;
+
 namespace Komin
 {
     public partial class KominServerForm : Form
@@ -108,6 +110,8 @@ namespace Komin
         {
             logbox.SelectionLength = 0;
             logbox.SelectionStart = 0;
+            button2.Enabled = (logbox.Text != "");
+            savelog.Enabled = (logbox.Text != "");
         }
 
         private void sqlCommandText_TextChanged(object sender, EventArgs e)
@@ -173,6 +177,34 @@ namespace Komin
             sqlCommandText.SelectionStart = 0;
             sqlCommandText.SelectionLength = sqlCommandText.Text.Length;
             sqlCommandText.Focus();
+        }
+
+        private void savelog_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.AddExtension = true;
+            sfd.CheckPathExists = true;
+            sfd.DefaultExt = "log";
+            sfd.DereferenceLinks = true;
+            sfd.Filter = "Server log file (*.log)|*.log";
+            sfd.FilterIndex = 0;
+            sfd.InitialDirectory = ".\\";
+            sfd.OverwritePrompt = true;
+            sfd.RestoreDirectory = false;
+            sfd.SupportMultiDottedExtensions = false;
+            sfd.Title = "Select a file";
+            sfd.ValidateNames = false;
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                StreamWriter file = new StreamWriter(sfd.OpenFile());
+                string text = logbox.Text;
+                text = text.Replace("\r\n", "\n");
+                text = text.Replace("\n\r", "\n");
+                text = text.Replace("\r", "\n");
+                file.Write(text);
+                file.Close();
+                MessageBox.Show("Log written to file", "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }
