@@ -29,8 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Kontakty");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Grupy");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Kontakty", 4, 4);
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Grupy", 5, 5);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KominClientForm));
             this.contextMenuStripContactsNode = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addContactToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripGroups = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -61,6 +62,7 @@
             this.njnnjToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mmmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sendFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.userstatesImageList = new System.Windows.Forms.ImageList(this.components);
             this.contextMenuStripContactsNode.SuspendLayout();
             this.contextMenuStripGroups.SuspendLayout();
             this.MainTabPanel.SuspendLayout();
@@ -107,6 +109,7 @@
             this.MainTabPanel.Controls.Add(this.LoginTab);
             this.MainTabPanel.Controls.Add(this.HomePage);
             this.MainTabPanel.Controls.Add(this.tabSendTextMessage);
+            this.MainTabPanel.ImageList = this.userstatesImageList;
             this.MainTabPanel.Location = new System.Drawing.Point(12, 12);
             this.MainTabPanel.Name = "MainTabPanel";
             this.MainTabPanel.SelectedIndex = 0;
@@ -225,17 +228,24 @@
             // treeView1
             // 
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView1.ImageIndex = 0;
+            this.treeView1.ImageList = this.userstatesImageList;
             this.treeView1.Location = new System.Drawing.Point(3, 16);
             this.treeView1.Name = "treeView1";
             treeNode1.ContextMenuStrip = this.contextMenuStripContactsNode;
+            treeNode1.ImageIndex = 4;
             treeNode1.Name = "Kontakty";
+            treeNode1.SelectedImageIndex = 4;
             treeNode1.Text = "Kontakty";
             treeNode2.ContextMenuStrip = this.contextMenuStripGroups;
+            treeNode2.ImageIndex = 5;
             treeNode2.Name = "Grupy";
+            treeNode2.SelectedImageIndex = 5;
             treeNode2.Text = "Grupy";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2});
+            this.treeView1.SelectedImageIndex = 0;
             this.treeView1.Size = new System.Drawing.Size(154, 312);
             this.treeView1.TabIndex = 0;
             this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_GetNode);
@@ -347,6 +357,17 @@
             // 
             this.sendFileDialog.FileName = "file";
             // 
+            // userstatesImageList
+            // 
+            this.userstatesImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("userstatesImageList.ImageStream")));
+            this.userstatesImageList.TransparentColor = System.Drawing.Color.White;
+            this.userstatesImageList.Images.SetKeyName(0, "user_offline16x16.bmp");
+            this.userstatesImageList.Images.SetKeyName(1, "user_invisible16x16.bmp");
+            this.userstatesImageList.Images.SetKeyName(2, "user_busy16x16.bmp");
+            this.userstatesImageList.Images.SetKeyName(3, "user_online16x16.bmp");
+            this.userstatesImageList.Images.SetKeyName(4, "contacts.bmp");
+            this.userstatesImageList.Images.SetKeyName(5, "groups.bmp");
+            // 
             // KominClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -404,6 +425,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripGroups;
         private System.Windows.Forms.ToolStripMenuItem addGroupToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ImageList userstatesImageList;
     }
 }
 

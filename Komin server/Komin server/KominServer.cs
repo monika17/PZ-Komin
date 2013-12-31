@@ -902,8 +902,7 @@ namespace Komin
             {
                 foreach (ContactData contact in cdl)
                 {
-                    if ((contact.contact_id!=contact_id)&&
-                        ((contact.status & (uint)KominClientStatusCodes.Mask) != (uint)KominClientStatusCodes.NotAccessible))
+                    if (((contact.status & (uint)KominClientStatusCodes.Mask) != (uint)KominClientStatusCodes.NotAccessible))
                         contact_ids.Add(contact.contact_id);
                 }
             }

@@ -27,6 +27,7 @@ namespace Komin
         private List<TabPage> add_page; //tab pages to be added on next redraw
         private TabPage next_page; //tab page to make visible on next redraw. set to null to avoid changing
         private TreeNode clickedContactNode; //get Node after mouse click in contacts list
+        private List<ContactData> changed_contacts;
 
         public KominClientForm()
         {
@@ -37,6 +38,7 @@ namespace Komin
             remove_page = new List<TabPage>();
             add_page = new List<TabPage>();
             next_page = null;
+            changed_contacts = new List<ContactData>();
 
             InitializeComponent();
             MainTabPanel.TabPages.Clear();
@@ -48,6 +50,7 @@ namespace Komin
             connection = new KominClientSideConnection();
             connection.onNewTextMessage = onNewMessage;
             connection.onContactListChange = onContactListChange;
+            connection.onStatusNotification = onStatusNotification_PreUpdate;
             ShowConnectOptionsOnLoginTab();
         }
 
@@ -108,6 +111,9 @@ namespace Komin
                 try { MainTabPanel.SelectedTab = next_page; }
                 catch (Exception) { }
             next_page = null;
+            foreach (ContactData cd in changed_contacts)
+                onStatusNotification(cd);
+            changed_contacts.Clear();
             TabUpdateOnRun = false;
             TabUpdateTimer.Enabled = true;
         }
@@ -227,7 +233,20 @@ namespace Komin
             tpage.TabIndex = 1;
             tpage.Text = tn.Text;
             tpage.UseVisualStyleBackColor = true;
+            if (receiver_is_group)
+                tpage.ImageIndex = 3;
+            else
+            {
+                //find contact on contact list
+                foreach (ContactData cd in connection.userdata.contacts)
+                    if (cd.contact_id == receiver_id)
+                    {
+                        tpage.ImageIndex = (int)(cd.status & (uint)KominClientStatusCodes.Mask);
+                        break;
+                    }
+            }
             tpage.Controls.Add(tmp);
+
             add_page.Add(tpage);
             next_page = tpage;
             MainTabPanel.ContextMenuStrip = contactTabContextMenu;
@@ -344,8 +363,65 @@ namespace Komin
                 TreeNode tn = new TreeNode(cd.contact_name);
                 tn.Tag = new ContactTreeTag(cd.contact_id, false);
                 tn.ContextMenuStrip = contextMenuStripContact;
+                tn.ImageIndex = (int)(cd.status & (uint)KominClientStatusCodes.Mask);
+                tn.SelectedImageIndex = (int)(cd.status & (uint)KominClientStatusCodes.Mask);
                 contacts.Nodes.Add(tn);
             }
+        }
+
+        private void onStatusNotification_PreUpdate(ContactData changed_contact)
+        {
+            changed_contacts.Add(changed_contact);
+        }
+
+        private void onStatusNotification(ContactData changed_contact)
+        {
+            TreeNode contacts = treeView1.Nodes["Kontakty"];
+            TreeNode groups = treeView1.Nodes["Grupy"];
+
+            //find contact on contact list
+            foreach (ContactData cd in connection.userdata.contacts)
+                if (cd.contact_id == changed_contact.contact_id)
+                {
+                    cd.status = changed_contact.status;
+                    break;
+                }
+
+            //find contact on groups members list
+            foreach (GroupData gd in connection.userdata.groups)
+                foreach (ContactData cd in gd.members)
+                    if (cd.contact_id == changed_contact.contact_id)
+                    {
+                        cd.status = changed_contact.status;
+                        break;
+                    }
+
+            //find contact on contact list in tree view
+            foreach (TreeNode tn in contacts.Nodes)
+                if (tn.Text == changed_contact.contact_name)
+                {
+                    tn.ImageIndex = (int)(changed_contact.status & (uint)KominClientStatusCodes.Mask);
+                    tn.SelectedImageIndex = (int)(changed_contact.status & (uint)KominClientStatusCodes.Mask);
+                    break;
+                }
+
+            //find contact on groups members lists in tree view
+            foreach (TreeNode gn in groups.Nodes)
+                foreach (TreeNode tn in gn.Nodes)
+                    if (tn.Text == changed_contact.contact_name)
+                    {
+                        tn.ImageIndex = (int)(changed_contact.status & (uint)KominClientStatusCodes.Mask);
+                        tn.SelectedImageIndex = (int)(changed_contact.status & (uint)KominClientStatusCodes.Mask);
+                        break;
+                    }
+
+            //find contact in opened tabs
+            foreach (TabPage tp in MainTabPanel.TabPages)
+                if (tp.Name == "C" + changed_contact.contact_id)
+                {
+                    tp.ImageIndex = (int)(changed_contact.status & (uint)KominClientStatusCodes.Mask);
+                    break;
+                }
         }
 
         int ContactDataComparison_ByNameAsc(ContactData _1, ContactData _2)
