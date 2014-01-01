@@ -68,7 +68,7 @@ namespace Komin
             return output;
         }
 
-        static uint ByteArrayToUInt(byte[] ba, int offset=0)
+        static uint ByteArrayToUInt(byte[] ba, int offset = 0)
         {
             return (((uint)ba[offset + 3]) << 24) + (((uint)ba[offset + 2]) << 16) + (((uint)ba[offset + 1]) << 8) + ((uint)ba[offset]);
         }
@@ -83,7 +83,7 @@ namespace Komin
             return output;
         }
 
-        static bool ByteArrayToBool(byte[] ba, int offset=0)
+        static bool ByteArrayToBool(byte[] ba, int offset = 0)
         {
             return (ba[offset] == 1 ? true : false);
         }
@@ -95,10 +95,12 @@ namespace Komin
             return bytes;
         }
 
-        static string ByteArrayToString(byte[] ba, int offset=0, int length_in_bytes=0)
+        static string ByteArrayToString(byte[] ba, int offset = 0, int length_in_bytes = -1)
         {
-            if (length_in_bytes == 0)
+            if (length_in_bytes == -1)
                 length_in_bytes = ba.Length;
+            if (length_in_bytes == 0)
+                return "";
             char[] chars = new char[length_in_bytes / sizeof(char)];
             Buffer.BlockCopy(ba, offset, chars, 0, length_in_bytes);
             return new string(chars);
@@ -279,10 +281,10 @@ namespace Komin
             //creators_id : uint
             //members_count : uint
             //struct{
-	        //    contact_id : uint
-	        //    contact_name_length : uint
-	        //    contact_name : char[contact_name_length]
-	        //    status : uint
+            //    contact_id : uint
+            //    contact_name_length : uint
+            //    contact_name : char[contact_name_length]
+            //    status : uint
             //} [members_count]
             if ((content & ((uint)KominProtocolContentTypes.GroupData)) != 0)
             {
@@ -367,25 +369,25 @@ namespace Komin
             //status : uint
             //contacts_count : uint
             //struct{
-	        //    contact_id : uint
-	        //    contact_name_length : uint
-	        //    contact_name : char[contact_name_length]
-	        //    status : uint
+            //    contact_id : uint
+            //    contact_name_length : uint
+            //    contact_name : char[contact_name_length]
+            //    status : uint
             //} [contacts_count]
             //groups_count : uint
             //struct{
-	        //    group_id : uint
+            //    group_id : uint
             //    group_name_length : uint
             //    group_name : char[group_name_length]
             //    communication_type : uint
             //    creators_id : uint;
-	        //    members_count : uint
-	        //    struct{
-		    //        contact_id : uint
-		    //        contact_name_length : uint
-		    //        contact_name : char[contact_name_length]
-		    //        status : uint
-	        //    } [members_count]
+            //    members_count : uint
+            //    struct{
+            //        contact_id : uint
+            //        contact_name_length : uint
+            //        contact_name : char[contact_name_length]
+            //        status : uint
+            //    } [members_count]
             //} [groups_count]
             if ((content & ((uint)KominProtocolContentTypes.UserData)) != 0)
             {
@@ -557,10 +559,10 @@ namespace Komin
             //creators_id : uint
             //members_count : uint
             //struct{
-	        //    contact_id : uint
-	        //    contact_name_length : uint
-	        //    contact_name : char[contact_name_length]
-	        //    status : uint
+            //    contact_id : uint
+            //    contact_name_length : uint
+            //    contact_name : char[contact_name_length]
+            //    status : uint
             //} [members_count]
             if ((content & ((uint)KominProtocolContentTypes.GroupData)) != 0)
             {
@@ -679,7 +681,7 @@ namespace Komin
                 int contacts_count = (int)ByteArrayToUInt(data, offset);
                 offset += sizeof(uint);
                 userdata.contacts.Clear();
-                for (; contacts_count>0; contacts_count--)
+                for (; contacts_count > 0; contacts_count--)
                 {
                     ContactData cd = new ContactData();
                     cd.contact_id = ByteArrayToUInt(data, offset);
@@ -797,7 +799,7 @@ namespace Komin
                     uint group_sum = 0;
                     foreach (ContactData cd in group.members)
                         group_sum += (uint)(sizeof(uint) * 3 + cd.contact_name.Length * sizeof(char));
-                    content_length += (uint)(sizeof(uint) * 5 + group.group_name.Length * sizeof(char)+group_sum);
+                    content_length += (uint)(sizeof(uint) * 5 + group.group_name.Length * sizeof(char) + group_sum);
                     break;
                 case KominProtocolContentTypes.FileData:
                     if (args[0].GetType().Name != "FileData")
@@ -930,59 +932,59 @@ namespace Komin
                 if ((type & i) != 0)
                     types.Add((KominProtocolContentTypes)i);
             }
-            foreach(KominProtocolContentTypes t in types)
-            switch (t)
-            {
-                case KominProtocolContentTypes.PasswordData:
-                    content_length -= (uint)(sizeof(uint) + password.Length * sizeof(char));
-                    break;
-                case KominProtocolContentTypes.StatusData:
-                    content_length -= (uint)(sizeof(uint));
-                    break;
-                case KominProtocolContentTypes.ContactIDData:
-                    content_length -= (uint)(sizeof(uint));
-                    break;
-                case KominProtocolContentTypes.TextMessageData:
-                    content_length -= (uint)(7 + sizeof(uint) + text_msg.message.Length * sizeof(char));
-                    break;
-                case KominProtocolContentTypes.AudioMessageData:
-                    content_length -= (uint)(sizeof(uint) + audio_msg.Length);
-                    break;
-                case KominProtocolContentTypes.VideoMessageData:
-                    content_length -= (uint)(sizeof(uint) + video_msg.Length);
-                    break;
-                case KominProtocolContentTypes.ContactData:
-                    content_length -= (uint)(sizeof(uint) * 3 + contact.contact_name.Length * sizeof(char));
-                    break;
-                case KominProtocolContentTypes.GroupData:
-                    uint group_sum = 0;
-                    foreach (ContactData cd in group.members)
-                        group_sum += (uint)(sizeof(uint) * 3 + cd.contact_name.Length * sizeof(char));
-                    content_length -= (uint)(sizeof(uint) * 5 + group.group_name.Length * sizeof(char)+group_sum);
-                    break;
-                case KominProtocolContentTypes.FileData:
-                    content_length -= (uint)(sizeof(uint) * 5 + 14 + file.filename.Length * sizeof(char) + file.filedata.Length);
-                    break;
-                case KominProtocolContentTypes.ErrorTextData:
-                    content_length -= (uint)(sizeof(uint) + error_text.Length * sizeof(char));
-                    break;
-                case KominProtocolContentTypes.UserData:
-                    uint contacts_sum = 0;
-                    foreach (ContactData cd in userdata.contacts)
-                        contacts_sum += (uint)(sizeof(uint) * 3 + cd.contact_name.Length * sizeof(char));
-                    uint groups_sum = 0;
-                    foreach (GroupData gd in userdata.groups)
-                    {
-                        groups_sum += (uint)(sizeof(uint) * 5 + gd.group_name.Length * sizeof(char));
-                        foreach (ContactData cd in gd.members)
-                            groups_sum += (uint)(sizeof(uint) * 3 + cd.contact_name.Length * sizeof(char));
-                    }
-                    content_length -= (uint)(sizeof(uint) * 5 + userdata.contact_name.Length * sizeof(char) + contacts_sum + groups_sum);
-                    break;
-                /*case KominProtocolContentTypes.SMSData:
-                    content_length -= (uint)(9 * sizeof(char) + sizeof(uint) + sms_text.Length * sizeof(char));
-                    break;*/
-            }
+            foreach (KominProtocolContentTypes t in types)
+                switch (t)
+                {
+                    case KominProtocolContentTypes.PasswordData:
+                        content_length -= (uint)(sizeof(uint) + password.Length * sizeof(char));
+                        break;
+                    case KominProtocolContentTypes.StatusData:
+                        content_length -= (uint)(sizeof(uint));
+                        break;
+                    case KominProtocolContentTypes.ContactIDData:
+                        content_length -= (uint)(sizeof(uint));
+                        break;
+                    case KominProtocolContentTypes.TextMessageData:
+                        content_length -= (uint)(7 + sizeof(uint) + text_msg.message.Length * sizeof(char));
+                        break;
+                    case KominProtocolContentTypes.AudioMessageData:
+                        content_length -= (uint)(sizeof(uint) + audio_msg.Length);
+                        break;
+                    case KominProtocolContentTypes.VideoMessageData:
+                        content_length -= (uint)(sizeof(uint) + video_msg.Length);
+                        break;
+                    case KominProtocolContentTypes.ContactData:
+                        content_length -= (uint)(sizeof(uint) * 3 + contact.contact_name.Length * sizeof(char));
+                        break;
+                    case KominProtocolContentTypes.GroupData:
+                        uint group_sum = 0;
+                        foreach (ContactData cd in group.members)
+                            group_sum += (uint)(sizeof(uint) * 3 + cd.contact_name.Length * sizeof(char));
+                        content_length -= (uint)(sizeof(uint) * 5 + group.group_name.Length * sizeof(char) + group_sum);
+                        break;
+                    case KominProtocolContentTypes.FileData:
+                        content_length -= (uint)(sizeof(uint) * 5 + 14 + file.filename.Length * sizeof(char) + file.filedata.Length);
+                        break;
+                    case KominProtocolContentTypes.ErrorTextData:
+                        content_length -= (uint)(sizeof(uint) + error_text.Length * sizeof(char));
+                        break;
+                    case KominProtocolContentTypes.UserData:
+                        uint contacts_sum = 0;
+                        foreach (ContactData cd in userdata.contacts)
+                            contacts_sum += (uint)(sizeof(uint) * 3 + cd.contact_name.Length * sizeof(char));
+                        uint groups_sum = 0;
+                        foreach (GroupData gd in userdata.groups)
+                        {
+                            groups_sum += (uint)(sizeof(uint) * 5 + gd.group_name.Length * sizeof(char));
+                            foreach (ContactData cd in gd.members)
+                                groups_sum += (uint)(sizeof(uint) * 3 + cd.contact_name.Length * sizeof(char));
+                        }
+                        content_length -= (uint)(sizeof(uint) * 5 + userdata.contact_name.Length * sizeof(char) + contacts_sum + groups_sum);
+                        break;
+                    /*case KominProtocolContentTypes.SMSData:
+                        content_length -= (uint)(9 * sizeof(char) + sizeof(uint) + sms_text.Length * sizeof(char));
+                        break;*/
+                }
         }
 
         public void CopyContent(KominNetworkPacket packet)
@@ -1013,6 +1015,8 @@ namespace Komin
         RemoveContactFromList,
         PingContactRequest,
         PingContactAnswer,
+        PingGroupRequest,
+        PingGroupAnswer,
         SendMessage,
         PingMessages,
         RequestAudioCall,
@@ -1070,6 +1074,7 @@ namespace Komin
         CallNotStartedYet = "Rozmowa nie została jeszcze rozpoczęta",
         //ServerFull = "Serwer przepełniony - nie można sie zalogować",
         ServerFileStorageFull = "Serwer nie może przyjąć pliku",
+        UserIsAlreadyGroupHolder = "Wskazany użytkownik już jest założycielem grupy",
         UserIsNotGroupHolder = "Nie masz do tego uprawnień (nie jesteś założycielem grupy)",
         CannotInfluOtherUsers = "Nie wolno wpływać na innych użytkowników",
         ServerInternalError = "Wewnętrzny błąd serwera";

@@ -64,7 +64,7 @@ namespace Komin
         {
             if (!server.IsRunning())
                 return;
-            connections_count.Text = ""+server.connections.Count;
+            connections_count.Text = "" + server.connections.Count;
             userlist.Items.Clear();
             grouplist.Items.Clear();
             DatabaseData db = KominServer.database.GetAllData();
@@ -73,7 +73,7 @@ namespace Komin
                 ListViewItem lvi = new ListViewItem();
                 lvi.Text = "" + ud.contact_id;
                 lvi.SubItems.Add(ud.contact_name);
-                lvi.SubItems.Add(""+ud.status);
+                lvi.SubItems.Add("" + ud.status);
                 string s = "";
                 foreach (ContactData c in ud.contacts)
                     s += c.contact_name + "  ";
@@ -83,6 +83,22 @@ namespace Komin
                     s += g.group_name + "  ";
                 lvi.SubItems.Add(s);
                 userlist.Items.Add(lvi);
+            }
+
+            foreach (GroupData gd in db.groups)
+            {
+                if (gd == null) continue;
+                ListViewItem lvi = new ListViewItem();
+                lvi.Text = "" + gd.group_id;
+                lvi.SubItems.Add(gd.group_name);
+                lvi.SubItems.Add("" + gd.creators_id);
+                lvi.SubItems.Add("" + gd.communication_type);
+                string s = "";
+                if (gd.members != null)
+                    foreach (ContactData c in gd.members)
+                        s += c.contact_name + "  ";
+                lvi.SubItems.Add(s);
+                grouplist.Items.Add(lvi);
             }
         }
 

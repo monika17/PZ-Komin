@@ -420,7 +420,7 @@ command field values (not complete because of missing error notifications) (star
 		content bits: 0001?0000000
 		responses:
 			<none>
-+23 - CREATE_GROUP (group capabilities not implemented yet)
+*23 - CREATE_GROUP (group capabilities not implemented yet)
 	command source: client
 		content bits: 000010000000
 		responses from server:
@@ -431,7 +431,7 @@ command field values (not complete because of missing error notifications) (star
 					U¿ytkownik nie jest zalogowany
 					Nieprawid³owe dane ¿¹dania
 					Grupa ju¿ istnieje
-24 - JOIN_GROUP
+*24 - JOIN_GROUP
 	command source: client
 		content bits: 000010000000
 		responses from server:
@@ -447,7 +447,7 @@ command field values (not complete because of missing error notifications) (star
 		content bits: 000010000000 (new group state)
 		responses:
 			<none>
-25 - LEAVE_GROUP (also KICK_FROM_GROUP)
+*25 - LEAVE_GROUP (also KICK_FROM_GROUP)
 	command source: client
 		content bits: 000011000000 (if contact data specified then kick request)
 		responses from server:
@@ -463,7 +463,7 @@ command field values (not complete because of missing error notifications) (star
 		content bits: 000001000000
 		responses:
 			<none>
-26 - CLOSE_GROUP
+*26 - CLOSE_GROUP
 	command source: client
 		content bits: 000010000000
 		responses from server:
@@ -480,7 +480,7 @@ command field values (not complete because of missing error notifications) (star
 		content bits: 000010000000
 		responses:
 			<none>
-27 - GROUP_HOLDER_CHANGE
+*27 - GROUP_HOLDER_CHANGE
 	command source: client
 		content bits: 000011000000
 		responses from server:
@@ -501,26 +501,13 @@ command field values (not complete because of missing error notifications) (star
 		content bits: 000000000000
 		responses from server:
 			<none>
-30 - INVITE_TO_GROUP
-	command source: client (client sends contact invitation to server)
-		content bits: 000011000000 (group name and contact name/id valid only)
-		responses from server:
-			cmd=8,content=001000000000 (failed - error)
-			<over time>
-			cmd=7,content=000011000000 (contact denied joining the group; group name and contact name/id valid only)
-	command source: server (server passes invitation to group to user)
-		content bits: 000011000000 (group name and contact (invitor) name/id valid only)
-		responses from client:
-			cmd=7,content=000011000000 (contact denies joining the group)
-			<in parallel>
-			cmd=24,content=... (contact joins the group)
-31 - PERIODIC_PING_REQUEST (ping over 3 seconds; server sends ping every 3 seconds and awaits estimated in initial ping amount of time for answer)
+30 - PERIODIC_PING_REQUEST (ping over 3 seconds; server sends ping every 3 seconds and awaits estimated in initial ping amount of time for answer)
 		(if no answer then client lost connection; client resolves server activity by awaiting 6 seconds for ping request - if none then server lost)
 	command source: server
 		content bits: 000000000000
 		responses from client:
 			cmd=32,content=000000000000
-32 - PERIODIC_PING_ANSWER
+31 - PERIODIC_PING_ANSWER
 	command source: client
 		content bits: 000000000000
 		responses from server:

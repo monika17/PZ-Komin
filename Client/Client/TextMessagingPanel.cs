@@ -12,6 +12,7 @@ namespace Komin
         public uint receiver_id;
         public bool receiver_is_group;
         private KominClientSideConnection conn;
+        private bool KominClientErrorOccured;
         private System.Timers.Timer TextInsertTimer;
         private bool on_inserting;
         private string text_insert;
@@ -35,18 +36,10 @@ namespace Komin
         public TextMessagingPanel(KominClientSideConnection conn, uint receiver_id, bool receiver_is_group, Form callingForm)
             : this()
         {
-            /*this.TextInsertTimer = new System.Timers.Timer(50);
-            this.TextInsertTimer.Elapsed += TextMessagingPanel_Insert;
-            this.TextInsertTimer.SynchronizingObject = this;
-            this.on_inserting = false;*/
             this.receiver_id = receiver_id;
             this.receiver_is_group = receiver_is_group;
             this.conn = conn;
             this.CallingForm = callingForm as KominClientForm;
-            //if (CallingForm != null) CallingForm.AcceptButton = textSendButton;
-            /*InitializeComponent();
-            TextInsertTimer.Start();
-            this.Visible = true;*/
         }
 
         private void TextMessagingPanel_Insert(object sender, EventArgs e)
@@ -76,10 +69,23 @@ namespace Komin
 
         private void onTextSendClicked(object sender, EventArgs e)
         {
+            KominClientErrorOccured = false;
+            SomeError err_routine = conn.onError;
+            conn.onError = onError;
             TextMessage tmsg = conn.SendMessage(receiver_id, receiver_is_group, textMessageInput.Text);
+            conn.onError = err_routine;
             textMessageInput.Text = "";
+            if (KominClientErrorOccured)
+                return;
             //insert loopback
-            InsertText("[" + tmsg.send_date + "]  " + conn.userdata.contact_name + ":\r\n" + tmsg.message + "\r\n");
+            if (!receiver_is_group)
+                InsertText("[" + tmsg.send_date + "]  " + conn.userdata.contact_name + ":\r\n" + tmsg.message + "\r\n");
+        }
+
+        private void onError(string err_text, KominNetworkPacket packet)
+        {
+            KominClientErrorOccured = true;
+            MessageBox.Show(err_text, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void buttonAutoSend_Click(object sender, EventArgs e)
@@ -90,6 +96,6 @@ namespace Komin
                 CallingForm.AcceptButton = null;
         }
 
- 
+
     }
 }

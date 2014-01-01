@@ -163,6 +163,11 @@ namespace Komin
             {
                 return false;
             }
+
+            if (contact_name.Length > 200)
+            {
+                return false;
+            }
             return true;
         }
 

@@ -7,6 +7,8 @@ namespace Komin
     public partial class AddUserForm : Form
     {
         private KominClientSideConnection connection;
+        private bool KominClientErrorOccured;
+
         public AddUserForm(KominClientSideConnection connection)
         {
             this.connection = connection;
@@ -16,33 +18,41 @@ namespace Komin
 
         private void RegisterNameValidityTimer_Tick(object sender, EventArgs e)
         {
-            try
+            if (!DataTesters.TestLoginOrGroupName(RegisterNameTextBox.Text))
             {
-                if (!DataTesters.TestLoginOrGroupName(RegisterNameTextBox.Text))
-                {
-                    RegisterNameAcceptableLabel.Text = "nazwa jest niepoprawna";
-                    RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(255, 0, 0);
-                    throw new Exception();
-                }
-                ContactData cd = connection.PingContactRequest(0, RegisterNameTextBox.Text);
-                if (cd != null)
-                {
-                    RegisterNameAcceptableLabel.Text = "nazwa jest zajęta";
-                    RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(255, 0, 0);
-                }
-                else
-                {
-                    RegisterNameAcceptableLabel.Text = "nazwa jest wolna";
-                    RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(0, 255, 0);
-                }
+                RegisterNameAcceptableLabel.Text = "nazwa jest niepoprawna";
+                RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(255, 0, 0);
+                RegisterNameValidityTimer.Enabled = false;
+                return;
             }
-            catch (KominClientErrorException)
+            KominClientErrorOccured = false;
+            SomeError err_routine = connection.onError;
+            connection.onError = onError;
+            ContactData cd = connection.PingContactRequest(0, RegisterNameTextBox.Text);
+            connection.onError = err_routine;
+            if (KominClientErrorOccured)
+            {
+                RegisterNameAcceptableLabel.Text = "nazwa jest wolna";
+                RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(0, 255, 0);
+                RegisterNameValidityTimer.Enabled = false;
+                return;
+            }
+            if (cd != null)
+            {
+                RegisterNameAcceptableLabel.Text = "nazwa jest zajęta";
+                RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(255, 0, 0);
+            }
+            else
             {
                 RegisterNameAcceptableLabel.Text = "nazwa jest wolna";
                 RegisterNameAcceptableLabel.ForeColor = Color.FromArgb(0, 255, 0);
             }
-            catch (Exception) { }
             RegisterNameValidityTimer.Enabled = false;
+        }
+
+        private void onError(string err_text, KominNetworkPacket packet)
+        {
+            KominClientErrorOccured = true;
         }
 
         private void RegisterNameTextBox_TextChanged(object sender, EventArgs e)
@@ -61,16 +71,20 @@ namespace Komin
 
         private void RegisterButton_Click(object sender, EventArgs e)
         {
-            try
-            {
-                connection.CreateContact(RegisterNameTextBox.Text, RegisterPassTextBox.Text);
-            }
-            catch (KominClientErrorException ex)
-            {
-                MessageBox.Show(ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            KominClientErrorOccured = false;
+            SomeError err_routine = connection.onError;
+            connection.onError = onError_Message;
+            connection.CreateContact(RegisterNameTextBox.Text, RegisterPassTextBox.Text);
+            connection.onError = err_routine;
+            if (KominClientErrorOccured)
                 return;
-            }
             Close();
+        }
+
+        private void onError_Message(string err_text, KominNetworkPacket packet)
+        {
+            KominClientErrorOccured = true;
+            MessageBox.Show(err_text, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

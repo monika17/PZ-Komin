@@ -4,23 +4,23 @@ using System.Windows.Forms;
 
 namespace Komin
 {
-    public partial class AddContactForm : Form
+    public partial class AddGroupForm : Form
     {
         private KominClientSideConnection conn;
         private bool KominClientErrorOccured;
 
-        public AddContactForm(KominClientSideConnection conn)
+        public AddGroupForm(KominClientSideConnection conn)
         {
             this.conn = conn;
             InitializeComponent();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void groupnameTextBox_TextChanged(object sender, EventArgs e)
         {
             button1.Enabled = false;
-            contactValidityLabel.Text = "";
+            groupnameValidityLabel.Text = "";
             timer1.Enabled = false;
-            if (textBox1.Text != "")
+            if (groupnameTextBox.Text != "")
                 timer1.Enabled = true;
         }
 
@@ -29,25 +29,26 @@ namespace Komin
             KominClientErrorOccured = false;
             SomeError err_routine = conn.onError;
             conn.onError = onError_Ping;
-            ContactData cd = conn.PingContactRequest(0, textBox1.Text);
+            GroupData gd = conn.PingGroupRequest(groupnameTextBox.Text);
             conn.onError = err_routine;
             if (KominClientErrorOccured)
             {
-                contactValidityLabel.Text = "kontakt nie istnieje";
-                contactValidityLabel.ForeColor = Color.FromArgb(255, 0, 0);
+                groupnameValidityLabel.Text = "grupa nie istnieje";
+                groupnameValidityLabel.ForeColor = Color.FromArgb(0, 255, 0);
+                button1.Enabled = true;
                 timer1.Enabled = false;
                 return;
             }
-            if (cd != null)
+            if (gd != null)
             {
-                contactValidityLabel.Text = "kontakt istnieje";
-                contactValidityLabel.ForeColor = Color.FromArgb(0, 255, 0);
-                button1.Enabled = true;
+                groupnameValidityLabel.Text = "grupa istnieje";
+                groupnameValidityLabel.ForeColor = Color.FromArgb(255, 0, 0);
             }
             else
             {
-                contactValidityLabel.Text = "kontakt nie istnieje";
-                contactValidityLabel.ForeColor = Color.FromArgb(255, 0, 0);
+                groupnameValidityLabel.Text = "grupa nie istnieje";
+                groupnameValidityLabel.ForeColor = Color.FromArgb(0, 255, 0);
+                button1.Enabled = true;
             }
             timer1.Enabled = false;
         }
@@ -59,10 +60,11 @@ namespace Komin
 
         private void button1_Click(object sender, EventArgs e)
         {
+            uint group_caps = (uint)((text.Checked ? 0x008 : 0) + (voice.Checked ? 0x010 : 0) + (video.Checked ? 0x020 : 0) + (files.Checked ? 0x100 : 0));
             KominClientErrorOccured = false;
             SomeError err_routine = conn.onError;
             conn.onError = onError_Message;
-            conn.AddContactToList(textBox1.Text);
+            conn.CreateGroup(groupnameTextBox.Text, group_caps);
             conn.onError = err_routine;
             if (KominClientErrorOccured)
                 return;

@@ -39,6 +39,7 @@
             // textSendButton
             // 
             this.textSendButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.textSendButton.Enabled = false;
             this.textSendButton.Location = new System.Drawing.Point(583, 443);
             this.textSendButton.Name = "textSendButton";
             this.textSendButton.Size = new System.Drawing.Size(56, 27);
@@ -52,6 +53,7 @@
             this.textMessageInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textMessageInput.Location = new System.Drawing.Point(3, 443);
+            this.textMessageInput.MaxLength = 1000;
             this.textMessageInput.Multiline = true;
             this.textMessageInput.Name = "textMessageInput";
             this.textMessageInput.Size = new System.Drawing.Size(574, 58);

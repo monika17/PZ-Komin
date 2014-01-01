@@ -108,6 +108,7 @@
             // 
             // LoginButton
             // 
+            this.LoginButton.Enabled = false;
             this.LoginButton.Location = new System.Drawing.Point(103, 88);
             this.LoginButton.Name = "LoginButton";
             this.LoginButton.Size = new System.Drawing.Size(90, 26);
@@ -176,6 +177,7 @@
             // 
             // buttonConnect
             // 
+            this.buttonConnect.Enabled = false;
             this.buttonConnect.Location = new System.Drawing.Point(192, 59);
             this.buttonConnect.Name = "buttonConnect";
             this.buttonConnect.Size = new System.Drawing.Size(87, 28);

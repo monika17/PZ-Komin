@@ -23,14 +23,6 @@ namespace Komin
 
         public KominServer()
         {
-            /*byte[] msg1 = { 1, 2, 3, 4, 5 };
-            byte[] msg2 = { 6, 7, 8, 9, 0 };
-            byte[] msg3 = new byte[10];
-            byte enc_seed = KominCipherSuite.Encrypt(ref msg1);
-            enc_seed = KominCipherSuite.Encrypt(ref msg2, enc_seed);
-            for (int i = 0; i < 10; i++)
-                if (i < 5) msg3[i] = msg1[i]; else msg3[i] = msg2[i - 5];
-            byte dec_seed = KominCipherSuite.Decrypt(ref msg3);*/
             server = null;
             listener = new BackgroundWorker();
             connections = new List<KominServerSideConnection>();
@@ -40,6 +32,10 @@ namespace Komin
             listener.WorkerSupportsCancellation = true;
             listener.DoWork += listen;
             log = null;
+            if (!Directory.Exists(".\\ServerFileStore"))
+            {
+                Directory.CreateDirectory(".\\ServerFileStore");
+            }
         }
 
         public string[] DetectIPAddresses()
@@ -87,7 +83,7 @@ namespace Komin
 
                 jobs.Restart();
                 listener.CancelAsync();
-                while(connections.Count>0)
+                while (connections.Count > 0)
                     connections[0].Disconnect();
                 server.Stop();
                 database.Disconnect();
@@ -258,7 +254,8 @@ namespace Komin
                         Array.Resize<byte>(ref buffer, buffer.Length - packet_size);
                         KominNetworkPacket packet = new KominNetworkPacket();
                         packet.UnpackReceivedPacket(ref packet_data);
-                        InterpretePacket(ref packet);
+                        //InterpretePacket(packet);
+                        new PacketInterpreterThread(this, packet);
                     }
                 } while (packet_size != 0);
             }
@@ -269,7 +266,28 @@ namespace Komin
             //PingTimer.Enabled = false;
         }
 
-        private void InterpretePacket(ref KominNetworkPacket packet)
+        class PacketInterpreterThread
+        {
+            Thread th;
+            KominServerSideConnection conn;
+            KominNetworkPacket packet;
+
+            public PacketInterpreterThread(KominServerSideConnection conn, KominNetworkPacket packet)
+            {
+                this.conn = conn;
+                this.packet = packet;
+                th = new Thread(starter);
+                th.Start();
+            }
+
+            void starter()
+            {
+                conn.InterpretePacket(packet);
+                th.Abort();
+            }
+        }
+
+        internal void InterpretePacket(KominNetworkPacket packet)
         {
             if (log != null) log("{E:" + enc_seed + ",D:" + dec_seed + "} Client " + client_id + "=>Server: sender=" + packet.sender + "   receiver=" + packet.target + "   is_group=" + (packet.target_is_group ? "true" : "false") + "   cmd=" + ((KominProtocolCommands)packet.command).ToString().ToUpper() + "   jobID=" + packet.job_id + "   content=" + packet.content);
 
@@ -303,8 +321,17 @@ namespace Komin
                         Error(KominNetworkErrors.UserNotExists, packet);
                         return;
                     }
-                    //store data
-                    KominServer.database.InsertPendingMessage(packet.sender, packet.target, false, ((TextMessage)packet.GetContent(KominProtocolContentTypes.TextMessageData)[0]).message);
+                    else
+                    {
+                        //store text message
+                        if ((packet.command == (uint)KominProtocolCommands.SendMessage) && ((packet.content & (uint)KominProtocolContentTypes.TextMessageData) == (uint)KominProtocolContentTypes.TextMessageData))
+                            KominServer.database.InsertPendingMessage(packet.sender, packet.target, false, ((TextMessage)packet.GetContent(KominProtocolContentTypes.TextMessageData)[0]).message);
+                        else
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.UserNotLoggedIn, packet);
+                        }
+                    }
                 }
                 return;
             }
@@ -396,22 +423,31 @@ namespace Komin
                         }
                         //set new status
                         SetStatus((uint)KominClientStatusCodes.NotAccessible);
-                        //confirm logging out to user
-                        packet.DeleteContent();
-                        packet.InsertContent(KominProtocolContentTypes.StatusData, (uint)KominClientStatusCodes.NotAccessible);
-                        Accept(packet);
                         //check is new state influ on group existence
                         foreach (GroupData gd in userd.groups)
                         {
-                            uint count = 0;
+                            bool holder_changed = false;
                             foreach (ContactData contact in gd.members)
-                                if ((contact.status & (uint)KominClientStatusCodes.Mask) == (uint)KominClientStatusCodes.NotAccessible)
-                                    count++;
-                            if (count == gd.members.Count)
+                                if ((contact.status & (uint)KominClientStatusCodes.Mask) == (uint)KominClientStatusCodes.NotAccessible) ;
+                                else if (contact.contact_id != contact_id)
+                                {
+                                    if (!holder_changed)
+                                    {
+                                        KominServer.database.SetGroupCreator(gd.group_id, contact.contact_id);
+                                        gd.creators_id = contact.contact_id;
+                                        GroupHolderChange(gd);
+                                        holder_changed = true;
+                                    }
+                                }
+                            if (!holder_changed)
                             {
                                 CloseGroup(gd.group_id);
                             }
                         }
+                        //confirm logging out to user
+                        packet.DeleteContent();
+                        packet.InsertContent(KominProtocolContentTypes.StatusData, (uint)KominClientStatusCodes.NotAccessible);
+                        Accept(packet);
                         contact_id = 0;
                         break;
                     }
@@ -659,6 +695,24 @@ namespace Komin
                 case KominProtocolCommands.PingContactAnswer: //user answers to ping from server
                     server.jobs.MarkNewArrival(packet.job_id, packet);
                     break;
+                case KominProtocolCommands.PingGroupRequest: //user wants to check is specified group name valid
+                    {
+                        if ((packet.content & 0x080) != 0x080)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.WrongRequestContent, packet);
+                            return;
+                        }
+                        GroupData gd = KominServer.database.GetGroupData(((GroupData)packet.GetContent(KominProtocolContentTypes.GroupData)[0]).group_name);
+                        if (gd == null)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.GroupNotExists, packet);
+                            return;
+                        }
+                        PingGroupAnswer(gd, packet);
+                        break;
+                    }
                 case KominProtocolCommands.SendMessage: //user sends group messages
                     {
                         if (((packet.content & 0x938) == 0) || ((packet.content | 0x938) != 0x938))
@@ -735,13 +789,21 @@ namespace Komin
                         uint new_group_holder = packet.sender;
                         GroupData new_gd = (GroupData)packet.GetContent(KominProtocolContentTypes.GroupData)[0];
                         ContactData cd = KominServer.database.GetContactData(new_group_holder);
-                        if(cd!=null)
+                        if (cd != null)
+                        {
                             if ((cd.status & (uint)KominClientStatusCodes.Mask) == (uint)KominClientStatusCodes.NotAccessible)
                             {
                                 packet.DeleteContent();
                                 Error(KominNetworkErrors.UserNotLoggedIn, packet);
                                 return;
                             }
+                        }
+                        else
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.UserNotExists, packet);
+                            return;
+                        }
                         uint capabilities = new_gd.communication_type & 0x130;
                         //#################################################### to do: check server acceptance of capabilities
                         switch (KominServer.database.CreateGroup(new_gd.group_name, new_group_holder, capabilities))
@@ -751,6 +813,7 @@ namespace Komin
                                 new_gd = KominServer.database.GetGroupData(new_gd.group_name);
                                 packet.InsertContent(KominProtocolContentTypes.GroupData, new_gd);
                                 Accept(packet);
+                                JoinGroup(new_gd);
                                 break;
                             case -1:
                                 packet.DeleteContent();
@@ -769,18 +832,202 @@ namespace Komin
                     }
                 case KominProtocolCommands.JoinGroup: //user wants to join an existing group
                     {
+                        if ((packet.content & 0x080) != 0x080)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.WrongRequestContent, packet);
+                            return;
+                        }
+                        GroupData gd = (GroupData)packet.GetContent(KominProtocolContentTypes.GroupData)[0];
+                        if (gd.group_name == "")
+                            gd = KominServer.database.GetGroupData(gd.group_id);
+                        else
+                            gd = KominServer.database.GetGroupData(gd.group_name);
+                        if (gd == null)
+                        {
+                            Error(KominNetworkErrors.GroupNotExists, packet);
+                            return;
+                        }
+                        switch (KominServer.database.InsertContactIntoList(gd.group_id, true, packet.sender))
+                        {
+                            case 0:
+                                gd = KominServer.database.GetGroupData(gd.group_id);
+                                packet.DeleteContent();
+                                packet.InsertContent(KominProtocolContentTypes.GroupData, gd);
+                                Accept(packet);
+                                JoinGroup(gd);
+                                break;
+                            case -1:
+                                packet.DeleteContent();
+                                Error(KominNetworkErrors.UserNotExists, packet);
+                                return;
+                            case -2:
+                                packet.DeleteContent();
+                                Error(KominNetworkErrors.GroupNotExists, packet);
+                                return;
+                            case -3:
+                                packet.DeleteContent();
+                                Error(KominNetworkErrors.UserAlreadyInGroup, packet);
+                                return;
+                        }
                         break;
                     }
                 case KominProtocolCommands.LeaveGroup: //user wants to leave an existing group
                     {
+                        if ((packet.content & 0x080) != 0x080)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.WrongRequestContent, packet);
+                            return;
+                        }
+                        GroupData gd = (GroupData)packet.GetContent(KominProtocolContentTypes.GroupData)[0];
+                        if (gd.group_name == "")
+                            gd = KominServer.database.GetGroupData(gd.group_id);
+                        else
+                            gd = KominServer.database.GetGroupData(gd.group_name);
+                        if (gd == null)
+                        {
+                            Error(KominNetworkErrors.GroupNotExists, packet);
+                            return;
+                        }
+                        switch (KominServer.database.RemoveContactFromList(gd.group_id, true, packet.sender))
+                        {
+                            case 0:
+                                gd = KominServer.database.GetGroupData(gd.group_id);
+                                packet.DeleteContent();
+                                packet.InsertContent(KominProtocolContentTypes.GroupData, gd);
+                                //check is new state influ on group existence
+                                bool holder_changed = false;
+                                foreach (ContactData contact in gd.members)
+                                    if ((contact.status & (uint)KominClientStatusCodes.Mask) == (uint)KominClientStatusCodes.NotAccessible) ;
+                                    else if (contact.contact_id != contact_id)
+                                    {
+                                        if (!holder_changed)
+                                        {
+                                            KominServer.database.SetGroupCreator(gd.group_id, contact.contact_id);
+                                            gd.creators_id = contact.contact_id;
+                                            GroupHolderChange(gd);
+                                            holder_changed = true;
+                                        }
+                                    }
+                                Accept(packet);
+                                LeaveGroup(gd);
+                                if (!holder_changed)
+                                    CloseGroup(gd.group_id);
+                                break;
+                            case -1:
+                                packet.DeleteContent();
+                                Error(KominNetworkErrors.ServerInternalError, packet);
+                                return;
+                            case -2:
+                                packet.DeleteContent();
+                                Error(KominNetworkErrors.UserNotInGroup, packet);
+                                return;
+                        }
                         break;
                     }
                 case KominProtocolCommands.CloseGroup: //user wants to close group
                     {
+                        if ((packet.content & 0x080) != 0x080)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.WrongRequestContent, packet);
+                            return;
+                        }
+                        GroupData req_gd = (GroupData)packet.GetContent(KominProtocolContentTypes.GroupData)[0];
+                        req_gd = KominServer.database.GetGroupData(req_gd.group_id);
+                        if (req_gd == null)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.GroupNotExists, packet);
+                            return;
+                        }
+                        if (req_gd.creators_id != packet.sender)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.UserIsNotGroupHolder, packet);
+                            return;
+                        }
+                        switch (CloseGroup(req_gd.group_id))
+                        {
+                            case 0:
+                                Accept(packet);
+                                break;
+                            case -1:
+                                packet.DeleteContent();
+                                Error(KominNetworkErrors.GroupNotExists, packet);
+                                return;
+                            case -2:
+                                packet.DeleteContent();
+                                Error(KominNetworkErrors.ServerInternalError, packet);
+                                return;
+                        }
                         break;
                     }
                 case KominProtocolCommands.GroupHolderChange: //user wants to promote other user on group holder
                     {
+                        if ((packet.content & 0x080) != 0x080)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.WrongRequestContent, packet);
+                            return;
+                        }
+                        GroupData req_gd = (GroupData)packet.GetContent(KominProtocolContentTypes.GroupData)[0];
+                        uint new_holder = req_gd.creators_id;
+                        req_gd = KominServer.database.GetGroupData(req_gd.group_id);
+                        if (req_gd == null)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.GroupNotExists, packet);
+                            return;
+                        }
+                        if (req_gd.creators_id != packet.sender)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.UserIsNotGroupHolder, packet);
+                            return;
+                        }
+                        if (req_gd.creators_id == new_holder)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.UserIsAlreadyGroupHolder, packet);
+                            return;
+                        }
+                        bool found = false;
+                        foreach (ContactData cd in req_gd.members)
+                            if (cd.contact_id == new_holder)
+                            {
+                                if ((cd.status & (uint)KominClientStatusCodes.Mask) == (uint)KominClientStatusCodes.NotAccessible)
+                                {
+                                    packet.DeleteContent();
+                                    Error(KominNetworkErrors.UserNotLoggedIn, packet);
+                                    return;
+                                }
+                                switch (KominServer.database.SetGroupCreator(req_gd.group_id, new_holder))
+                                {
+                                    case 0:
+                                        Accept(packet);
+                                        req_gd.creators_id = new_holder;
+                                        GroupHolderChange(req_gd);
+                                        break;
+                                    case -1:
+                                        packet.DeleteContent();
+                                        Error(KominNetworkErrors.GroupNotExists, packet);
+                                        return;
+                                    case -2:
+                                        packet.DeleteContent();
+                                        Error(KominNetworkErrors.UserNotInGroup, packet);
+                                        return;
+                                }
+                                found = true;
+                                break;
+                            }
+                        if (!found)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.UserNotInGroup, packet);
+                            return;
+                        }
                         break;
                     }
                 case KominProtocolCommands.RemoveContact: //user wants to remove its account
@@ -852,7 +1099,30 @@ namespace Komin
 
             //set new status
             SetStatus((uint)KominClientStatusCodes.NotAccessible);
-            
+
+            //check does new state influ on group existence
+            UserData ud = KominServer.database.GetUserData(KominServer.database.GetContactData(contact_id).contact_name);
+            foreach (GroupData gd in ud.groups)
+            {
+                bool holder_changed = false;
+                foreach (ContactData contact in gd.members)
+                    if ((contact.status & (uint)KominClientStatusCodes.Mask) == (uint)KominClientStatusCodes.NotAccessible) ;
+                    else if (contact.contact_id != contact_id)
+                    {
+                        if (!holder_changed)
+                        {
+                            KominServer.database.SetGroupCreator(gd.group_id, contact.contact_id);
+                            gd.creators_id = contact.contact_id;
+                            GroupHolderChange(gd);
+                            holder_changed = true;
+                        }
+                    }
+                if (!holder_changed)
+                {
+                    CloseGroup(gd.group_id);
+                }
+            }
+
             //notifiy logging out to user
             KominNetworkPacket packet = new KominNetworkPacket();
             packet.sender = 0; //server
@@ -862,20 +1132,6 @@ namespace Komin
             packet.command = (uint)KominProtocolCommands.Logout;
             packet.DeleteContent();
             InsertPacketForSending(packet);
-
-            //check is new state influ on group existence
-            UserData ud = KominServer.database.GetUserData(KominServer.database.GetContactData(contact_id).contact_name);
-            foreach (GroupData gd in ud.groups)
-            {
-                uint count = 0;
-                foreach (ContactData contact in gd.members)
-                    if ((contact.status & (uint)KominClientStatusCodes.Mask) == (uint)KominClientStatusCodes.NotAccessible)
-                        count++;
-                if (count == gd.members.Count)
-                {
-                    CloseGroup(gd.group_id);
-                }
-            }
 
             server.jobs.FinishJob(job);
         }
@@ -988,6 +1244,17 @@ namespace Komin
             InsertPacketForSending(answer);
         }
 
+        public void PingGroupAnswer(GroupData gd, KominNetworkPacket packet) //server answers for group ping check
+        {
+            packet.target = packet.sender;
+            packet.sender = 0;
+            packet.target_is_group = false;
+            packet.command = (uint)KominProtocolCommands.PingGroupAnswer;
+            packet.DeleteContent();
+            packet.InsertContent(KominProtocolContentTypes.GroupData, gd);
+            InsertPacketForSending(packet);
+        }
+
         //public void SendMessage() { } //server can't force any user to send anything
 
         //public void PingMessages() { } //server don't need to ask user for stored incoming messages
@@ -1016,16 +1283,136 @@ namespace Komin
 
         //public void CreateGroup() { } //server is not allowed to create groups
 
-        public void JoinGroup() //server notifies user that new user joined its group
+        public void JoinGroup(GroupData gd) //server notifies group that new user joined it
         {
+            if (contact_id == 0)
+                return;
+
+            KominNetworkJob job = server.jobs.AddJob();
+
+            foreach (ContactData cd in gd.members)
+                foreach (KominServerSideConnection con in server.connections)
+                    if ((con.contact_id == cd.contact_id) && ((cd.status & (uint)KominClientStatusCodes.Mask) != (uint)KominClientStatusCodes.NotAccessible))
+                    {
+                        KominNetworkPacket packet = new KominNetworkPacket();
+                        packet.sender = 0; //server
+                        packet.target = gd.group_id;
+                        packet.target_is_group = true;
+                        packet.command = (uint)KominProtocolCommands.JoinGroup;
+                        packet.job_id = job.JobID;
+                        packet.DeleteContent();
+                        packet.InsertContent(KominProtocolContentTypes.GroupData, gd);
+                        con.InsertPacketForSending(packet);
+                    }
+
+            server.jobs.FinishJob(job);
         }
 
-        public void LeaveGroup() //server notifies user that user left its group
+        public void LeaveGroup(GroupData gd) //server notifies users that user left its group
         {
+            if (contact_id == 0)
+                return;
+
+            KominNetworkJob job = server.jobs.AddJob();
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = 0; //server
+            packet.target = gd.group_id;
+            packet.target_is_group = true;
+            packet.command = (uint)KominProtocolCommands.LeaveGroup;
+            packet.job_id = job.JobID;
+            packet.DeleteContent();
+            packet.InsertContent(KominProtocolContentTypes.GroupData, gd);
+            InsertPacketForSending(packet);
+            foreach (ContactData cd in gd.members)
+                if (cd.contact_id != contact_id)
+                    foreach (KominServerSideConnection con in server.connections)
+                        if ((con.contact_id == cd.contact_id) && ((cd.status & (uint)KominClientStatusCodes.Mask) != (uint)KominClientStatusCodes.NotAccessible))
+                        {
+                            packet = new KominNetworkPacket();
+                            packet.sender = 0; //server
+                            packet.target = gd.group_id;
+                            packet.target_is_group = true;
+                            packet.command = (uint)KominProtocolCommands.LeaveGroup;
+                            packet.job_id = job.JobID;
+                            packet.DeleteContent();
+                            packet.InsertContent(KominProtocolContentTypes.GroupData, gd);
+                            con.InsertPacketForSending(packet);
+                        }
+
+            server.jobs.FinishJob(job);
         }
 
-        public void CloseGroup(uint group_id) //server closes group and notifies members that this group has been closed
+        public int CloseGroup(uint group_id) //server closes group, notifies members that this group has been closed and erases group files
         {
+            if (contact_id == 0)
+                return -2;
+
+            KominNetworkJob job = server.jobs.AddJob();
+
+            RemoveSummary sum;
+            switch (KominServer.database.RemoveGroup(group_id, out sum))
+            {
+                case 0:
+                    //notify members that group has been dissolved
+                    foreach (ContactData cd in sum.gd.members)
+                        if ((cd.status & (uint)KominClientStatusCodes.Mask) != (uint)KominClientStatusCodes.NotAccessible)
+                            foreach (KominServerSideConnection con in server.connections)
+                                if (cd.contact_id == con.contact_id)
+                                {
+                                    KominNetworkPacket packet = new KominNetworkPacket();
+                                    packet.sender = 0;
+                                    packet.target = sum.gd.group_id;
+                                    packet.target_is_group = true;
+                                    packet.command = (uint)KominProtocolCommands.CloseGroup;
+                                    packet.job_id = job.JobID;
+                                    packet.DeleteContent();
+                                    packet.InsertContent(KominProtocolContentTypes.GroupData, sum.gd);
+                                    con.InsertPacketForSending(packet);
+                                }
+                    //erase group files
+                    if (sum.gfdl != null)
+                        foreach (GroupFileData gfd in sum.gfdl)
+                        {
+                            try
+                            {
+                                //File.Delete(".\\ServerFileStore\\file" + gfd.file_id + "\\" + gfd.filename);
+                                Directory.Delete(".\\ServerFileStore\\file" + gfd.file_id, true);
+                            }
+                            catch (Exception) { }
+                        }
+                    server.jobs.FinishJob(job);
+                    break;
+                case -1:
+                    return -1;
+            }
+
+            return 0;
+        }
+
+        public void GroupHolderChange(GroupData gd) //server notifies group members that group holder has been changed
+        {
+            if (contact_id == 0)
+                return;
+
+            KominNetworkJob job = server.jobs.AddJob();
+
+            foreach (ContactData cd in gd.members)
+                foreach (KominServerSideConnection con in server.connections)
+                    if ((con.contact_id == cd.contact_id) && ((cd.status & (uint)KominClientStatusCodes.Mask) != (uint)KominClientStatusCodes.NotAccessible))
+                    {
+                        KominNetworkPacket packet = new KominNetworkPacket();
+                        packet.sender = 0; //server
+                        packet.target = gd.group_id;
+                        packet.target_is_group = true;
+                        packet.command = (uint)KominProtocolCommands.GroupHolderChange;
+                        packet.job_id = job.JobID;
+                        packet.DeleteContent();
+                        packet.InsertContent(KominProtocolContentTypes.GroupData, gd);
+                        con.InsertPacketForSending(packet);
+                    }
+
+            server.jobs.FinishJob(job);
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Komin
     public partial class ConnectOptionsPanel : UserControl
     {
         private KominClientSideConnection connection;
+        private bool KominClientErrorOccured;
         private KominClientForm clientForm;
         public ConnectOptionsPanel(KominClientSideConnection connection, KominClientForm clientForm)
         {
@@ -25,26 +26,24 @@ namespace Komin
 
         private void buttonConnect_Click(object sender, EventArgs e)
         {
-            try
+            if (!DataTesters.TestIPAddress(textBoxhostIp.Text))
             {
-                if (!DataTesters.TestIPAddress(textBoxhostIp.Text))
-                {
-                    MessageBox.Show("Niepoprawny format adresu IP", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                int port_no = Convert.ToInt32(textBoxPort.Text);
-                if ((port_no < 1) || (port_no > 9999))
-                {
-                    MessageBox.Show("Niepoprawny numer portu (poprawne są z przedziału [1, 9999])", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                connection.Connect(textBoxhostIp.Text, port_no);
-            }
-            catch (KominClientErrorException)
-            {
-                MessageBox.Show("Nie udało się połączyć z serwerem", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Niepoprawny format adresu IP", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            int port_no = Convert.ToInt32(textBoxPort.Text);
+            if ((port_no < 1) || (port_no > 9999))
+            {
+                MessageBox.Show("Niepoprawny numer portu (poprawne są z przedziału [1, 9999])", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            KominClientErrorOccured = false;
+            SomeError err_routine = connection.onError;
+            connection.onError = onError;
+            connection.Connect(textBoxhostIp.Text, port_no);
+            connection.onError = err_routine;
+            if (KominClientErrorOccured)
+                return;
             ConnectPanel.Visible = false;
             LoginPanel.Location = new Point(0, 0);
             clientForm.AcceptButton = LoginButton;
@@ -52,18 +51,22 @@ namespace Komin
             LoginNametextBox.Focus();
         }
 
+        private void onError(string err_text, KominNetworkPacket packet)
+        {
+            KominClientErrorOccured = true;
+            MessageBox.Show(err_text, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         private void LoginButton_Click(object sender, EventArgs e)
         {
             uint new_status = (uint)KominClientStatusCodes.Accessible;
-            try
-            {
-                connection.Login(LoginNametextBox.Text, LoginPasstextBox.Text, ref new_status);
-            }
-            catch (KominClientErrorException ex)
-            {
-                MessageBox.Show(ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            KominClientErrorOccured = false;
+            SomeError err_routine = connection.onError;
+            connection.onError = onError;
+            connection.Login(LoginNametextBox.Text, LoginPasstextBox.Text, ref new_status);
+            connection.onError = err_routine;
+            if (KominClientErrorOccured)
                 return;
-            }
             clientForm.LoginSuccess();
         }
 
@@ -75,7 +78,13 @@ namespace Komin
 
         private void BackButton_Click(object sender, EventArgs e)
         {
+            KominClientErrorOccured = false;
+            SomeError err_routine = connection.onError;
+            connection.onError = onError;
             connection.Disconnect();
+            connection.onError = err_routine;
+            if (KominClientErrorOccured)
+                return;
             ConnectPanel.Visible = true;
             ConnectPanel.Location = new Point(0, 0);
             LoginPanel.Visible = false;

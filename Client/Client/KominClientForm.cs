@@ -20,6 +20,7 @@ namespace Komin
         }
 
         private KominClientSideConnection connection;
+        private bool KominClientErrorOccured;
         //tab update
         private System.Timers.Timer TabUpdateTimer;
         private bool TabUpdateOnRun;
@@ -28,6 +29,7 @@ namespace Komin
         private TabPage next_page; //tab page to make visible on next redraw. set to null to avoid changing
         private TreeNode clickedContactNode; //get Node after mouse click in contacts list
         private List<ContactData> changed_contacts;
+        private List<GroupData> changed_groups;
 
         public KominClientForm()
         {
@@ -39,6 +41,7 @@ namespace Komin
             add_page = new List<TabPage>();
             next_page = null;
             changed_contacts = new List<ContactData>();
+            changed_groups = new List<GroupData>();
 
             InitializeComponent();
             MainTabPanel.TabPages.Clear();
@@ -48,9 +51,16 @@ namespace Komin
 
             //configure connection structure - don't attempt to connect yet
             connection = new KominClientSideConnection();
+            connection.onError = onError;
             connection.onNewTextMessage = onNewMessage;
             connection.onContactListChange = onContactListChange;
             connection.onStatusNotification = onStatusNotification_PreUpdate;
+            connection.onGroupJoin = onGroupChange_PreUpdate;
+            connection.onGroupInvite = onGroupInvite;
+            connection.onGroupHolderChange = onGroupChange_PreUpdate;
+            connection.onGroupClosed = onGroupClosed;
+            connection.onGroupLeave = onGroupChange_PreUpdate;
+            connection.onGroupKick = onGroupKick;
             ShowConnectOptionsOnLoginTab();
         }
 
@@ -76,16 +86,30 @@ namespace Komin
                 TreeNode tn = new TreeNode(cd.contact_name);
                 tn.Tag = new ContactTreeTag(cd.contact_id, false);
                 tn.ContextMenuStrip = contextMenuStripContact;
+                tn.ImageIndex = (int)cd.status;
+                tn.SelectedImageIndex = (int)cd.status;
                 contacts.Nodes.Add(tn);
             }
+            connection.userdata.groups.Sort(GroupDataComparison_ByNameAsc);
             foreach (GroupData gd in connection.userdata.groups)
             {
                 TreeNode gtn = new TreeNode(gd.group_name);
                 gtn.Tag = new ContactTreeTag(gd.group_id, true);
+                gtn.ContextMenuStrip = contextMenuStripGroup;
+                gtn.ImageIndex = 6;
+                gtn.SelectedImageIndex = 6;
+                gd.members.Sort(ContactDataComparison_ByNameAsc);
                 foreach (ContactData cd in gd.members)
                 {
                     TreeNode tn = new TreeNode(cd.contact_name);
                     tn.Tag = new ContactTreeTag(cd.contact_id, false);
+                    tn.ContextMenuStrip = contextMenuStripGroupMember;
+                    tn.ImageIndex = (int)(cd.status + (gd.creators_id == cd.contact_id ? 6 : 0));
+                    if (tn.ImageIndex == 6)
+                        tn.ImageIndex = 0;
+                    tn.SelectedImageIndex = (int)(cd.status + (gd.creators_id == cd.contact_id ? 6 : 0));
+                    if (tn.SelectedImageIndex == 6)
+                        tn.SelectedImageIndex = 0;
                     gtn.Nodes.Add(tn);
                 }
                 groups.Nodes.Add(gtn);
@@ -111,6 +135,9 @@ namespace Komin
                 try { MainTabPanel.SelectedTab = next_page; }
                 catch (Exception) { }
             next_page = null;
+            foreach (GroupData gd in changed_groups)
+                onGroupChange(gd);
+            changed_groups.Clear();
             foreach (ContactData cd in changed_contacts)
                 onStatusNotification(cd);
             changed_contacts.Clear();
@@ -134,29 +161,19 @@ namespace Komin
 
         private void logout_Click(object sender, EventArgs e)
         {
-            try
-            {
-                connection.Logout();
-            }
-            catch (KominClientErrorException ex)
-            {
-                MessageBox.Show(ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            KominClientErrorOccured = false;
+            connection.Logout();
+            if (KominClientErrorOccured)
                 return;
-            }
             ResetPanel();
         }
 
         private void DisconnectButton_Click(object sender, EventArgs e)
         {
-            try
-            {
-                connection.Disconnect();
-            }
-            catch (KominClientErrorException ex)
-            {
-                MessageBox.Show(ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            KominClientErrorOccured = false;
+            connection.Disconnect();
+            if (KominClientErrorOccured)
                 return;
-            }
             ResetPanel();
             ShowConnectOptionsOnLoginTab();
         }
@@ -171,9 +188,13 @@ namespace Komin
             MainTabPanel.TabPages.Add(LoginTab);
             UserName.Text = "Nazwa: ";
             statusComboBox.Text = "";
+            treeView1.Nodes["Kontakty"].Collapse(false);
             treeView1.Nodes["Kontakty"].Nodes.Clear();
+            treeView1.Nodes["Grupy"].Collapse(false);
+            foreach (TreeNode gdn in treeView1.Nodes["Grupy"].Nodes)
+                gdn.Nodes.Clear();
             treeView1.Nodes["Grupy"].Nodes.Clear();
-            RightMenu.Enabled = false; 
+            RightMenu.Enabled = false;
         }
 
         private void onCloseContactTabClick(object sender, EventArgs e)
@@ -182,7 +203,7 @@ namespace Komin
 
         private void treeView1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(e.KeyChar=='\r')
+            if (e.KeyChar == '\r')
                 treeView1_NodeDoubleClick(sender, new TreeNodeMouseClickEventArgs(((TreeView)sender).SelectedNode, System.Windows.Forms.MouseButtons.Left, 2, 0, 0));
         }
 
@@ -250,6 +271,12 @@ namespace Komin
             add_page.Add(tpage);
             next_page = tpage;
             MainTabPanel.ContextMenuStrip = contactTabContextMenu;
+        }
+
+        private void onError(string err_text, KominNetworkPacket packet)
+        {
+            KominClientErrorOccured = true;
+            MessageBox.Show(err_text, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void onNewMessage(uint sender_id, uint receiver_id, bool receiver_is_group, TextMessage msg)
@@ -350,7 +377,6 @@ namespace Komin
                             next_page = HomePage;
                         }
                         remove_page.Add(tp);
-                        WaitForTabUpdate();
                         break;
                     }
             }
@@ -407,13 +433,26 @@ namespace Komin
 
             //find contact on groups members lists in tree view
             foreach (TreeNode gn in groups.Nodes)
+            {
+                GroupData gd = null;
+                foreach (GroupData g in connection.userdata.groups)
+                    if (g.group_name == gn.Text)
+                    {
+                        gd = g;
+                        break;
+                    }
                 foreach (TreeNode tn in gn.Nodes)
                     if (tn.Text == changed_contact.contact_name)
                     {
-                        tn.ImageIndex = (int)(changed_contact.status & (uint)KominClientStatusCodes.Mask);
-                        tn.SelectedImageIndex = (int)(changed_contact.status & (uint)KominClientStatusCodes.Mask);
+                        tn.ImageIndex = (int)(changed_contact.status & (uint)KominClientStatusCodes.Mask) + (gd.creators_id == changed_contact.contact_id ? 6 : 0);
+                        if (tn.ImageIndex == 6)
+                            tn.ImageIndex = 0;
+                        tn.SelectedImageIndex = (int)(changed_contact.status & (uint)KominClientStatusCodes.Mask) + (gd.creators_id == changed_contact.contact_id ? 6 : 0);
+                        if (tn.SelectedImageIndex == 6)
+                            tn.SelectedImageIndex = 0;
                         break;
                     }
+            }
 
             //find contact in opened tabs
             foreach (TabPage tp in MainTabPanel.TabPages)
@@ -424,14 +463,138 @@ namespace Komin
                 }
         }
 
+        private void onGroupChange_PreUpdate(GroupData new_gd)
+        {
+            changed_groups.Add(new_gd);
+        }
+
+        private void onGroupChange(GroupData new_gd)
+        {
+            TreeNode groups = treeView1.Nodes["Grupy"];
+
+            //remove groups
+            List<int> to_remove = new List<int>();
+            for (int i = 0; i < groups.Nodes.Count; i++)
+            {
+                bool found = false;
+                foreach (GroupData gd in connection.userdata.groups)
+                {
+                    if (((ContactTreeTag)groups.Nodes[i].Tag).id == gd.group_id)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                    to_remove.Insert(0, i);
+            }
+            foreach (int i in to_remove)
+            {
+                foreach (TabPage tp in MainTabPanel.TabPages)
+                    if (tp.Text == groups.Nodes[i].Text)
+                    {
+                        if (MainTabPanel.TabPages.Count == 1)
+                        {
+                            add_page.Add(HomePage);
+                            next_page = HomePage;
+                        }
+                        remove_page.Add(tp);
+                        break;
+                    }
+                groups.Nodes.RemoveAt(i);
+            }
+
+            //add groups
+            connection.userdata.groups.Sort(GroupDataComparison_ByNameAsc);
+            for (int i = 0; i < connection.userdata.groups.Count; i++)
+            {
+                GroupData gd = connection.userdata.groups[i];
+                if ((groups.Nodes.Count < i + 1) || (groups.Nodes[i].Text != gd.group_name))
+                {
+                    TreeNode gtn = new TreeNode(gd.group_name);
+                    gtn.Tag = new ContactTreeTag(gd.group_id, true);
+                    gtn.ContextMenuStrip = contextMenuStripGroup;
+                    gtn.ImageIndex = 6;
+                    gtn.SelectedImageIndex = 6;
+                    gd.members.Sort(ContactDataComparison_ByNameAsc);
+                    foreach (ContactData cd in gd.members)
+                    {
+                        TreeNode tn = new TreeNode(cd.contact_name);
+                        tn.Tag = new ContactTreeTag(cd.contact_id, false);
+                        tn.ContextMenuStrip = contextMenuStripGroupMember;
+                        tn.ImageIndex = (int)(cd.status + (gd.creators_id == cd.contact_id ? 6 : 0));
+                        if (tn.ImageIndex == 6)
+                            tn.ImageIndex = 0;
+                        tn.SelectedImageIndex = (int)(cd.status + (gd.creators_id == cd.contact_id ? 6 : 0));
+                        if (tn.SelectedImageIndex == 6)
+                            tn.SelectedImageIndex = 0;
+                        gtn.Nodes.Add(tn);
+                    }
+                    if (groups.Nodes.Count < i + 1)
+                        groups.Nodes.Add(gtn);
+                    else
+                        groups.Nodes.Insert(i, gtn);
+                }
+                else //update group
+                {
+                    TreeNode gtn = groups.Nodes[i];
+                    gtn.Nodes.Clear();
+                    gd.members.Sort(ContactDataComparison_ByNameAsc);
+                    foreach (ContactData cd in gd.members)
+                    {
+                        TreeNode tn = new TreeNode(cd.contact_name);
+                        tn.Tag = new ContactTreeTag(cd.contact_id, false);
+                        tn.ContextMenuStrip = contextMenuStripGroupMember;
+                        tn.ImageIndex = (int)(cd.status + (gd.creators_id == cd.contact_id ? 6 : 0));
+                        if (tn.ImageIndex == 6)
+                            tn.ImageIndex = 0;
+                        tn.SelectedImageIndex = (int)(cd.status + (gd.creators_id == cd.contact_id ? 6 : 0));
+                        if (tn.SelectedImageIndex == 6)
+                            tn.SelectedImageIndex = 0;
+                        gtn.Nodes.Add(tn);
+                    }
+                }
+            }
+        }
+
+        private bool onGroupInvite(GroupData gd, ContactData invitor)
+        {
+            switch (MessageBox.Show(invitor.contact_name + " zaprasza Cię do grupy " + gd.group_name, "Zaproszenie do grupy", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            {
+                case DialogResult.Yes:
+                    return true;
+                case DialogResult.No:
+                    return false;
+                default:
+                    return false;
+            }
+        }
+
+        private void onGroupClosed(GroupData gd)
+        {
+            onGroupChange_PreUpdate(gd);
+            MessageBox.Show("Zarządca grupy " + gd.group_name + " rozwiązał ją.", "Powiadomienie", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void onGroupKick(GroupData gd)
+        {
+            onGroupChange_PreUpdate(gd);
+            MessageBox.Show("Zostałeś wyrzucony/a z grupy " + gd.group_name + " przez jej zarządce", "Wyrzucenie z grupy", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         int ContactDataComparison_ByNameAsc(ContactData _1, ContactData _2)
         {
             return _1.contact_name.CompareTo(_2.contact_name);
         }
 
+        int GroupDataComparison_ByNameAsc(GroupData _1, GroupData _2)
+        {
+            return _1.group_name.CompareTo(_2.group_name);
+        }
+
         private void onClientClosing(object sender, FormClosingEventArgs e)
         {
-            if(connection != null)
+            if (connection != null)
                 connection.Disconnect();
         }
 
@@ -462,29 +625,125 @@ namespace Komin
         {
             if (MessageBox.Show("Czy napewno chcesz usunąć kontakt?\n\nKontakt: " + clickedContactNode.Text, "Potwierdzenie", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                try
-                {
-                    connection.RemoveContactFromList(clickedContactNode.Text);
-                }
-                catch (KominClientErrorException ex)
-                {
-                    MessageBox.Show(ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                KominClientErrorOccured = false;
+                connection.RemoveContactFromList(clickedContactNode.Text);
+                if (KominClientErrorOccured)
                     return;
-                }
             }
         }
 
         private void statusComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            try
-            {
-                connection.SetStatus((uint)statusComboBox.SelectedIndex);
-            }
-            catch (KominClientErrorException ex)
-            {
-                MessageBox.Show(ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            KominClientErrorOccured = false;
+            connection.SetStatus((uint)statusComboBox.SelectedIndex);
+            if (KominClientErrorOccured)
                 return;
+        }
+
+        private void addGroupMemberToContacts(object sender, EventArgs e)
+        {
+            KominClientErrorOccured = false;
+            connection.AddContactToList(clickedContactNode.Text);
+            if (KominClientErrorOccured)
+                return;
+        }
+
+        private void addNewGroupContextMenuItem(object sender, EventArgs e)
+        {
+            AddGroupForm agf = new AddGroupForm(connection);
+            agf.ShowDialog();
+        }
+
+        private void inviteContactToGroup_Click(object sender, EventArgs e)
+        {
+            foreach (ContactData cd in connection.userdata.contacts)
+                if (clickedContactNode.Text == cd.contact_name)
+                {
+                    GroupInviteForm gif = new GroupInviteForm(connection, cd);
+                    gif.ShowDialog();
+                    break;
+                }
+        }
+
+        private void promoteToGroupLeader_Click(object sender, EventArgs e)
+        {
+            ContactTreeTag holder_tag = (ContactTreeTag)clickedContactNode.Tag;
+            ContactTreeTag group_tag = (ContactTreeTag)clickedContactNode.Parent.Tag;
+            KominClientErrorOccured = false;
+            connection.ChangeGroupHolder(group_tag.id, holder_tag.id);
+            if (KominClientErrorOccured)
+                return;
+        }
+
+        private void removeGroupContextMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Czy napewno chcesz rozwiązać grupe " + clickedContactNode.Text + "?", "Potwierdzenie", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                KominClientErrorOccured = false;
+                connection.CloseGroup(((ContactTreeTag)clickedContactNode.Tag).id);
+                if (KominClientErrorOccured)
+                    return;
             }
+        }
+
+        private void leaveGroupContextMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Czy napewno chcesz opuścić grupe " + clickedContactNode.Text + "?", "Potwierdzenie", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                KominClientErrorOccured = false;
+                connection.LeaveGroup(((ContactTreeTag)clickedContactNode.Tag).id);
+                if (KominClientErrorOccured)
+                    return;
+            }
+        }
+
+        private void kickFromGroupContextMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Czy napewno chcesz wyrzucić " + clickedContactNode.Text + " z grupy " + clickedContactNode.Parent.Text + "?", "Potwierdzenie", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                KominClientErrorOccured = false;
+                connection.LeaveGroup(((ContactTreeTag)clickedContactNode.Parent.Tag).id, true, ((ContactTreeTag)clickedContactNode.Tag).id);
+                if (KominClientErrorOccured)
+                    return;
+            }
+        }
+
+        private void contextMenuStripContact_Opening(object sender, CancelEventArgs e)
+        {
+            ContextMenuStrip menu = (ContextMenuStrip)sender;
+            ContactTreeTag contact_tag = (ContactTreeTag)clickedContactNode.Tag;
+            menu.Items["zaprośDoGrupyToolStripMenuItem1"].Enabled = (treeView1.Nodes["Grupy"].Nodes.Count > 0) && (contact_tag.id != connection.userdata.contact_id);
+        }
+
+        private void contextMenuStripGroup_Opening(object sender, CancelEventArgs e)
+        {
+            ContextMenuStrip menu = (ContextMenuStrip)sender;
+            ContactTreeTag group_tag = (ContactTreeTag)clickedContactNode.Tag;
+            bool holder = false;
+            foreach (GroupData gd in connection.userdata.groups)
+                if (gd.group_id == group_tag.id)
+                {
+                    holder = (connection.userdata.contact_id == gd.creators_id);
+                    break;
+                }
+            menu.Items["rozwiążGrupeToolStripMenuItem"].Enabled = holder;
+        }
+
+        private void contextMenuStripGroupMember_Opening(object sender, CancelEventArgs e)
+        {
+            ContextMenuStrip menu = (ContextMenuStrip)sender;
+            ContactTreeTag group_tag = (ContactTreeTag)clickedContactNode.Parent.Tag;
+            ContactTreeTag member_tag = (ContactTreeTag)clickedContactNode.Tag;
+            bool self = (connection.userdata.contact_id == member_tag.id);
+            bool holder = false;
+            foreach (GroupData gd in connection.userdata.groups)
+                if (gd.group_id == group_tag.id)
+                {
+                    holder = (connection.userdata.contact_id == gd.creators_id);
+                    break;
+                }
+            menu.Items["awansujNaLideraGrupyToolStripMenuItem"].Enabled = holder && !self;
+            menu.Items["wyrzućZGrupyToolStripMenuItem"].Enabled = holder && !self;
         }
     }
 }

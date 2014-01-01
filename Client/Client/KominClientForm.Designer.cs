@@ -29,18 +29,20 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KominClientForm));
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Kontakty", 4, 4);
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Grupy", 5, 5);
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KominClientForm));
             this.contextMenuStripContactsNode = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addContactToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripGroups = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dołączDoGrupyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainTabPanel = new System.Windows.Forms.TabControl();
             this.LoginTab = new System.Windows.Forms.TabPage();
             this.HomePage = new System.Windows.Forms.TabPage();
             this.tmpTest = new System.Windows.Forms.Label();
             this.tabSendTextMessage = new System.Windows.Forms.TabPage();
+            this.treeViewIcons = new System.Windows.Forms.ImageList(this.components);
             this.RightMenu = new System.Windows.Forms.Panel();
             this.DisconnectButton = new System.Windows.Forms.Button();
             this.statusComboBox = new System.Windows.Forms.ComboBox();
@@ -54,15 +56,36 @@
             this.contextMenuStripContact = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.txtMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.audioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.wideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.videoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wyślijPlikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.ączNaRozmoweAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.przełączNaRozmoweWideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.zaprośDoGrupyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.archiwumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteContactToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSendMessage = new System.Windows.Forms.ToolStripMenuItem();
             this.njnnjToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mmmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sendFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.userstatesImageList = new System.Windows.Forms.ImageList(this.components);
+            this.contextMenuStripGroup = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.opuśćGrupeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.group_txtMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.group_audioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.group_videoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.group_wyślijPlikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.rozwiążGrupeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripGroupMember = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.awansujNaLideraGrupyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.dodajDoKontaktówToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.wyrzućZGrupyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripContactsNode.SuspendLayout();
             this.contextMenuStripGroups.SuspendLayout();
             this.MainTabPanel.SuspendLayout();
@@ -71,6 +94,8 @@
             this.ContactGroupBox.SuspendLayout();
             this.contactTabContextMenu.SuspendLayout();
             this.contextMenuStripContact.SuspendLayout();
+            this.contextMenuStripGroup.SuspendLayout();
+            this.contextMenuStripGroupMember.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStripContactsNode
@@ -78,28 +103,36 @@
             this.contextMenuStripContactsNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addContactToolStripMenuItem});
             this.contextMenuStripContactsNode.Name = "contextMenuStripAddContact";
-            this.contextMenuStripContactsNode.Size = new System.Drawing.Size(140, 26);
+            this.contextMenuStripContactsNode.Size = new System.Drawing.Size(142, 26);
             // 
             // addContactToolStripMenuItem
             // 
             this.addContactToolStripMenuItem.Name = "addContactToolStripMenuItem";
-            this.addContactToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
-            this.addContactToolStripMenuItem.Text = "dodaj kontakt";
+            this.addContactToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.addContactToolStripMenuItem.Text = "Dodaj kontakt";
             this.addContactToolStripMenuItem.Click += new System.EventHandler(this.addContactToolStripMenuItem_Click);
             // 
             // contextMenuStripGroups
             // 
             this.contextMenuStripGroups.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addGroupToolStripMenuItem});
+            this.addGroupToolStripMenuItem,
+            this.dołączDoGrupyToolStripMenuItem});
             this.contextMenuStripGroups.Name = "contextMenuStripGroups";
-            this.contextMenuStripGroups.Size = new System.Drawing.Size(133, 26);
+            this.contextMenuStripGroups.Size = new System.Drawing.Size(154, 48);
             // 
             // addGroupToolStripMenuItem
             // 
-            this.addGroupToolStripMenuItem.Enabled = false;
             this.addGroupToolStripMenuItem.Name = "addGroupToolStripMenuItem";
-            this.addGroupToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.addGroupToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.addGroupToolStripMenuItem.Text = "Dodaj grupę";
+            this.addGroupToolStripMenuItem.Click += new System.EventHandler(this.addNewGroupContextMenuItem);
+            // 
+            // dołączDoGrupyToolStripMenuItem
+            // 
+            this.dołączDoGrupyToolStripMenuItem.Enabled = false;
+            this.dołączDoGrupyToolStripMenuItem.Name = "dołączDoGrupyToolStripMenuItem";
+            this.dołączDoGrupyToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.dołączDoGrupyToolStripMenuItem.Text = "Dołącz do grupy";
             // 
             // MainTabPanel
             // 
@@ -109,7 +142,7 @@
             this.MainTabPanel.Controls.Add(this.LoginTab);
             this.MainTabPanel.Controls.Add(this.HomePage);
             this.MainTabPanel.Controls.Add(this.tabSendTextMessage);
-            this.MainTabPanel.ImageList = this.userstatesImageList;
+            this.MainTabPanel.ImageList = this.treeViewIcons;
             this.MainTabPanel.Location = new System.Drawing.Point(12, 12);
             this.MainTabPanel.Name = "MainTabPanel";
             this.MainTabPanel.SelectedIndex = 0;
@@ -118,10 +151,10 @@
             // 
             // LoginTab
             // 
-            this.LoginTab.Location = new System.Drawing.Point(4, 22);
+            this.LoginTab.Location = new System.Drawing.Point(4, 23);
             this.LoginTab.Name = "LoginTab";
             this.LoginTab.Padding = new System.Windows.Forms.Padding(3);
-            this.LoginTab.Size = new System.Drawing.Size(490, 392);
+            this.LoginTab.Size = new System.Drawing.Size(490, 391);
             this.LoginTab.TabIndex = 0;
             this.LoginTab.Text = "Logowanie i Rejestracja";
             this.LoginTab.UseVisualStyleBackColor = true;
@@ -129,10 +162,10 @@
             // HomePage
             // 
             this.HomePage.Controls.Add(this.tmpTest);
-            this.HomePage.Location = new System.Drawing.Point(4, 22);
+            this.HomePage.Location = new System.Drawing.Point(4, 23);
             this.HomePage.Name = "HomePage";
             this.HomePage.Padding = new System.Windows.Forms.Padding(3);
-            this.HomePage.Size = new System.Drawing.Size(490, 392);
+            this.HomePage.Size = new System.Drawing.Size(490, 391);
             this.HomePage.TabIndex = 1;
             this.HomePage.Text = "Strona Główna";
             this.HomePage.UseVisualStyleBackColor = true;
@@ -149,12 +182,27 @@
             // 
             // tabSendTextMessage
             // 
-            this.tabSendTextMessage.Location = new System.Drawing.Point(4, 22);
+            this.tabSendTextMessage.Location = new System.Drawing.Point(4, 23);
             this.tabSendTextMessage.Name = "tabSendTextMessage";
-            this.tabSendTextMessage.Size = new System.Drawing.Size(490, 392);
+            this.tabSendTextMessage.Size = new System.Drawing.Size(490, 391);
             this.tabSendTextMessage.TabIndex = 1;
             this.tabSendTextMessage.Text = "Text";
             this.tabSendTextMessage.UseVisualStyleBackColor = true;
+            // 
+            // treeViewIcons
+            // 
+            this.treeViewIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("treeViewIcons.ImageStream")));
+            this.treeViewIcons.TransparentColor = System.Drawing.Color.White;
+            this.treeViewIcons.Images.SetKeyName(0, "user_offline16x16.bmp");
+            this.treeViewIcons.Images.SetKeyName(1, "user_invisible16x16.bmp");
+            this.treeViewIcons.Images.SetKeyName(2, "user_busy16x16.bmp");
+            this.treeViewIcons.Images.SetKeyName(3, "user_online16x16.bmp");
+            this.treeViewIcons.Images.SetKeyName(4, "contacts.bmp");
+            this.treeViewIcons.Images.SetKeyName(5, "groups.bmp");
+            this.treeViewIcons.Images.SetKeyName(6, "group.bmp");
+            this.treeViewIcons.Images.SetKeyName(7, "group_holder_invisible.bmp");
+            this.treeViewIcons.Images.SetKeyName(8, "group_holder_busy.bmp");
+            this.treeViewIcons.Images.SetKeyName(9, "group_holder_online.bmp");
             // 
             // RightMenu
             // 
@@ -229,7 +277,7 @@
             // 
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.ImageIndex = 0;
-            this.treeView1.ImageList = this.userstatesImageList;
+            this.treeView1.ImageList = this.treeViewIcons;
             this.treeView1.Location = new System.Drawing.Point(3, 16);
             this.treeView1.Name = "treeView1";
             treeNode1.ContextMenuStrip = this.contextMenuStripContactsNode;
@@ -278,6 +326,7 @@
             // 
             // zamknijToolStripMenuItem
             // 
+            this.zamknijToolStripMenuItem.Enabled = false;
             this.zamknijToolStripMenuItem.Name = "zamknijToolStripMenuItem";
             this.zamknijToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
             this.zamknijToolStripMenuItem.Text = "Zamknij";
@@ -288,51 +337,102 @@
             this.contextMenuStripContact.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtMessageToolStripMenuItem,
             this.audioToolStripMenuItem,
-            this.wideoToolStripMenuItem,
+            this.videoToolStripMenuItem,
             this.wyślijPlikToolStripMenuItem,
             this.toolStripSeparator1,
+            this.ączNaRozmoweAudioToolStripMenuItem,
+            this.przełączNaRozmoweWideoToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.zaprośDoGrupyToolStripMenuItem1,
+            this.toolStripSeparator8,
+            this.archiwumToolStripMenuItem,
+            this.toolStripSeparator3,
             this.deleteContactToolStripMenuItem});
             this.contextMenuStripContact.Name = "contextMenuStripContact";
-            this.contextMenuStripContact.Size = new System.Drawing.Size(163, 120);
+            this.contextMenuStripContact.Size = new System.Drawing.Size(208, 226);
+            this.contextMenuStripContact.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripContact_Opening);
             // 
             // txtMessageToolStripMenuItem
             // 
             this.txtMessageToolStripMenuItem.Name = "txtMessageToolStripMenuItem";
-            this.txtMessageToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.txtMessageToolStripMenuItem.Text = "rozmowa tekstowa";
+            this.txtMessageToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.txtMessageToolStripMenuItem.Text = "Rozmowa tekstowa";
             this.txtMessageToolStripMenuItem.Click += new System.EventHandler(this.txtMessageToolStripMenuItem_Click);
             // 
             // audioToolStripMenuItem
             // 
             this.audioToolStripMenuItem.Enabled = false;
             this.audioToolStripMenuItem.Name = "audioToolStripMenuItem";
-            this.audioToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.audioToolStripMenuItem.Text = "rozmowa audio";
+            this.audioToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.audioToolStripMenuItem.Text = "Rozmowa audio";
             // 
-            // wideoToolStripMenuItem
+            // videoToolStripMenuItem
             // 
-            this.wideoToolStripMenuItem.Enabled = false;
-            this.wideoToolStripMenuItem.Name = "wideoToolStripMenuItem";
-            this.wideoToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.wideoToolStripMenuItem.Text = "rozmowa wideo";
+            this.videoToolStripMenuItem.Enabled = false;
+            this.videoToolStripMenuItem.Name = "videoToolStripMenuItem";
+            this.videoToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.videoToolStripMenuItem.Text = "Rozmowa wideo";
             // 
             // wyślijPlikToolStripMenuItem
             // 
             this.wyślijPlikToolStripMenuItem.Name = "wyślijPlikToolStripMenuItem";
-            this.wyślijPlikToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.wyślijPlikToolStripMenuItem.Text = "wyślij plik";
+            this.wyślijPlikToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.wyślijPlikToolStripMenuItem.Text = "Wyślij plik";
             this.wyślijPlikToolStripMenuItem.Click += new System.EventHandler(this.wyślijPlikToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(159, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(204, 6);
+            // 
+            // ączNaRozmoweAudioToolStripMenuItem
+            // 
+            this.ączNaRozmoweAudioToolStripMenuItem.Enabled = false;
+            this.ączNaRozmoweAudioToolStripMenuItem.Name = "ączNaRozmoweAudioToolStripMenuItem";
+            this.ączNaRozmoweAudioToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.ączNaRozmoweAudioToolStripMenuItem.Text = "Przełącz na rozmowe audio";
+            // 
+            // przełączNaRozmoweWideoToolStripMenuItem
+            // 
+            this.przełączNaRozmoweWideoToolStripMenuItem.Enabled = false;
+            this.przełączNaRozmoweWideoToolStripMenuItem.Name = "przełączNaRozmoweWideoToolStripMenuItem";
+            this.przełączNaRozmoweWideoToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.przełączNaRozmoweWideoToolStripMenuItem.Text = "Przełącz na rozmowe wideo";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(204, 6);
+            // 
+            // zaprośDoGrupyToolStripMenuItem1
+            // 
+            this.zaprośDoGrupyToolStripMenuItem1.Name = "zaprośDoGrupyToolStripMenuItem1";
+            this.zaprośDoGrupyToolStripMenuItem1.Size = new System.Drawing.Size(207, 22);
+            this.zaprośDoGrupyToolStripMenuItem1.Text = "Zaproś do grupy";
+            this.zaprośDoGrupyToolStripMenuItem1.Click += new System.EventHandler(this.inviteContactToGroup_Click);
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(204, 6);
+            // 
+            // archiwumToolStripMenuItem
+            // 
+            this.archiwumToolStripMenuItem.Enabled = false;
+            this.archiwumToolStripMenuItem.Name = "archiwumToolStripMenuItem";
+            this.archiwumToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.archiwumToolStripMenuItem.Text = "Archiwum";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(204, 6);
             // 
             // deleteContactToolStripMenuItem
             // 
             this.deleteContactToolStripMenuItem.Name = "deleteContactToolStripMenuItem";
-            this.deleteContactToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.deleteContactToolStripMenuItem.Text = "usuń kontakt";
+            this.deleteContactToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.deleteContactToolStripMenuItem.Text = "Usuń kontakt";
             this.deleteContactToolStripMenuItem.Click += new System.EventHandler(this.deleteContactToolStripMenuItem_Click);
             // 
             // toolStripMenuItemSendMessage
@@ -357,16 +457,115 @@
             // 
             this.sendFileDialog.FileName = "file";
             // 
-            // userstatesImageList
+            // contextMenuStripGroup
             // 
-            this.userstatesImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("userstatesImageList.ImageStream")));
-            this.userstatesImageList.TransparentColor = System.Drawing.Color.White;
-            this.userstatesImageList.Images.SetKeyName(0, "user_offline16x16.bmp");
-            this.userstatesImageList.Images.SetKeyName(1, "user_invisible16x16.bmp");
-            this.userstatesImageList.Images.SetKeyName(2, "user_busy16x16.bmp");
-            this.userstatesImageList.Images.SetKeyName(3, "user_online16x16.bmp");
-            this.userstatesImageList.Images.SetKeyName(4, "contacts.bmp");
-            this.userstatesImageList.Images.SetKeyName(5, "groups.bmp");
+            this.contextMenuStripGroup.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.opuśćGrupeToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.group_txtMessageToolStripMenuItem,
+            this.group_audioToolStripMenuItem,
+            this.group_videoToolStripMenuItem,
+            this.group_wyślijPlikToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.rozwiążGrupeToolStripMenuItem});
+            this.contextMenuStripGroup.Name = "contextMenuStripGroup";
+            this.contextMenuStripGroup.Size = new System.Drawing.Size(168, 148);
+            this.contextMenuStripGroup.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripGroup_Opening);
+            // 
+            // opuśćGrupeToolStripMenuItem
+            // 
+            this.opuśćGrupeToolStripMenuItem.Name = "opuśćGrupeToolStripMenuItem";
+            this.opuśćGrupeToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.opuśćGrupeToolStripMenuItem.Text = "Opuść grupe";
+            this.opuśćGrupeToolStripMenuItem.Click += new System.EventHandler(this.leaveGroupContextMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(164, 6);
+            // 
+            // group_txtMessageToolStripMenuItem
+            // 
+            this.group_txtMessageToolStripMenuItem.Name = "group_txtMessageToolStripMenuItem";
+            this.group_txtMessageToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.group_txtMessageToolStripMenuItem.Text = "Rozmowa tekstowa";
+            this.group_txtMessageToolStripMenuItem.Click += new System.EventHandler(this.txtMessageToolStripMenuItem_Click);
+            // 
+            // group_audioToolStripMenuItem
+            // 
+            this.group_audioToolStripMenuItem.Enabled = false;
+            this.group_audioToolStripMenuItem.Name = "group_audioToolStripMenuItem";
+            this.group_audioToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.group_audioToolStripMenuItem.Text = "Rozmowa audio";
+            // 
+            // group_videoToolStripMenuItem
+            // 
+            this.group_videoToolStripMenuItem.Enabled = false;
+            this.group_videoToolStripMenuItem.Name = "group_videoToolStripMenuItem";
+            this.group_videoToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.group_videoToolStripMenuItem.Text = "Rozmowa wideo";
+            // 
+            // group_wyślijPlikToolStripMenuItem
+            // 
+            this.group_wyślijPlikToolStripMenuItem.Name = "group_wyślijPlikToolStripMenuItem";
+            this.group_wyślijPlikToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.group_wyślijPlikToolStripMenuItem.Text = "Wyślij plik";
+            this.group_wyślijPlikToolStripMenuItem.Click += new System.EventHandler(this.wyślijPlikToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(164, 6);
+            // 
+            // rozwiążGrupeToolStripMenuItem
+            // 
+            this.rozwiążGrupeToolStripMenuItem.Name = "rozwiążGrupeToolStripMenuItem";
+            this.rozwiążGrupeToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.rozwiążGrupeToolStripMenuItem.Text = "Rozwiąż grupe";
+            this.rozwiążGrupeToolStripMenuItem.Click += new System.EventHandler(this.removeGroupContextMenuItem_Click);
+            // 
+            // contextMenuStripGroupMember
+            // 
+            this.contextMenuStripGroupMember.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.awansujNaLideraGrupyToolStripMenuItem,
+            this.toolStripSeparator7,
+            this.dodajDoKontaktówToolStripMenuItem,
+            this.toolStripSeparator6,
+            this.wyrzućZGrupyToolStripMenuItem});
+            this.contextMenuStripGroupMember.Name = "contextMenuStripGroupMember";
+            this.contextMenuStripGroupMember.Size = new System.Drawing.Size(205, 104);
+            this.contextMenuStripGroupMember.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripGroupMember_Opening);
+            // 
+            // awansujNaLideraGrupyToolStripMenuItem
+            // 
+            this.awansujNaLideraGrupyToolStripMenuItem.Name = "awansujNaLideraGrupyToolStripMenuItem";
+            this.awansujNaLideraGrupyToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.awansujNaLideraGrupyToolStripMenuItem.Text = "Awansuj na zarządce grupy";
+            this.awansujNaLideraGrupyToolStripMenuItem.Click += new System.EventHandler(this.promoteToGroupLeader_Click);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(183, 6);
+            // 
+            // dodajDoKontaktówToolStripMenuItem
+            // 
+            this.dodajDoKontaktówToolStripMenuItem.Name = "dodajDoKontaktówToolStripMenuItem";
+            this.dodajDoKontaktówToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.dodajDoKontaktówToolStripMenuItem.Text = "Dodaj do kontaktów";
+            this.dodajDoKontaktówToolStripMenuItem.Click += new System.EventHandler(this.addGroupMemberToContacts);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(183, 6);
+            // 
+            // wyrzućZGrupyToolStripMenuItem
+            // 
+            this.wyrzućZGrupyToolStripMenuItem.Name = "wyrzućZGrupyToolStripMenuItem";
+            this.wyrzućZGrupyToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.wyrzućZGrupyToolStripMenuItem.Text = "Wyrzuć z grupy";
+            this.wyrzućZGrupyToolStripMenuItem.Click += new System.EventHandler(this.kickFromGroupContextMenuItem_Click);
             // 
             // KominClientForm
             // 
@@ -389,6 +588,8 @@
             this.ContactGroupBox.ResumeLayout(false);
             this.contactTabContextMenu.ResumeLayout(false);
             this.contextMenuStripContact.ResumeLayout(false);
+            this.contextMenuStripGroup.ResumeLayout(false);
+            this.contextMenuStripGroupMember.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -415,7 +616,7 @@
         private System.Windows.Forms.ToolStripMenuItem mmmToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem txtMessageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem audioToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem wideoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem videoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wyślijPlikToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog sendFileDialog;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripContactsNode;
@@ -425,7 +626,30 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripGroups;
         private System.Windows.Forms.ToolStripMenuItem addGroupToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ImageList userstatesImageList;
+        private System.Windows.Forms.ImageList treeViewIcons;
+        private System.Windows.Forms.ToolStripMenuItem ączNaRozmoweAudioToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem przełączNaRozmoweWideoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem dołączDoGrupyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem archiwumToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripGroup;
+        private System.Windows.Forms.ToolStripMenuItem opuśćGrupeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem group_txtMessageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem group_audioToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem group_videoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem group_wyślijPlikToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem rozwiążGrupeToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripGroupMember;
+        private System.Windows.Forms.ToolStripMenuItem awansujNaLideraGrupyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolStripMenuItem dodajDoKontaktówToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem wyrzućZGrupyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem zaprośDoGrupyToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
     }
 }
 

@@ -80,6 +80,7 @@
             // 
             // RegisterButton
             // 
+            this.RegisterButton.Enabled = false;
             this.RegisterButton.Location = new System.Drawing.Point(46, 84);
             this.RegisterButton.Name = "RegisterButton";
             this.RegisterButton.Size = new System.Drawing.Size(91, 26);

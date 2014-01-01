@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using System.Data;
 using System.Data.SqlClient;
@@ -68,8 +66,8 @@ namespace Komin
             RequestTimer.Enabled = false;
             while (RequestTimerLock == true) ;
             RequestTimerLock = true;
-            SqlCommand cmd = new SqlCommand(reqtexts[0].Substring(1, reqtexts[0].Length-1), connection);
-            if (reqtexts[0][0]=='R')
+            SqlCommand cmd = new SqlCommand(reqtexts[0].Substring(1, reqtexts[0].Length - 1), connection);
+            if (reqtexts[0][0] == 'R')
             {
                 try
                 {
@@ -91,7 +89,7 @@ namespace Komin
                     ReqRdr = null;
                 }
             }
-            else if(reqtexts[0][0]=='E')
+            else if (reqtexts[0][0] == 'E')
             {
                 try
                 {
@@ -124,7 +122,11 @@ namespace Komin
                 uids.Add((uint)((int)ReqRdr["id_konta"]));
             MarkReaderRequestCompleted();
             foreach (uint uid in uids)
-                ret.users.Add(GetUserData(uid));
+            {
+                UserData ud = GetUserData(uid);
+                if (ud != null)
+                    ret.users.Add(ud);
+            }
 
             WaitForRequestExecution(MakeReaderRequest("select id_grupy from grupy"));
             List<uint> gids = new List<uint>();
@@ -132,7 +134,11 @@ namespace Komin
                 gids.Add((uint)((int)ReqRdr["id_grupy"]));
             MarkReaderRequestCompleted();
             foreach (uint gid in gids)
-                ret.groups.Add(GetGroupData(gid));
+            {
+                GroupData gd = GetGroupData(gid);
+                if (gd != null)
+                    ret.groups.Add(gd);
+            }
 
             ret.gfs = GetGroupFiles();
 
@@ -170,7 +176,7 @@ namespace Komin
             if (ReqRdr.HasRows)
             {
                 ReqRdr.Read();
-                contact_id = 1+(uint)((int)ReqRdr["id_konta"]);
+                contact_id = 1 + (uint)((int)ReqRdr["id_konta"]);
             }
             MarkReaderRequestCompleted();
 
@@ -293,7 +299,7 @@ namespace Komin
             if (!ReqRdr.HasRows) //new_creator_id is not a group member
             {
                 MarkReaderRequestCompleted();
-                return -1;
+                return -2;
             }
             MarkReaderRequestCompleted();
 
@@ -317,7 +323,7 @@ namespace Komin
             //check is list name valid
             string list_name = (is_group == true ? "members" : "contacts") + list_id;
             WaitForRequestExecution(MakeReaderRequest("select * from " + list_name));
-            if(error_during_req) //list doesn't exist
+            if (error_during_req) //list doesn't exist
                 return -2;
             MarkReaderRequestCompleted();
 
@@ -365,11 +371,11 @@ namespace Komin
         public int GetContactListCount(uint list_id, bool is_group)
         {
             int ret = 0;
-            
+
             //check is list name valid
             string list_name = (is_group == true ? "members" : "contacts") + list_id;
             WaitForRequestExecution(MakeReaderRequest("select * from " + list_name));
-            if(error_during_req) //list doesn't exist
+            if (error_during_req) //list doesn't exist
                 return -1;
             MarkReaderRequestCompleted();
 
@@ -422,7 +428,7 @@ namespace Komin
 
             //check is list name valid
             WaitForRequestExecution(MakeReaderRequest("select * from " + list_name));
-            if(error_during_req) //list doesn't exist
+            if (error_during_req) //list doesn't exist
                 return -3;
             MarkReaderRequestCompleted();
 
@@ -524,7 +530,7 @@ namespace Komin
         public ContactData GetContactData(uint contact_id)
         {
             ContactData ret = new ContactData();
-            
+
             //get contact data
             WaitForRequestExecution(MakeReaderRequest("select * from konta where id_konta=" + contact_id));
             if (!ReqRdr.HasRows) //user not exists
@@ -546,7 +552,7 @@ namespace Komin
         public ContactData GetContactData(string contact_name)
         {
             ContactData ret = new ContactData();
-            
+
             //get contact data
             WaitForRequestExecution(MakeReaderRequest("select * from konta where nazwa=\'" + contact_name + "\'"));
             if (!ReqRdr.HasRows) //user not exists
@@ -568,7 +574,7 @@ namespace Komin
         public List<ContactData> GetContactsData()
         {
             List<ContactData> ret = new List<ContactData>();
-            
+
             //get contact data
             WaitForRequestExecution(MakeReaderRequest("select * from konta"));
             if (!ReqRdr.HasRows) //no user not exists
@@ -648,10 +654,10 @@ namespace Komin
         private List<ContactData> GetContactListData(string list_name)
         {
             List<ContactData> ret = new List<ContactData>();
-            
+
             //get list data
             WaitForRequestExecution(MakeReaderRequest("select * from " + list_name));
-            if(error_during_req) //list not exists
+            if (error_during_req) //list not exists
                 return null;
             List<uint> contact_ids = new List<uint>();
             if (ReqRdr.HasRows)
@@ -674,7 +680,7 @@ namespace Komin
         {
             UserData ret = new UserData();
             string contact_list_name = "";
-            
+
             //get user data
             WaitForRequestExecution(MakeReaderRequest("select * from konta where id_konta=" + contact_id));
             if (!ReqRdr.HasRows) //user not exists
@@ -707,7 +713,7 @@ namespace Komin
             foreach (uint group_id in group_ids)
             {
                 GroupData group = GetGroupData(group_id);
-                if (group.members != null)
+                if (group != null && group.members != null)
                     foreach (ContactData member in group.members)
                         if (member.contact_id == ret.contact_id)
                         {
@@ -723,7 +729,7 @@ namespace Komin
         {
             UserData ret = new UserData();
             string contact_list_name = "";
-            
+
             //get user data
             WaitForRequestExecution(MakeReaderRequest("select * from konta where nazwa=\'" + contact_name + "\'"));
             if (!ReqRdr.HasRows) //user not exists
@@ -772,7 +778,7 @@ namespace Komin
         //groups are notified about new files with messages including file_id so they can request files using this id
         {
             GroupFileData ret = new GroupFileData();
-            
+
             //check is group valid
             WaitForRequestExecution(MakeReaderRequest("select id_grupy from grupy where id_grupy=" + group_id));
             if (!ReqRdr.HasRows) //group not exists
@@ -808,7 +814,7 @@ namespace Komin
         public List<GroupFileData> GetGroupFiles(uint contact_id = 0, bool is_group = false)
         {
             List<GroupFileData> ret = new List<GroupFileData>();
-            
+
             //if contact_id is 0 then ignore this test
             if (contact_id != 0)
                 //check is contact_id a valid user
@@ -861,7 +867,7 @@ namespace Komin
         public List<PendingMessage> GetPendingMessages(uint contact_id, bool is_group = false)
         {
             List<PendingMessage> ret = new List<PendingMessage>();
-            
+
             //check is contact_id a valid user or group
             if (is_group == false)
                 WaitForRequestExecution(MakeReaderRequest("select id_konta from konta where id_konta=" + contact_id));
@@ -1021,10 +1027,11 @@ namespace Komin
             summary.gfdl = GetGroupFiles(summary.gd.group_id, true);
 
             //remove files sent to this group
-            foreach (GroupFileData gfd in summary.gfdl)
-            {
-                RemoveGroupFile(gfd.file_id);
-            }
+            if (summary.gfdl != null)
+                foreach (GroupFileData gfd in summary.gfdl)
+                {
+                    RemoveGroupFile(gfd.file_id);
+                }
 
             //remove pending messages for this group
             WaitForRequestExecution(MakeReaderRequest("select id_wiadomosci from oczekujące_wiadomości where id_docelowy=" + summary.gd.group_id + " and czy_grupowy=1"));
@@ -1053,7 +1060,7 @@ namespace Komin
         {
             //check is list_name valid
             WaitForRequestExecution(MakeReaderRequest("select * from " + list_name));
-            if(error_during_req) //list doesn't exist
+            if (error_during_req) //list doesn't exist
                 return -1;
             MarkReaderRequestCompleted();
 

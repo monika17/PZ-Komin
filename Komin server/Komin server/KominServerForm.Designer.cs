@@ -61,6 +61,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControl1.SuspendLayout();
             this.SummaryPage.SuspendLayout();
             this.LogPage.SuspendLayout();
@@ -151,6 +153,8 @@
             this.grouplist.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader8,
             this.columnHeader5,
+            this.columnHeader9,
+            this.columnHeader10,
             this.columnHeader6});
             this.grouplist.FullRowSelect = true;
             this.grouplist.GridLines = true;
@@ -354,6 +358,16 @@
             this.timer2.Enabled = true;
             this.timer2.Tick += new System.EventHandler(this.onLogTimerUpdate);
             // 
+            // columnHeader9
+            // 
+            this.columnHeader9.DisplayIndex = 2;
+            this.columnHeader9.Text = "Group Holder";
+            // 
+            // columnHeader10
+            // 
+            this.columnHeader10.Text = "Group Caps.";
+            this.columnHeader10.Width = 71;
+            // 
             // KominServerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -417,6 +431,8 @@
         private System.Windows.Forms.TextBox sqlCommandText;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button savelog;
+        private System.Windows.Forms.ColumnHeader columnHeader9;
+        private System.Windows.Forms.ColumnHeader columnHeader10;
 
     }
 }
