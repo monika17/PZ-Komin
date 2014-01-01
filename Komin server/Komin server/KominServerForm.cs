@@ -64,6 +64,7 @@ namespace Komin
         {
             if (!server.IsRunning())
                 return;
+            button3.Enabled = false;
             connections_count.Text = "" + server.connections.Count;
             userlist.Items.Clear();
             grouplist.Items.Clear();
@@ -100,6 +101,7 @@ namespace Komin
                 lvi.SubItems.Add(s);
                 grouplist.Items.Add(lvi);
             }
+            button3.Enabled = true;
         }
 
         public void logger(string msg)

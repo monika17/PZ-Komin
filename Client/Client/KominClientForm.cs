@@ -30,6 +30,7 @@ namespace Komin
         private TreeNode clickedContactNode; //get Node after mouse click in contacts list
         private List<ContactData> changed_contacts;
         private List<GroupData> changed_groups;
+        private bool server_lost;
 
         public KominClientForm()
         {
@@ -42,6 +43,7 @@ namespace Komin
             next_page = null;
             changed_contacts = new List<ContactData>();
             changed_groups = new List<GroupData>();
+            server_lost = false;
 
             InitializeComponent();
             MainTabPanel.TabPages.Clear();
@@ -61,6 +63,7 @@ namespace Komin
             connection.onGroupClosed = onGroupClosed;
             connection.onGroupLeave = onGroupChange_PreUpdate;
             connection.onGroupKick = onGroupKick;
+            connection.onServerLostConnection = onServerLostConnection_PreShow;
             ShowConnectOptionsOnLoginTab();
         }
 
@@ -123,6 +126,8 @@ namespace Komin
             TabUpdateTimer.Enabled = false;
             while (TabUpdateOnRun) ;
             TabUpdateOnRun = true;
+            if (server_lost)
+                onServerLostConnection();
             foreach (TabPage tp in remove_page)
                 try { MainTabPanel.TabPages.Remove(tp); }
                 catch (Exception) { }
@@ -580,6 +585,19 @@ namespace Komin
         {
             onGroupChange_PreUpdate(gd);
             MessageBox.Show("Zostałeś wyrzucony/a z grupy " + gd.group_name + " przez jej zarządce", "Wyrzucenie z grupy", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void onServerLostConnection_PreShow()
+        {
+            server_lost = true;
+        }
+
+        private void onServerLostConnection()
+        {
+            server_lost = false;
+            MessageBox.Show("Utracono połączenie z serwerem", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            ResetPanel();
+            ShowConnectOptionsOnLoginTab();
         }
 
         int ContactDataComparison_ByNameAsc(ContactData _1, ContactData _2)

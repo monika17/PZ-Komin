@@ -40,6 +40,8 @@
             this.grouplist = new System.Windows.Forms.ListView();
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.userlist = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -59,10 +61,8 @@
             this.sqlExec = new System.Windows.Forms.Button();
             this.sqlCommandText = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.button3 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.SummaryPage.SuspendLayout();
             this.LogPage.SuspendLayout();
@@ -136,6 +136,7 @@
             // 
             // SummaryPage
             // 
+            this.SummaryPage.Controls.Add(this.button3);
             this.SummaryPage.Controls.Add(this.grouplist);
             this.SummaryPage.Controls.Add(this.userlist);
             this.SummaryPage.Controls.Add(this.connections_count);
@@ -172,6 +173,15 @@
             // columnHeader5
             // 
             this.columnHeader5.Text = "Group";
+            // 
+            // columnHeader9
+            // 
+            this.columnHeader9.Text = "Group Holder";
+            // 
+            // columnHeader10
+            // 
+            this.columnHeader10.Text = "Group Caps.";
+            this.columnHeader10.Width = 71;
             // 
             // columnHeader6
             // 
@@ -347,26 +357,20 @@
             this.label4.TabIndex = 0;
             this.label4.Text = "Command:";
             // 
-            // timer1
-            // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 2000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
             // timer2
             // 
             this.timer2.Enabled = true;
             this.timer2.Tick += new System.EventHandler(this.onLogTimerUpdate);
             // 
-            // columnHeader9
+            // button3
             // 
-            this.columnHeader9.DisplayIndex = 2;
-            this.columnHeader9.Text = "Group Holder";
-            // 
-            // columnHeader10
-            // 
-            this.columnHeader10.Text = "Group Caps.";
-            this.columnHeader10.Width = 71;
+            this.button3.Location = new System.Drawing.Point(1033, 451);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 4;
+            this.button3.Text = "refresh";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.timer1_Tick);
             // 
             // KominServerForm
             // 
@@ -410,7 +414,6 @@
         private System.Windows.Forms.Label connections_count;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TabPage LogPage;
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ListView grouplist;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
@@ -433,6 +436,7 @@
         private System.Windows.Forms.Button savelog;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ColumnHeader columnHeader10;
+        private System.Windows.Forms.Button button3;
 
     }
 }

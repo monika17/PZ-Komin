@@ -128,7 +128,44 @@ namespace Komin
         {
             if (buffer.Length < HeaderSize)
                 return 0;
+            uint command = ByteArrayToUInt(buffer, sizeof(uint) * 2 + 1/*sizeof(bool)*/);
+            if (command > (uint)KominProtocolCommands.MaxValue) //packet malfunction - discard buffer
+            {
+                Array.Resize<byte>(ref buffer, 0);
+                return 0;
+            }
+            uint content = ByteArrayToUInt(buffer, sizeof(uint) * 4 + 1/*sizeof(bool)*/);
             uint content_length = ByteArrayToUInt(buffer, sizeof(uint) * 5 + 1/*sizeof(bool)*/);
+            uint min_length = 0;
+            if ((content & (uint)KominProtocolContentTypes.PasswordData) != 0)
+                min_length += (uint)sizeof(uint);
+            if ((content & (uint)KominProtocolContentTypes.StatusData) != 0)
+                min_length += (uint)sizeof(uint);
+            if ((content & (uint)KominProtocolContentTypes.ContactIDData) != 0)
+                min_length += (uint)sizeof(uint);
+            if ((content & (uint)KominProtocolContentTypes.TextMessageData) != 0)
+                min_length += (uint)(7 + sizeof(uint));
+            if ((content & (uint)KominProtocolContentTypes.AudioMessageData) != 0)
+                min_length += (uint)sizeof(uint);
+            if ((content & (uint)KominProtocolContentTypes.VideoMessageData) != 0)
+                min_length += (uint)sizeof(uint);
+            if ((content & (uint)KominProtocolContentTypes.ContactData) != 0)
+                min_length += (uint)(sizeof(uint) * 3);
+            if ((content & (uint)KominProtocolContentTypes.GroupData) != 0)
+                min_length += (uint)(sizeof(uint) * 5);
+            if ((content & (uint)KominProtocolContentTypes.FileData) != 0)
+                min_length += (uint)(sizeof(uint) * 5 + 14);
+            if ((content & (uint)KominProtocolContentTypes.ErrorTextData) != 0)
+                min_length += (uint)sizeof(uint);
+            if ((content & (uint)KominProtocolContentTypes.UserData) != 0)
+                min_length += (uint)(sizeof(uint) * 5);
+            /*if ((content & (uint)KominProtocolContentTypes.SMSData) != 0)
+                min_length += (uint)(9 * sizeof(char) + sizeof(uint));*/
+            if (content_length < min_length) //packet malfunction - discard buffer
+            {
+                Array.Resize<byte>(ref buffer, 0);
+                return 0;
+            }
             if (buffer.Length < HeaderSize + content_length)
                 return 0;
             return (uint)HeaderSize + content_length;
@@ -1033,6 +1070,8 @@ namespace Komin
         CloseGroup,
         GroupHolderChange,
         RemoveContact,
+        PeriodicPingRequest,
+        PeriodicPingAnswer,
         Disconnect,
         MaxValue = Disconnect
     }

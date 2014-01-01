@@ -142,8 +142,9 @@ namespace Komin
         public server_logging_routine log;
         public uint client_id;
         byte enc_seed, dec_seed;
-        //System.Timers.Timer PingTimer;
-        //bool had_pinger_nop;
+        System.Timers.Timer PingTimer;
+        bool had_ping_answer;
+        bool waiting_for_ping_answer;
         //user data
         uint contact_id;
 
@@ -158,25 +159,31 @@ namespace Komin
             commune.DoWork += clientCommune;
             log = null;
             enc_seed = dec_seed = KominCipherSuite.InitialSeed;
-            /*PingTimer = new System.Timers.Timer(3000);
-            PingTimer.AutoReset = true;
+            PingTimer = new System.Timers.Timer(3000);
             PingTimer.Elapsed += PingTimer_Elapsed;
-            had_pinger_nop = false;*/
+            had_ping_answer = false;
+            waiting_for_ping_answer = false;
         }
 
-        /*void PingTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        void PingTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             PingTimer.Enabled = false;
-            NoOperation();
-            if (!had_pinger_nop)
+            if (waiting_for_ping_answer && !had_ping_answer) //ping answer didn't arrive on time
             {
                 if (log != null) log("Client " + client_id + " lost connection");
-                SelfStop();
+                //SelfStop();
+                Disconnect();
                 return;
             }
-            had_pinger_nop = false;
-            PingTimer.Enabled = true;
-        }*/
+            else if(!waiting_for_ping_answer) //it's time to send another ping request
+            {
+                PingTimer.Interval = 5000;
+                had_ping_answer = false;
+                waiting_for_ping_answer = true;
+                PeriodicPingRequest();
+                PingTimer.Enabled = true;
+            }
+        }
 
         ~KominServerSideConnection()
         {
@@ -207,6 +214,7 @@ namespace Komin
         private void SelfStop()
         {
             while (packets_to_send.Count > 0) ;
+            PingTimer.Enabled = false;
             commune.CancelAsync();
             client.Close();
             client = null;
@@ -224,11 +232,13 @@ namespace Komin
             byte[] buffer = new byte[0];
             stream = client.GetStream();
 
-            //PingTimer.Enabled = true;
-            //NoOperation();
-
             if (log != null) log("Client " + client_id + " connected");
 
+            waiting_for_ping_answer = true;
+            had_ping_answer = false;
+            PeriodicPingRequest();
+            PingTimer.Enabled = true;
+            
             while (!commune.CancellationPending)
             {
                 while (client.Available <= 0)
@@ -254,7 +264,6 @@ namespace Komin
                         Array.Resize<byte>(ref buffer, buffer.Length - packet_size);
                         KominNetworkPacket packet = new KominNetworkPacket();
                         packet.UnpackReceivedPacket(ref packet_data);
-                        //InterpretePacket(packet);
                         new PacketInterpreterThread(this, packet);
                     }
                 } while (packet_size != 0);
@@ -263,7 +272,7 @@ namespace Komin
             stream.FlushAsync();
             stream.Close();
 
-            //PingTimer.Enabled = false;
+            PingTimer.Enabled = false;
         }
 
         class PacketInterpreterThread
@@ -291,12 +300,16 @@ namespace Komin
         {
             if (log != null) log("{E:" + enc_seed + ",D:" + dec_seed + "} Client " + client_id + "=>Server: sender=" + packet.sender + "   receiver=" + packet.target + "   is_group=" + (packet.target_is_group ? "true" : "false") + "   cmd=" + ((KominProtocolCommands)packet.command).ToString().ToUpper() + "   jobID=" + packet.job_id + "   content=" + packet.content);
 
-            if ((packet.sender != contact_id) ||
-                ((packet.sender == 0) && ((packet.command != (uint)KominProtocolCommands.Login) &&
-                                          (packet.command != (uint)KominProtocolCommands.CreateContact) &&
-                                          (packet.command != (uint)KominProtocolCommands.PingContactRequest) &&
-                                          (packet.command != (uint)KominProtocolCommands.Disconnect) &&
-                                          (packet.command != (uint)KominProtocolCommands.NoOperation))))
+            if (((packet.sender != contact_id) ||
+                 ((packet.sender == 0) && ((packet.command != (uint)KominProtocolCommands.Login) &&
+                                           (packet.command != (uint)KominProtocolCommands.CreateContact) &&
+                                           (packet.command != (uint)KominProtocolCommands.PingContactRequest) &&
+                                           (packet.command != (uint)KominProtocolCommands.PeriodicPingRequest) &&
+                                           (packet.command != (uint)KominProtocolCommands.PeriodicPingAnswer) &&
+                                           (packet.command != (uint)KominProtocolCommands.Disconnect) &&
+                                           (packet.command != (uint)KominProtocolCommands.NoOperation)))) &&
+                ((packet.sender == 0) && ((packet.command != (uint)KominProtocolCommands.PeriodicPingRequest) &&
+                                          (packet.command != (uint)KominProtocolCommands.PeriodicPingAnswer))))
             {
                 //packet error - illegal attempt
                 return;
@@ -341,7 +354,6 @@ namespace Komin
             switch ((KominProtocolCommands)packet.command)
             {
                 case KominProtocolCommands.NoOperation:
-                    //had_pinger_nop = true;
                     break;
                 case KominProtocolCommands.Login: //client tries to log in
                     {
@@ -1032,6 +1044,16 @@ namespace Komin
                     }
                 case KominProtocolCommands.RemoveContact: //user wants to remove its account
                     break;
+                /*case KominProtocolCommands.PeriodicPingRequest: //server doesn't respond to periodic ping requests
+                    break;*/
+                case KominProtocolCommands.PeriodicPingAnswer: //client answers to periodic ping
+                    //plan next request sending
+                    PingTimer.Enabled = false;
+                    waiting_for_ping_answer = false;
+                    had_ping_answer = true;
+                    PingTimer.Interval = 3000;
+                    PingTimer.Enabled = true;
+                    break;
                 case KominProtocolCommands.Disconnect: //client notifies about disconnecting
                     SelfStop();
                     break;
@@ -1092,7 +1114,8 @@ namespace Komin
 
         public void Logout() //server forces users logout and posts its status to groups and contacts
         {
-            if (contact_id == 0)
+            if (waiting_for_ping_answer && !had_ping_answer && (contact_id != 0)) ;
+            else if (contact_id == 0)
                 return;
 
             KominNetworkJob job = server.jobs.AddJob();
@@ -1123,15 +1146,18 @@ namespace Komin
                 }
             }
 
-            //notifiy logging out to user
-            KominNetworkPacket packet = new KominNetworkPacket();
-            packet.sender = 0; //server
-            packet.target = contact_id;
-            packet.target_is_group = false;
-            packet.job_id = job.JobID;
-            packet.command = (uint)KominProtocolCommands.Logout;
-            packet.DeleteContent();
-            InsertPacketForSending(packet);
+            if (!(waiting_for_ping_answer && !had_ping_answer && (contact_id != 0)))
+            {
+                //notifiy logging out to user
+                KominNetworkPacket packet = new KominNetworkPacket();
+                packet.sender = 0; //server
+                packet.target = contact_id;
+                packet.target_is_group = false;
+                packet.job_id = job.JobID;
+                packet.command = (uint)KominProtocolCommands.Logout;
+                packet.DeleteContent();
+                InsertPacketForSending(packet);
+            }
 
             server.jobs.FinishJob(job);
         }
@@ -1414,5 +1440,19 @@ namespace Komin
 
             server.jobs.FinishJob(job);
         }
+
+        private void PeriodicPingRequest() //server sends periodic ping signal to client
+        {
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = 0; //server
+            packet.target = 0; //don't care if client know its id
+            packet.target_is_group = false;
+            packet.command = (uint)KominProtocolCommands.PeriodicPingRequest;
+            packet.job_id = 0;
+            packet.DeleteContent();
+            InsertPacketForSending(packet);
+        }
+
+        private void PeriodicPingAnswer() { } //server don't answer to periodic ping
     }
 }
