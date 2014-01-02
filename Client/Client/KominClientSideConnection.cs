@@ -88,6 +88,8 @@ namespace Komin
             PingTimer.Enabled = false;
             if (waiting_for_ping_request && !had_ping_request) //ping request didn't arrive on time
             {
+                //server connection lost - cancel all jobs
+                jobs.CancelAllJobs();
                 if (onServerLostConnection != null)
                     onServerLostConnection();
                 SelfStop();
@@ -261,6 +263,8 @@ namespace Komin
                 case KominProtocolCommands.Logout: //client was forced to log out by server
                     if (packet.content == 0)
                     {
+                        //cancel all jobs due to server logout
+                        jobs.CancelAllJobs();
                         if (onServerLogout != null)
                             onServerLogout();
                     }
@@ -287,6 +291,9 @@ namespace Komin
                                     present = true;
                                     break;
                                 }
+                        //cancel jobs awaiting for an answer from this contact if it is not accessible
+                        if ((c.status & (uint)KominClientStatusCodes.Mask) == (uint)KominClientStatusCodes.NotAccessible)
+                            jobs.CancelJobs(c.contact_id, false);
 
                         if (present && onStatusNotification != null)
                             onStatusNotification(c);
@@ -489,6 +496,8 @@ namespace Komin
                                 break;
                             }
                         }
+                        //cancel all jobs awaiting for answer from this group
+                        jobs.CancelJobs(new_gd.group_id, true);
                     }
                     break;
                 case KominProtocolCommands.GroupHolderChange: //server notifies that group holder has been changed
@@ -568,7 +577,7 @@ namespace Komin
 
         public void Login(string contact_name, string password, ref uint new_status) //send login data to server
         {
-            KominNetworkJob job = jobs.AddJob();
+            KominNetworkJob job = jobs.AddJob(0, false);
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
@@ -589,6 +598,12 @@ namespace Komin
             {
                 job.WaitForNewArrival();
                 packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:
@@ -630,7 +645,7 @@ namespace Komin
             if (userdata.contact_id == 0)
                 return;
 
-            KominNetworkJob job = jobs.AddJob();
+            KominNetworkJob job = jobs.AddJob(0, false);
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
@@ -646,6 +661,12 @@ namespace Komin
             {
                 job.WaitForNewArrival();
                 packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:
@@ -673,7 +694,7 @@ namespace Komin
             if (userdata.contact_id == 0)
                 return;
 
-            KominNetworkJob job = jobs.AddJob();
+            KominNetworkJob job = jobs.AddJob(0, false);
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
@@ -690,6 +711,12 @@ namespace Komin
             {
                 job.WaitForNewArrival();
                 packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:
@@ -716,7 +743,7 @@ namespace Komin
             if (userdata.contact_id == 0)
                 return;
 
-            KominNetworkJob job = jobs.AddJob();
+            KominNetworkJob job = jobs.AddJob(0, false);
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
@@ -733,6 +760,12 @@ namespace Komin
             {
                 job.WaitForNewArrival();
                 packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:
@@ -756,7 +789,7 @@ namespace Komin
 
         public void CreateContact(string new_contact_name, string new_password) //request creation of new account
         {
-            KominNetworkJob job = jobs.AddJob();
+            KominNetworkJob job = jobs.AddJob(0, false);
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
@@ -776,6 +809,12 @@ namespace Komin
             {
                 job.WaitForNewArrival();
                 packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:
@@ -839,7 +878,7 @@ namespace Komin
             if (userdata.contact_id == 0)
                 return;
 
-            KominNetworkJob job = jobs.AddJob();
+            KominNetworkJob job = jobs.AddJob(0, false);
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
@@ -858,6 +897,12 @@ namespace Komin
             {
                 job.WaitForNewArrival();
                 packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:
@@ -886,7 +931,7 @@ namespace Komin
             if (userdata.contact_id == 0)
                 return;
 
-            KominNetworkJob job = jobs.AddJob();
+            KominNetworkJob job = jobs.AddJob(0, false);
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
@@ -905,6 +950,12 @@ namespace Komin
             {
                 job.WaitForNewArrival();
                 packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:
@@ -930,7 +981,7 @@ namespace Komin
 
         public ContactData PingContactRequest(uint contact_id, string contact_name = "") //ask client about its status, capabilities etc.
         {
-            KominNetworkJob job = jobs.AddJob();
+            KominNetworkJob job = jobs.AddJob(contact_id, false);
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
@@ -955,6 +1006,12 @@ namespace Komin
             {
                 job.WaitForNewArrival();
                 packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return null;
+                }
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.PingContactAnswer:
@@ -986,7 +1043,7 @@ namespace Komin
             if (userdata.contact_id == 0)
                 return null;
 
-            KominNetworkJob job = jobs.AddJob();
+            KominNetworkJob job = jobs.AddJob(0, false);
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
@@ -1005,6 +1062,12 @@ namespace Komin
             {
                 job.WaitForNewArrival();
                 packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return null;
+                }
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.PingGroupAnswer:
@@ -1121,7 +1184,7 @@ namespace Komin
             if (userdata.contact_id == 0)
                 return null;
 
-            KominNetworkJob job = jobs.AddJob();
+            KominNetworkJob job = jobs.AddJob(0, false);
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
@@ -1142,6 +1205,12 @@ namespace Komin
             {
                 job.WaitForNewArrival();
                 packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return null;
+                }
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:
@@ -1169,15 +1238,18 @@ namespace Komin
             if (userdata.contact_id == 0)
                 return;
 
-            KominNetworkJob job = jobs.AddJob();
+            uint target_id;
+            if (invite)
+                target_id = invited_id;
+            else
+                target_id = 0; //server
+
+            KominNetworkJob job = jobs.AddJob(target_id, false);
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
             packet.sender = userdata.contact_id;
-            if (invite)
-                packet.target = invited_id;
-            else
-                packet.target = 0; //server
+            packet.target = target_id;
             packet.target_is_group = false;
             packet.job_id = job.JobID;
             packet.command = (uint)KominProtocolCommands.JoinGroup;
@@ -1197,6 +1269,12 @@ namespace Komin
             {
                 job.WaitForNewArrival();
                 packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:
@@ -1223,15 +1301,18 @@ namespace Komin
             if (userdata.contact_id == 0)
                 return;
 
-            KominNetworkJob job = jobs.AddJob();
+            uint target_id;
+            if (kick)
+                target_id = kicked_id;
+            else
+                target_id = 0; //server
+
+            KominNetworkJob job = jobs.AddJob(target_id, false);
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
             packet.sender = userdata.contact_id;
-            if (kick)
-                packet.target = kicked_id;
-            else
-                packet.target = 0; //server
+            packet.target = target_id;
             packet.target_is_group = false;
             packet.job_id = job.JobID;
             packet.command = (uint)KominProtocolCommands.LeaveGroup;
@@ -1251,6 +1332,12 @@ namespace Komin
             {
                 job.WaitForNewArrival();
                 packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:
@@ -1277,7 +1364,7 @@ namespace Komin
             if (userdata.contact_id == 0)
                 return;
 
-            KominNetworkJob job = jobs.AddJob();
+            KominNetworkJob job = jobs.AddJob(group_id, true);
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
@@ -1296,6 +1383,12 @@ namespace Komin
             {
                 job.WaitForNewArrival();
                 packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:
@@ -1322,7 +1415,7 @@ namespace Komin
             if (userdata.contact_id == 0)
                 return;
 
-            KominNetworkJob job = jobs.AddJob();
+            KominNetworkJob job = jobs.AddJob(group_id, true);
             bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
@@ -1342,6 +1435,12 @@ namespace Komin
             {
                 job.WaitForNewArrival();
                 packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:

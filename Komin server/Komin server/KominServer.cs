@@ -171,7 +171,7 @@ namespace Komin
             if (waiting_for_ping_answer && !had_ping_answer) //ping answer didn't arrive on time
             {
                 if (log != null) log("Client " + client_id + " lost connection");
-                //SelfStop();
+                server.jobs.CancelJobs(contact_id, false);
                 Disconnect();
                 return;
             }
@@ -195,7 +195,8 @@ namespace Komin
             if (client == null)
                 return;
 
-            Logout();
+            if (contact_id != 0)
+                Logout();
 
             KominNetworkPacket p = new KominNetworkPacket();
             p.sender = 0;
@@ -314,7 +315,7 @@ namespace Komin
                 //packet error - illegal attempt
                 return;
             }
-
+            
             //filter out client targeted packets - proxy
             if ((packet.target_is_group == false) && (packet.target != 0))
             {
