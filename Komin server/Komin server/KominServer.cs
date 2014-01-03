@@ -134,6 +134,9 @@ namespace Komin
 
     public class KominServerSideConnection
     {
+        public const int PingAnswerAwaitTime = 10000;
+        public const int PingRequestSendTime = 3000;
+
         public TcpClient client;
         NetworkStream stream;
         public BackgroundWorker commune;
@@ -159,7 +162,7 @@ namespace Komin
             commune.DoWork += clientCommune;
             log = null;
             enc_seed = dec_seed = KominCipherSuite.InitialSeed;
-            PingTimer = new System.Timers.Timer(3000);
+            PingTimer = new System.Timers.Timer(PingRequestSendTime);
             PingTimer.Elapsed += PingTimer_Elapsed;
             had_ping_answer = false;
             waiting_for_ping_answer = false;
@@ -177,7 +180,7 @@ namespace Komin
             }
             else if(!waiting_for_ping_answer) //it's time to send another ping request
             {
-                PingTimer.Interval = 5000;
+                PingTimer.Interval = PingAnswerAwaitTime;
                 had_ping_answer = false;
                 waiting_for_ping_answer = true;
                 PeriodicPingRequest();
@@ -1052,7 +1055,7 @@ namespace Komin
                     PingTimer.Enabled = false;
                     waiting_for_ping_answer = false;
                     had_ping_answer = true;
-                    PingTimer.Interval = 3000;
+                    PingTimer.Interval = PingRequestSendTime;
                     PingTimer.Enabled = true;
                     break;
                 case KominProtocolCommands.Disconnect: //client notifies about disconnecting

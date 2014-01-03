@@ -157,14 +157,14 @@ namespace Komin
     {
         public static bool TestLoginOrGroupName(string contact_name) //check is login name correct
         {
-            Regex regexp = new Regex("^[A-Z][A-Za-z0-9_]*$");
+            Regex regexp = new Regex("^[a-z][a-z0-9_]*$");
 
             if (regexp.Matches(contact_name).Count != 1)
             {
                 return false;
             }
 
-            if (contact_name.Length > 200)
+            if (contact_name.Length > 20)
             {
                 return false;
             }

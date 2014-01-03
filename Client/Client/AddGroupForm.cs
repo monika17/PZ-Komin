@@ -26,6 +26,13 @@ namespace Komin
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (!DataTesters.TestLoginOrGroupName(groupnameTextBox.Text))
+            {
+                groupnameValidityLabel.Text = "nazwa jest niepoprawna";
+                groupnameValidityLabel.ForeColor = Color.FromArgb(255, 0, 0);
+                timer1.Enabled = false;
+                return;
+            }
             KominClientErrorOccured = false;
             SomeError err_routine = conn.onError;
             conn.onError = onError_Ping;

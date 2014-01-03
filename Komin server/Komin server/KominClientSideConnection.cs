@@ -11,6 +11,8 @@ namespace Komin
 {
     public class KominClientSideConnection
     {
+        public const int PingRequestArriveTime = 10000;
+
         public TcpClient server;
         NetworkStream stream;
         public BackgroundWorker commune;
@@ -56,7 +58,7 @@ namespace Komin
             commune.WorkerSupportsCancellation = true;
             commune.DoWork += serverCommune;
             enc_seed = dec_seed = KominCipherSuite.InitialSeed;
-            PingTimer = new System.Timers.Timer(5000);
+            PingTimer = new System.Timers.Timer(PingRequestArriveTime);
             PingTimer.Elapsed += PingTimer_Elapsed;
             had_ping_request = false;
             waiting_for_ping_request = true;

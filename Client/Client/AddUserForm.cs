@@ -13,7 +13,7 @@ namespace Komin
         {
             this.connection = connection;
             InitializeComponent();
-            RegisterNameTextBoxToolTip.SetToolTip(RegisterNameTextBox, "Pierwsza litera duża, później ciąg złożyny z liter (dużych i małych), cyfr i znaku podkreślenia _");
+            RegisterNameTextBoxToolTip.SetToolTip(RegisterNameTextBox, "Pierwsza litera, później ciąg złożyny z liter, cyfr i znaku podkreślenia _");
         }
 
         private void RegisterNameValidityTimer_Tick(object sender, EventArgs e)
