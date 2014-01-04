@@ -96,6 +96,12 @@ namespace Komin
                 CallingForm.AcceptButton = null;
         }
 
+        private void textMessageContainer_TextChanged(object sender, EventArgs e)
+        {
+            textMessageContainer.SelectionStart = textMessageContainer.Text.Length;
+            textMessageContainer.ScrollToCaret();
+        }
+
 
     }
 }
