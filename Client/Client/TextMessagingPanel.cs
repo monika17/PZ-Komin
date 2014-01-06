@@ -50,7 +50,7 @@ namespace Komin
             on_inserting = true;
             if (text_insert != null)
                 textMessageContainer.Text += text_insert;
-     
+
             text_insert = null;
             on_inserting = false;
             TextInsertTimer.Enabled = true;
@@ -68,7 +68,7 @@ namespace Komin
         private void AddToArchive(string text)
         {
             var dirPath = "Archive/" + conn.userdata.contact_name;
-            var path = dirPath + "/"+ receiver_id + ".txt";
+            var path = dirPath + "/" + receiver_id + ".txt";
             if (!Directory.Exists(dirPath))
                 Directory.CreateDirectory(dirPath);
 
@@ -117,12 +117,22 @@ namespace Komin
                 CallingForm.AcceptButton = null;
         }
 
+        public void FreeSpaceForAV(int height)
+        {
+            Location = new Point(Location.X, Location.Y + height);
+            Size = new Size(Size.Width, Size.Height - height);
+        }
+
+        public void TakeSpaceFromAV(int height)
+        {
+            Location = new Point(Location.X, Location.Y - height);
+            Size = new Size(Size.Width, Size.Height + height);
+        }
+
         private void textMessageContainer_TextChanged(object sender, EventArgs e)
         {
             textMessageContainer.SelectionStart = textMessageContainer.Text.Length;
             textMessageContainer.ScrollToCaret();
         }
-
-
     }
 }

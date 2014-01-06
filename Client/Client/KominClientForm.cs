@@ -31,6 +31,8 @@ namespace Komin
         private List<ContactData> changed_contacts;
         private List<GroupData> changed_groups;
         private bool server_lost;
+        private bool server_kick;
+        private bool server_disconnect;
 
         public KominClientForm()
         {
@@ -44,6 +46,8 @@ namespace Komin
             changed_contacts = new List<ContactData>();
             changed_groups = new List<GroupData>();
             server_lost = false;
+            server_kick = false;
+            server_disconnect = false;
 
             InitializeComponent();
             MainTabPanel.TabPages.Clear();
@@ -64,7 +68,8 @@ namespace Komin
             connection.onGroupLeave = onGroupChange_PreUpdate;
             connection.onGroupKick = onGroupKick;
             connection.onServerLostConnection = onServerLostConnection_PreShow;
-            connection.onServerLogout = ServerLogout;
+            connection.onServerLogout = onServerLogout_PreShow;
+            connection.onServerDisconnected = onServerDisconnected_PreShow;
             ShowConnectOptionsOnLoginTab();
         }
 
@@ -130,6 +135,10 @@ namespace Komin
             TabUpdateOnRun = true;
             if (server_lost)
                 onServerLostConnection();
+            if (server_kick)
+                onServerLogout();
+            if (server_disconnect)
+                onServerDisconnected();
             foreach (TabPage tp in remove_page)
                 try { MainTabPanel.TabPages.Remove(tp); }
                 catch (Exception) { }
@@ -183,12 +192,6 @@ namespace Komin
                 return;
             ResetPanel();
             ShowConnectOptionsOnLoginTab();
-        }
-
-        private void ServerLogout()
-        {
-            MessageBox.Show("Zostałeś rozłączony na żądanie serwera", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            ResetPanel();
         }
 
         private void ResetPanel()
@@ -604,6 +607,31 @@ namespace Komin
         {
             server_lost = false;
             MessageBox.Show("Utracono połączenie z serwerem", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            ResetPanel();
+            ShowConnectOptionsOnLoginTab();
+        }
+
+        private void onServerLogout_PreShow()
+        {
+            server_kick = true;
+        }
+
+        private void onServerLogout()
+        {
+            server_kick = false;
+            MessageBox.Show("Zostałeś wylogowany z serwera", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            ResetPanel();
+        }
+
+        private void onServerDisconnected_PreShow()
+        {
+            server_disconnect = true;
+        }
+
+        private void onServerDisconnected()
+        {
+            server_disconnect = false;
+            MessageBox.Show("Serwer zakończył połączenie", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
             ResetPanel();
             ShowConnectOptionsOnLoginTab();
         }

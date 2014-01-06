@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NAudio">
+      <HintPath>.\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -74,6 +77,18 @@
     <Compile Include="ArchiveForm.Designer.cs">
       <DependentUpon>ArchiveForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AudioMessagingPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AudioMessagingPanel.Designer.cs">
+      <DependentUpon>AudioMessagingPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AudioMessagingPanelItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AudioMessagingPanelItem.Designer.cs">
+      <DependentUpon>AudioMessagingPanelItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConnectOptionsPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -86,6 +101,9 @@
     <Compile Include="GroupInviteForm.Designer.cs">
       <DependentUpon>GroupInviteForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="KominAudioCodec.cs" />
+    <Compile Include="KominAudioInput.cs" />
+    <Compile Include="KominAudioOutput.cs" />
     <Compile Include="KominCipherSuite.cs" />
     <Compile Include="KominClientForm.cs">
       <SubType>Form</SubType>
@@ -116,6 +134,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ArchiveForm.resx">
       <DependentUpon>ArchiveForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AudioMessagingPanel.resx">
+      <DependentUpon>AudioMessagingPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AudioMessagingPanelItem.resx">
+      <DependentUpon>AudioMessagingPanelItem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ConnectOptionsPanel.resx">
       <DependentUpon>ConnectOptionsPanel.cs</DependentUpon>

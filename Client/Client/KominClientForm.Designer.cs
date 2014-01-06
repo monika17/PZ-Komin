@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KominClientForm));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Kontakty", 4, 4);
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Grupy", 5, 5);
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Kontakty", 4, 4);
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Grupy", 5, 5);
             this.contextMenuStripContactsNode = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addContactToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripGroups = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -103,12 +103,12 @@
             this.contextMenuStripContactsNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addContactToolStripMenuItem});
             this.contextMenuStripContactsNode.Name = "contextMenuStripAddContact";
-            this.contextMenuStripContactsNode.Size = new System.Drawing.Size(149, 26);
+            this.contextMenuStripContactsNode.Size = new System.Drawing.Size(142, 26);
             // 
             // addContactToolStripMenuItem
             // 
             this.addContactToolStripMenuItem.Name = "addContactToolStripMenuItem";
-            this.addContactToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.addContactToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.addContactToolStripMenuItem.Text = "Dodaj kontakt";
             this.addContactToolStripMenuItem.Click += new System.EventHandler(this.addContactToolStripMenuItem_Click);
             // 
@@ -118,12 +118,12 @@
             this.addGroupToolStripMenuItem,
             this.dołączDoGrupyToolStripMenuItem});
             this.contextMenuStripGroups.Name = "contextMenuStripGroups";
-            this.contextMenuStripGroups.Size = new System.Drawing.Size(161, 48);
+            this.contextMenuStripGroups.Size = new System.Drawing.Size(154, 48);
             // 
             // addGroupToolStripMenuItem
             // 
             this.addGroupToolStripMenuItem.Name = "addGroupToolStripMenuItem";
-            this.addGroupToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.addGroupToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.addGroupToolStripMenuItem.Text = "Dodaj grupę";
             this.addGroupToolStripMenuItem.Click += new System.EventHandler(this.addNewGroupContextMenuItem);
             // 
@@ -131,7 +131,7 @@
             // 
             this.dołączDoGrupyToolStripMenuItem.Enabled = false;
             this.dołączDoGrupyToolStripMenuItem.Name = "dołączDoGrupyToolStripMenuItem";
-            this.dołączDoGrupyToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.dołączDoGrupyToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.dołączDoGrupyToolStripMenuItem.Text = "Dołącz do grupy";
             // 
             // MainTabPanel
@@ -280,19 +280,19 @@
             this.treeView1.ImageList = this.treeViewIcons;
             this.treeView1.Location = new System.Drawing.Point(3, 16);
             this.treeView1.Name = "treeView1";
-            treeNode1.ContextMenuStrip = this.contextMenuStripContactsNode;
-            treeNode1.ImageIndex = 4;
-            treeNode1.Name = "Kontakty";
-            treeNode1.SelectedImageIndex = 4;
-            treeNode1.Text = "Kontakty";
-            treeNode2.ContextMenuStrip = this.contextMenuStripGroups;
-            treeNode2.ImageIndex = 5;
-            treeNode2.Name = "Grupy";
-            treeNode2.SelectedImageIndex = 5;
-            treeNode2.Text = "Grupy";
+            treeNode3.ContextMenuStrip = this.contextMenuStripContactsNode;
+            treeNode3.ImageIndex = 4;
+            treeNode3.Name = "Kontakty";
+            treeNode3.SelectedImageIndex = 4;
+            treeNode3.Text = "Kontakty";
+            treeNode4.ContextMenuStrip = this.contextMenuStripGroups;
+            treeNode4.ImageIndex = 5;
+            treeNode4.Name = "Grupy";
+            treeNode4.SelectedImageIndex = 5;
+            treeNode4.Text = "Grupy";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
+            treeNode3,
+            treeNode4});
             this.treeView1.SelectedImageIndex = 0;
             this.treeView1.Size = new System.Drawing.Size(154, 312);
             this.treeView1.TabIndex = 0;
@@ -322,13 +322,13 @@
             this.contactTabContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.zamknijToolStripMenuItem});
             this.contactTabContextMenu.Name = "contactTabContextMenu";
-            this.contactTabContextMenu.Size = new System.Drawing.Size(118, 26);
+            this.contactTabContextMenu.Size = new System.Drawing.Size(112, 26);
             // 
             // zamknijToolStripMenuItem
             // 
             this.zamknijToolStripMenuItem.Enabled = false;
             this.zamknijToolStripMenuItem.Name = "zamknijToolStripMenuItem";
-            this.zamknijToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.zamknijToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
             this.zamknijToolStripMenuItem.Text = "Zamknij";
             this.zamknijToolStripMenuItem.Click += new System.EventHandler(this.onCloseContactTabClick);
             // 
@@ -349,13 +349,13 @@
             this.toolStripSeparator3,
             this.deleteContactToolStripMenuItem});
             this.contextMenuStripContact.Name = "contextMenuStripContact";
-            this.contextMenuStripContact.Size = new System.Drawing.Size(220, 248);
+            this.contextMenuStripContact.Size = new System.Drawing.Size(208, 248);
             this.contextMenuStripContact.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripContact_Opening);
             // 
             // txtMessageToolStripMenuItem
             // 
             this.txtMessageToolStripMenuItem.Name = "txtMessageToolStripMenuItem";
-            this.txtMessageToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.txtMessageToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.txtMessageToolStripMenuItem.Text = "Rozmowa tekstowa";
             this.txtMessageToolStripMenuItem.Click += new System.EventHandler(this.txtMessageToolStripMenuItem_Click);
             // 
@@ -363,75 +363,75 @@
             // 
             this.audioToolStripMenuItem.Enabled = false;
             this.audioToolStripMenuItem.Name = "audioToolStripMenuItem";
-            this.audioToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.audioToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.audioToolStripMenuItem.Text = "Rozmowa audio";
             // 
             // videoToolStripMenuItem
             // 
             this.videoToolStripMenuItem.Enabled = false;
             this.videoToolStripMenuItem.Name = "videoToolStripMenuItem";
-            this.videoToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.videoToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.videoToolStripMenuItem.Text = "Rozmowa wideo";
             // 
             // wyślijPlikToolStripMenuItem
             // 
             this.wyślijPlikToolStripMenuItem.Name = "wyślijPlikToolStripMenuItem";
-            this.wyślijPlikToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.wyślijPlikToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.wyślijPlikToolStripMenuItem.Text = "Wyślij plik";
             this.wyślijPlikToolStripMenuItem.Click += new System.EventHandler(this.wyślijPlikToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(216, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(204, 6);
             // 
             // ączNaRozmoweAudioToolStripMenuItem
             // 
             this.ączNaRozmoweAudioToolStripMenuItem.Enabled = false;
             this.ączNaRozmoweAudioToolStripMenuItem.Name = "ączNaRozmoweAudioToolStripMenuItem";
-            this.ączNaRozmoweAudioToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.ączNaRozmoweAudioToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.ączNaRozmoweAudioToolStripMenuItem.Text = "Przełącz na rozmowe audio";
             // 
             // przełączNaRozmoweWideoToolStripMenuItem
             // 
             this.przełączNaRozmoweWideoToolStripMenuItem.Enabled = false;
             this.przełączNaRozmoweWideoToolStripMenuItem.Name = "przełączNaRozmoweWideoToolStripMenuItem";
-            this.przełączNaRozmoweWideoToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.przełączNaRozmoweWideoToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.przełączNaRozmoweWideoToolStripMenuItem.Text = "Przełącz na rozmowe wideo";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(216, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(204, 6);
             // 
             // zaprośDoGrupyToolStripMenuItem1
             // 
             this.zaprośDoGrupyToolStripMenuItem1.Name = "zaprośDoGrupyToolStripMenuItem1";
-            this.zaprośDoGrupyToolStripMenuItem1.Size = new System.Drawing.Size(219, 22);
+            this.zaprośDoGrupyToolStripMenuItem1.Size = new System.Drawing.Size(207, 22);
             this.zaprośDoGrupyToolStripMenuItem1.Text = "Zaproś do grupy";
             this.zaprośDoGrupyToolStripMenuItem1.Click += new System.EventHandler(this.inviteContactToGroup_Click);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(216, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(204, 6);
             // 
             // archiwumToolStripMenuItem
             // 
             this.archiwumToolStripMenuItem.Name = "archiwumToolStripMenuItem";
-            this.archiwumToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.archiwumToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.archiwumToolStripMenuItem.Text = "Archiwum";
             this.archiwumToolStripMenuItem.Click += new System.EventHandler(this.archiwumToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(216, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(204, 6);
             // 
             // deleteContactToolStripMenuItem
             // 
             this.deleteContactToolStripMenuItem.Name = "deleteContactToolStripMenuItem";
-            this.deleteContactToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.deleteContactToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.deleteContactToolStripMenuItem.Text = "Usuń kontakt";
             this.deleteContactToolStripMenuItem.Click += new System.EventHandler(this.deleteContactToolStripMenuItem_Click);
             // 
@@ -469,25 +469,25 @@
             this.toolStripSeparator5,
             this.rozwiążGrupeToolStripMenuItem});
             this.contextMenuStripGroup.Name = "contextMenuStripGroup";
-            this.contextMenuStripGroup.Size = new System.Drawing.Size(177, 148);
+            this.contextMenuStripGroup.Size = new System.Drawing.Size(168, 148);
             this.contextMenuStripGroup.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripGroup_Opening);
             // 
             // opuśćGrupeToolStripMenuItem
             // 
             this.opuśćGrupeToolStripMenuItem.Name = "opuśćGrupeToolStripMenuItem";
-            this.opuśćGrupeToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.opuśćGrupeToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.opuśćGrupeToolStripMenuItem.Text = "Opuść grupe";
             this.opuśćGrupeToolStripMenuItem.Click += new System.EventHandler(this.leaveGroupContextMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(173, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(164, 6);
             // 
             // group_txtMessageToolStripMenuItem
             // 
             this.group_txtMessageToolStripMenuItem.Name = "group_txtMessageToolStripMenuItem";
-            this.group_txtMessageToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.group_txtMessageToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.group_txtMessageToolStripMenuItem.Text = "Rozmowa tekstowa";
             this.group_txtMessageToolStripMenuItem.Click += new System.EventHandler(this.txtMessageToolStripMenuItem_Click);
             // 
@@ -495,32 +495,32 @@
             // 
             this.group_audioToolStripMenuItem.Enabled = false;
             this.group_audioToolStripMenuItem.Name = "group_audioToolStripMenuItem";
-            this.group_audioToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.group_audioToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.group_audioToolStripMenuItem.Text = "Rozmowa audio";
             // 
             // group_videoToolStripMenuItem
             // 
             this.group_videoToolStripMenuItem.Enabled = false;
             this.group_videoToolStripMenuItem.Name = "group_videoToolStripMenuItem";
-            this.group_videoToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.group_videoToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.group_videoToolStripMenuItem.Text = "Rozmowa wideo";
             // 
             // group_wyślijPlikToolStripMenuItem
             // 
             this.group_wyślijPlikToolStripMenuItem.Name = "group_wyślijPlikToolStripMenuItem";
-            this.group_wyślijPlikToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.group_wyślijPlikToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.group_wyślijPlikToolStripMenuItem.Text = "Wyślij plik";
             this.group_wyślijPlikToolStripMenuItem.Click += new System.EventHandler(this.wyślijPlikToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(173, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(164, 6);
             // 
             // rozwiążGrupeToolStripMenuItem
             // 
             this.rozwiążGrupeToolStripMenuItem.Name = "rozwiążGrupeToolStripMenuItem";
-            this.rozwiążGrupeToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.rozwiążGrupeToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.rozwiążGrupeToolStripMenuItem.Text = "Rozwiąż grupe";
             this.rozwiążGrupeToolStripMenuItem.Click += new System.EventHandler(this.removeGroupContextMenuItem_Click);
             // 
@@ -533,37 +533,37 @@
             this.toolStripSeparator6,
             this.wyrzućZGrupyToolStripMenuItem});
             this.contextMenuStripGroupMember.Name = "contextMenuStripGroupMember";
-            this.contextMenuStripGroupMember.Size = new System.Drawing.Size(218, 82);
+            this.contextMenuStripGroupMember.Size = new System.Drawing.Size(205, 82);
             this.contextMenuStripGroupMember.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripGroupMember_Opening);
             // 
             // awansujNaLideraGrupyToolStripMenuItem
             // 
             this.awansujNaLideraGrupyToolStripMenuItem.Name = "awansujNaLideraGrupyToolStripMenuItem";
-            this.awansujNaLideraGrupyToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.awansujNaLideraGrupyToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.awansujNaLideraGrupyToolStripMenuItem.Text = "Awansuj na zarządce grupy";
             this.awansujNaLideraGrupyToolStripMenuItem.Click += new System.EventHandler(this.promoteToGroupLeader_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(214, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(201, 6);
             // 
             // dodajDoKontaktówToolStripMenuItem
             // 
             this.dodajDoKontaktówToolStripMenuItem.Name = "dodajDoKontaktówToolStripMenuItem";
-            this.dodajDoKontaktówToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.dodajDoKontaktówToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.dodajDoKontaktówToolStripMenuItem.Text = "Dodaj do kontaktów";
             this.dodajDoKontaktówToolStripMenuItem.Click += new System.EventHandler(this.addGroupMemberToContacts);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(214, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(201, 6);
             // 
             // wyrzućZGrupyToolStripMenuItem
             // 
             this.wyrzućZGrupyToolStripMenuItem.Name = "wyrzućZGrupyToolStripMenuItem";
-            this.wyrzućZGrupyToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.wyrzućZGrupyToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.wyrzućZGrupyToolStripMenuItem.Text = "Wyrzuć z grupy";
             this.wyrzućZGrupyToolStripMenuItem.Click += new System.EventHandler(this.kickFromGroupContextMenuItem_Click);
             // 
