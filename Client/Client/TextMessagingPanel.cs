@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
@@ -56,10 +57,29 @@ namespace Komin
 
         public void InsertText(string text)
         {
+            AddToArchive(text);
             if (text_insert == null)
                 text_insert = text;
             else
                 text_insert += text;
+        }
+
+        private void AddToArchive(string text)
+        {
+            var dirPath = "Archive/" + conn.userdata.contact_name;
+            var path = dirPath + "/"+ receiver_id + ".txt";
+            if (!Directory.Exists(dirPath))
+                Directory.CreateDirectory(dirPath);
+
+            try
+            {
+                using (var file = new StreamWriter(path, true))
+                    file.Write(text);
+            }
+            catch
+            {
+                MessageBox.Show("Nie można zapisać w " + path, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void onTextInputContentChanged(object sender, EventArgs e)
