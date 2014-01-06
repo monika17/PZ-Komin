@@ -68,6 +68,12 @@
     <Compile Include="AddUserForm.Designer.cs">
       <DependentUpon>AddUserForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ArchiveForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ArchiveForm.Designer.cs">
+      <DependentUpon>ArchiveForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConnectOptionsPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -107,6 +113,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AddUserForm.resx">
       <DependentUpon>AddUserForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ArchiveForm.resx">
+      <DependentUpon>ArchiveForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ConnectOptionsPanel.resx">
       <DependentUpon>ConnectOptionsPanel.cs</DependentUpon>

@@ -764,5 +764,14 @@ namespace Komin
             menu.Items["awansujNaLideraGrupyToolStripMenuItem"].Enabled = holder && !self;
             menu.Items["wyrzućZGrupyToolStripMenuItem"].Enabled = holder && !self;
         }
+
+        private void archiwumToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var contact = clickedContactNode;
+            var contactId = ((ContactTreeTag)contact.Tag).id;
+
+            var archive = new ArchiveForm("Archive/" + connection.userdata.contact_name + "/" + contactId + ".txt");
+            archive.Visible = true;
+        }
     }
 }
