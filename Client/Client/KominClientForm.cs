@@ -64,6 +64,7 @@ namespace Komin
             connection.onGroupLeave = onGroupChange_PreUpdate;
             connection.onGroupKick = onGroupKick;
             connection.onServerLostConnection = onServerLostConnection_PreShow;
+            connection.onServerLogout = ServerLogout;
             ShowConnectOptionsOnLoginTab();
         }
 
@@ -182,6 +183,12 @@ namespace Komin
                 return;
             ResetPanel();
             ShowConnectOptionsOnLoginTab();
+        }
+
+        private void ServerLogout()
+        {
+            MessageBox.Show("Zostałeś rozłączony na żądanie serwera", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ResetPanel();
         }
 
         private void ResetPanel()

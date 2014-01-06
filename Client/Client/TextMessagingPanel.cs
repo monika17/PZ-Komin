@@ -50,6 +50,7 @@ namespace Komin
             on_inserting = true;
             if (text_insert != null)
                 textMessageContainer.Text += text_insert;
+     
             text_insert = null;
             on_inserting = false;
             TextInsertTimer.Enabled = true;
