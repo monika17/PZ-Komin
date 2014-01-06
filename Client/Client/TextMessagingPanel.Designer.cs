@@ -31,8 +31,8 @@
             this.textSendButton = new System.Windows.Forms.Button();
             this.textMessageInput = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.buttonAutoSend = new System.Windows.Forms.CheckBox();
             this.textMessageContainer = new System.Windows.Forms.RichTextBox();
+            this.buttonAutoSend = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -75,6 +75,19 @@
             this.panel1.Size = new System.Drawing.Size(642, 504);
             this.panel1.TabIndex = 6;
             // 
+            // textMessageContainer
+            // 
+            this.textMessageContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textMessageContainer.Location = new System.Drawing.Point(3, 3);
+            this.textMessageContainer.Name = "textMessageContainer";
+            this.textMessageContainer.ReadOnly = true;
+            this.textMessageContainer.Size = new System.Drawing.Size(636, 434);
+            this.textMessageContainer.TabIndex = 5;
+            this.textMessageContainer.Text = "";
+            this.textMessageContainer.TextChanged += new System.EventHandler(this.textMessageContainer_TextChanged);
+            // 
             // buttonAutoSend
             // 
             this.buttonAutoSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -87,18 +100,6 @@
             this.buttonAutoSend.Text = "on-enter";
             this.buttonAutoSend.UseVisualStyleBackColor = true;
             this.buttonAutoSend.Click += new System.EventHandler(this.buttonAutoSend_Click);
-            // 
-            // textMessageContainer
-            // 
-            this.textMessageContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textMessageContainer.Location = new System.Drawing.Point(3, 3);
-            this.textMessageContainer.Name = "textMessageContainer";
-            this.textMessageContainer.Size = new System.Drawing.Size(636, 434);
-            this.textMessageContainer.TabIndex = 5;
-            this.textMessageContainer.Text = "";
-            this.textMessageContainer.TextChanged += new System.EventHandler(this.textMessageContainer_TextChanged);
             // 
             // TextMessagingPanel
             // 

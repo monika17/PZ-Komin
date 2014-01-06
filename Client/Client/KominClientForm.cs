@@ -69,6 +69,7 @@ namespace Komin
 
         public void LoginSuccess()
         {
+            AcceptButton = null;
             uint new_status = (uint)KominClientStatusCodes.Accessible;
 
             UserName.Text = "Nazwa: " + connection.userdata.contact_name;
