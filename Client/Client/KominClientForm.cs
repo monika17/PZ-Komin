@@ -320,7 +320,7 @@ namespace Komin
                             OpenTabForContact(tn);
                             WaitForTabUpdate();
                             //insert message
-                            ((TextMessagingPanel)MainTabPanel.TabPages["C" + sender_id].Controls["TextMessagingPanel"]).InsertText("[" + msg.send_date + "]  " + cd.contact_name + ":\r\n" + msg.message + "\r\n");
+                            ((TextMessagingPanel)MainTabPanel.TabPages["C" + sender_id].Controls["TextMessagingPanel"]).InsertText(ReceiverHtmlText(msg.send_date, cd.contact_name, msg.message));
                             return;
                         }
                     //discard
@@ -352,12 +352,22 @@ namespace Komin
                         OpenTabForContact(tn);
                         WaitForTabUpdate();
                         //insert message
-                        ((TextMessagingPanel)MainTabPanel.TabPages["G" + receiver_id].Controls["TextMessagingPanel"]).InsertText("[" + msg.send_date + "]  " + cd.contact_name + ":\r\n" + msg.message + "\r\n");
+                        ((TextMessagingPanel)MainTabPanel.TabPages["G" + receiver_id].Controls["TextMessagingPanel"]).InsertText(ReceiverHtmlText(msg.send_date, cd.contact_name, msg.message));
                         return;
                     }
                 //discard
                 return;
             }
+        }
+
+        private string ReceiverHtmlText(DateTime sendDate, string contactName, string message)
+        {
+            var width = 435;
+            return "<div style='width: " + width + "px; background-color: #fff; border-bottom:1px dashed #AAAAAA; padding: 3px; font-family: Verdana, Tahoma, Arial'>" +
+                   "<span style='font-size:8pt'>" + String.Format("{0:d/M/yyyy HH:mm:ss}", sendDate) + "</span>  " +
+                   "<b><span style='font-size: 9pt'>" + contactName + ":</span></b> " +
+                   "<span style='font-size: 9pt'>" + message + "</span><br>" +
+                   "</div>";
         }
 
         private void onContactListChange(UserData new_ud)
