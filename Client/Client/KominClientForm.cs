@@ -59,6 +59,7 @@ namespace Komin
             connection = new KominClientSideConnection();
             connection.onError = onError;
             connection.onNewTextMessage = onNewMessage;
+            connection.onNewAudioMessage = onNewAudioMessage;
             connection.onContactListChange = onContactListChange;
             connection.onStatusNotification = onStatusNotification_PreUpdate;
             connection.onGroupJoin = onGroupChange_PreUpdate;
@@ -270,6 +271,7 @@ namespace Komin
             tpage.TabIndex = 1;
             tpage.Text = tn.Text;
             tpage.UseVisualStyleBackColor = true;
+            //ContactData c = null; //###########################
             if (receiver_is_group)
                 tpage.ImageIndex = 3;
             else
@@ -279,6 +281,7 @@ namespace Komin
                     if (cd.contact_id == receiver_id)
                     {
                         tpage.ImageIndex = (int)(cd.status & (uint)KominClientStatusCodes.Mask);
+                        //c = cd; //#############################
                         break;
                     }
             }
@@ -287,6 +290,13 @@ namespace Komin
             add_page.Add(tpage);
             next_page = tpage;
             MainTabPanel.ContextMenuStrip = contactTabContextMenu;
+
+            /*AudioMessagingPanel amp = new AudioMessagingPanel(connection, receiver_id, receiver_is_group, tpage);
+            amp.Enabled = true;
+            amp.Visible = true;
+            amp.Location = new System.Drawing.Point(0, 0);
+            tpage.Controls.Add(amp);
+            amp.AddContact(c, false);*/
         }
 
         private void onError(string err_text, KominNetworkPacket packet)
@@ -358,6 +368,34 @@ namespace Komin
                 //discard
                 return;
             }
+        }
+
+        private void onNewAudioMessage(uint sender, uint receiver, bool receiver_is_group, byte[] msg)
+        {
+            //check is there any opened audio messaging panel - if there isn't then no need to process message
+            if (AudioMessagingPanel.Singleton == null)
+                return;
+            //check receiver data. exit if it is not for us
+            if (receiver_is_group == false)
+            {
+                if (receiver != connection.userdata.contact_id)
+                    return;
+            }
+            else
+            {
+                bool found = false;
+                foreach (GroupData gd in connection.userdata.groups)
+                {
+                    if (gd.group_id == receiver)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                    return;
+            }
+            AudioMessagingPanel.Singleton.InsertMessage(sender, msg);
         }
 
         private void onContactListChange(UserData new_ud)
@@ -767,6 +805,9 @@ namespace Komin
             ContextMenuStrip menu = (ContextMenuStrip)sender;
             ContactTreeTag contact_tag = (ContactTreeTag)clickedContactNode.Tag;
             menu.Items["zaprośDoGrupyToolStripMenuItem1"].Enabled = (treeView1.Nodes["Grupy"].Nodes.Count > 0) && (contact_tag.id != connection.userdata.contact_id);
+            menu.Items["txtMessageToolStripMenuItem"].Enabled = (contact_tag.id != connection.userdata.contact_id);
+            //menu.Items["audioMessageToolStripMenuItem"].Enabled = (contact_tag.id != connection.userdata.contact_id) && (clickedContactNode.SelectedImageIndex != 0);
+            //menu.Items["videoMessageToolStripMenuItem"].Enabled = (contact_tag.id != connection.userdata.contact_id) && (clickedContactNode.SelectedImageIndex != 0);
         }
 
         private void contextMenuStripGroup_Opening(object sender, CancelEventArgs e)

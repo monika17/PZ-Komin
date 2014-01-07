@@ -323,6 +323,12 @@ namespace Komin
             if ((packet.target_is_group == false) && (packet.target != 0))
             {
                 bool redirected = false;
+                if ((packet.target == packet.sender) && (packet.command == (uint)KominProtocolCommands.SendMessage)) //disable audio and video loopbacks
+                {
+                    packet.DeleteContent((uint)KominProtocolContentTypes.AudioMessageData | (uint)KominProtocolContentTypes.VideoMessageData);
+                    if (packet.content == 0)
+                        return; //discard packet if empty message
+                }
                 foreach (KominServerSideConnection conn in server.connections)
                     if (conn.contact_id == packet.target)
                     {
@@ -330,7 +336,7 @@ namespace Komin
                         redirected = true;
                         break;
                     }
-                if (redirected == false)
+                if (redirected == false) //opposite side couldn't receive packet
                 {
                     ContactData cd = KominServer.database.GetContactData(packet.target);
                     if (cd == null)
@@ -731,7 +737,7 @@ namespace Komin
                     }
                 case KominProtocolCommands.SendMessage: //user sends group messages
                     {
-                        if (((packet.content & 0x938) == 0) || ((packet.content | 0x938) != 0x938))
+                        if (((packet.content & 0x038) == 0) || ((packet.content | 0x038) != 0x038)) //##### files disabled - 0x138 to enable
                         {
                             packet.DeleteContent();
                             Error(KominNetworkErrors.WrongRequestContent, packet);
@@ -742,7 +748,20 @@ namespace Komin
                             if ((member.status & (uint)KominClientStatusCodes.Mask) != (uint)KominClientStatusCodes.NotAccessible)
                             {
                                 if (member.contact_id == packet.sender)
-                                    InsertPacketForSending(packet);
+                                {
+                                    //for loopback exclude audio and video
+                                    KominNetworkPacket p = new KominNetworkPacket();
+                                    p.sender = packet.sender;
+                                    p.target = packet.target;
+                                    p.target_is_group = packet.target_is_group;
+                                    p.command = packet.command;
+                                    p.job_id = packet.job_id;
+                                    p.DeleteContent();
+                                    p.CopyContent(packet);
+                                    p.DeleteContent((uint)KominProtocolContentTypes.AudioMessageData | (uint)KominProtocolContentTypes.VideoMessageData);
+                                    if (p.content != 0)
+                                        InsertPacketForSending(p);
+                                }
                                 else
                                     foreach (KominServerSideConnection conn in server.connections)
                                         if (conn.contact_id == member.contact_id)
@@ -780,10 +799,54 @@ namespace Komin
                 /*case KominProtocolCommands.RequestAudioCall: //user can't request a call from server
                     break;
                 case KominProtocolCommands.RequestVideoCall:
-                    break;
-                case KominProtocolCommands.CloseCall: //user can't close a call with server
-                    break;
-                case KominProtocolCommands.SwitchToAudioCall: //user can't change call type for calls with server
+                    break;*/
+                case KominProtocolCommands.CloseCall: //group holder wants to close call - broadcast this information in group
+                    {
+                        if (packet.content != 0)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.WrongRequestContent, packet);
+                            return;
+                        }
+                        GroupData gd = KominServer.database.GetGroupData(packet.target);
+                        if (gd == null)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.GroupNotExists, packet);
+                            return;
+                        }
+                        if (packet.sender != gd.creators_id)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.UserIsNotGroupHolder, packet);
+                            return;
+                        }
+                        if ((gd.communication_type & 0x030) == 0)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.CallNotStartedYet, packet);
+                            return;
+                        }
+                        gd.communication_type &= 0x101; //clear audio and video communication types
+                        if (KominServer.database.SetGroupCommunicationType(gd.group_id, gd.communication_type) == -1)
+                        {
+                            packet.DeleteContent();
+                            Error(KominNetworkErrors.GroupNotExists, packet);
+                            return;
+                        }
+                        packet.DeleteContent();
+                        packet.InsertContent(KominProtocolContentTypes.GroupData, gd);
+                        foreach (ContactData member in gd.members)
+                            if ((member.status & (uint)KominClientStatusCodes.Mask) != (uint)KominClientStatusCodes.NotAccessible)
+                            {
+                                foreach (KominServerSideConnection conn in server.connections)
+                                    if (conn.contact_id == member.contact_id)
+                                        conn.InsertPacketForSending(packet);
+                            }
+                        Accept(packet);
+                        break;
+                    }
+                /*case KominProtocolCommands.SwitchToAudioCall: //group holder wants to change call type - broadcast this information in group
                     break;
                 case KominProtocolCommands.SwitchToVideoCall:
                     break;*/

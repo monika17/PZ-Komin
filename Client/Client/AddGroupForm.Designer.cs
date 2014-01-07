@@ -34,8 +34,8 @@
             this.groupnameValidityLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.text = new System.Windows.Forms.CheckBox();
-            this.voice = new System.Windows.Forms.RadioButton();
-            this.video = new System.Windows.Forms.RadioButton();
+            this.voice = new System.Windows.Forms.CheckBox();
+            this.video = new System.Windows.Forms.CheckBox();
             this.files = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -93,25 +93,24 @@
             // voice
             // 
             this.voice.AutoSize = true;
-            this.voice.Checked = true;
             this.voice.Location = new System.Drawing.Point(15, 96);
             this.voice.Name = "voice";
-            this.voice.Size = new System.Drawing.Size(66, 17);
+            this.voice.Size = new System.Drawing.Size(67, 17);
             this.voice.TabIndex = 5;
-            this.voice.TabStop = true;
             this.voice.Text = "głosowa";
             this.voice.UseVisualStyleBackColor = true;
+            this.voice.CheckedChanged += new System.EventHandler(this.voice_CheckedChanged);
             // 
             // video
             // 
             this.video.AutoSize = true;
             this.video.Location = new System.Drawing.Point(15, 119);
             this.video.Name = "video";
-            this.video.Size = new System.Drawing.Size(53, 17);
+            this.video.Size = new System.Drawing.Size(54, 17);
             this.video.TabIndex = 6;
-            this.video.TabStop = true;
             this.video.Text = "wideo";
             this.video.UseVisualStyleBackColor = true;
+            this.video.CheckedChanged += new System.EventHandler(this.video_CheckedChanged);
             // 
             // files
             // 
@@ -152,7 +151,7 @@
             this.timer1.Interval = 1500;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // AddGroup
+            // AddGroupForm
             // 
             this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -172,7 +171,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "AddGroup";
+            this.Name = "AddGroupForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Dodaj nową grupę";
@@ -188,8 +187,8 @@
         private System.Windows.Forms.Label groupnameValidityLabel;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox text;
-        private System.Windows.Forms.RadioButton voice;
-        private System.Windows.Forms.RadioButton video;
+        private System.Windows.Forms.CheckBox voice;
+        private System.Windows.Forms.CheckBox video;
         private System.Windows.Forms.CheckBox files;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;

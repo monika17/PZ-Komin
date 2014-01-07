@@ -90,5 +90,21 @@ namespace Komin
             timer1.Enabled = false;
             this.Close();
         }
+
+        private void voice_CheckedChanged(object sender, EventArgs e)
+        {
+            if (voice.Checked == true)
+            {
+                video.Checked = false;
+            }
+        }
+
+        private void video_CheckedChanged(object sender, EventArgs e)
+        {
+            if (video.Checked == true)
+            {
+                voice.Checked = false;
+            }
+        }
     }
 }
