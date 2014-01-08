@@ -55,12 +55,13 @@
             this.zamknijToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripContact = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.txtMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.audioMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.videoMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wyślijPlikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.audioMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.videoMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ączNaRozmoweAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.przełączNaRozmoweWideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeCallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.zaprośDoGrupyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -86,7 +87,6 @@
             this.dodajDoKontaktówToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.wyrzućZGrupyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.closeCallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripContactsNode.SuspendLayout();
             this.contextMenuStripGroups.SuspendLayout();
             this.MainTabPanel.SuspendLayout();
@@ -204,6 +204,7 @@
             this.treeViewIcons.Images.SetKeyName(7, "group_holder_invisible.bmp");
             this.treeViewIcons.Images.SetKeyName(8, "group_holder_busy.bmp");
             this.treeViewIcons.Images.SetKeyName(9, "group_holder_online.bmp");
+            this.treeViewIcons.Images.SetKeyName(10, "message.bmp");
             // 
             // RightMenu
             // 
@@ -361,20 +362,6 @@
             this.txtMessageToolStripMenuItem.Text = "Rozmowa tekstowa";
             this.txtMessageToolStripMenuItem.Click += new System.EventHandler(this.txtMessageToolStripMenuItem_Click);
             // 
-            // audioMessageToolStripMenuItem
-            // 
-            this.audioMessageToolStripMenuItem.Enabled = false;
-            this.audioMessageToolStripMenuItem.Name = "audioMessageToolStripMenuItem";
-            this.audioMessageToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-            this.audioMessageToolStripMenuItem.Text = "Rozmowa audio";
-            // 
-            // videoMessageToolStripMenuItem
-            // 
-            this.videoMessageToolStripMenuItem.Enabled = false;
-            this.videoMessageToolStripMenuItem.Name = "videoMessageToolStripMenuItem";
-            this.videoMessageToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-            this.videoMessageToolStripMenuItem.Text = "Rozmowa wideo";
-            // 
             // wyślijPlikToolStripMenuItem
             // 
             this.wyślijPlikToolStripMenuItem.Name = "wyślijPlikToolStripMenuItem";
@@ -386,6 +373,21 @@
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(204, 6);
+            // 
+            // audioMessageToolStripMenuItem
+            // 
+            this.audioMessageToolStripMenuItem.Enabled = false;
+            this.audioMessageToolStripMenuItem.Name = "audioMessageToolStripMenuItem";
+            this.audioMessageToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.audioMessageToolStripMenuItem.Text = "Rozmowa audio";
+            this.audioMessageToolStripMenuItem.Click += new System.EventHandler(this.audioMessageToolStripMenuItem_Click);
+            // 
+            // videoMessageToolStripMenuItem
+            // 
+            this.videoMessageToolStripMenuItem.Enabled = false;
+            this.videoMessageToolStripMenuItem.Name = "videoMessageToolStripMenuItem";
+            this.videoMessageToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.videoMessageToolStripMenuItem.Text = "Rozmowa wideo";
             // 
             // ączNaRozmoweAudioToolStripMenuItem
             // 
@@ -400,6 +402,13 @@
             this.przełączNaRozmoweWideoToolStripMenuItem.Name = "przełączNaRozmoweWideoToolStripMenuItem";
             this.przełączNaRozmoweWideoToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.przełączNaRozmoweWideoToolStripMenuItem.Text = "Przełącz na rozmowe wideo";
+            // 
+            // closeCallToolStripMenuItem
+            // 
+            this.closeCallToolStripMenuItem.Enabled = false;
+            this.closeCallToolStripMenuItem.Name = "closeCallToolStripMenuItem";
+            this.closeCallToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.closeCallToolStripMenuItem.Text = "Zakończ rozmowę";
             // 
             // toolStripSeparator2
             // 
@@ -568,13 +577,6 @@
             this.wyrzućZGrupyToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.wyrzućZGrupyToolStripMenuItem.Text = "Wyrzuć z grupy";
             this.wyrzućZGrupyToolStripMenuItem.Click += new System.EventHandler(this.kickFromGroupContextMenuItem_Click);
-            // 
-            // closeCallToolStripMenuItem
-            // 
-            this.closeCallToolStripMenuItem.Enabled = false;
-            this.closeCallToolStripMenuItem.Name = "closeCallToolStripMenuItem";
-            this.closeCallToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-            this.closeCallToolStripMenuItem.Text = "Zakończ rozmowę";
             // 
             // KominClientForm
             // 

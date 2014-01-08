@@ -240,8 +240,8 @@ namespace Komin
 
             waiting_for_ping_answer = true;
             had_ping_answer = false;
-            PeriodicPingRequest();
-            PingTimer.Enabled = true;
+            //PeriodicPingRequest();
+            //PingTimer.Enabled = true;
             
             while (!commune.CancellationPending)
             {
@@ -883,7 +883,7 @@ namespace Komin
                             Error(KominNetworkErrors.UserNotExists, packet);
                             return;
                         }
-                        uint capabilities = new_gd.communication_type & 0x130;
+                        uint capabilities = new_gd.communication_type & 0x138;
                         //#################################################### to do: check server acceptance of capabilities
                         switch (KominServer.database.CreateGroup(new_gd.group_name, new_group_holder, capabilities))
                         {

@@ -40,6 +40,7 @@ namespace Komin
             singleton = this;
 
             InitializeComponent();
+            this.Name = "AudioMessagingPanel";
             this.receiver_id = receiver_id;
             this.receiver_is_group = receiver_is_group;
             this.conn = conn;

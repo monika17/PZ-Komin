@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using NAudio;
 using NAudio.Wave;
 
 namespace Komin
@@ -42,6 +43,26 @@ namespace Komin
                 requests.Add(new Request(4, null));
                 while (thread_working) ;
             }
+        }
+
+        /// <returns>true if test succeded</returns>
+        public static bool HardwareTest()
+        {
+            WOut wout = new WOut();
+            wout.bwp = new BufferedWaveProvider(new WaveFormat(8000, 16, 1));
+            wout.waveOut = new WaveOut();
+            wout.waveOut.Volume = 1.0f;
+            try
+            {
+                wout.waveOut.Init(wout.bwp);
+                wout.waveOut.Play();
+                wout.waveOut.Stop();
+            }
+            catch (MmException)
+            {
+                return false;
+            }
+            return true;
         }
 
         private void thread_master()

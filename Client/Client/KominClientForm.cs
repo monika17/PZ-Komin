@@ -71,6 +71,7 @@ namespace Komin
             connection.onServerLostConnection = onServerLostConnection_PreShow;
             connection.onServerLogout = onServerLogout_PreShow;
             connection.onServerDisconnected = onServerDisconnected_PreShow;
+            connection.onAudioCallRequest = onAudioCallRequest;
             ShowConnectOptionsOnLoginTab();
         }
 
@@ -233,7 +234,56 @@ namespace Komin
             LoginTab.Controls.Add(connectOptionsPanel);
         }
 
-        private void OpenTabForContact(TreeNode tn)
+        /// <summary>
+        /// Opens new tab for contact or group
+        /// </summary>
+        /// <param name="id">contact/group id</param>
+        /// <param name="is_group">true if specified id is a group id, false otherwise</param>
+        /// <param name="media_reason">0 - text communication, 1 - audio communication, 2 - video communication</param>
+        private void OpenTabForContact(uint id, bool is_group, int media_reason = 0)
+        {
+            TreeNode contacts = treeView1.Nodes["Kontakty"];
+            TreeNode groups = treeView1.Nodes["Grupy"];
+
+            foreach (TreeNode cn in contacts.Nodes)
+            {
+                if (((ContactTreeTag)cn.Tag).id == id)
+                {
+                    OpenTabForContact(cn, media_reason);
+                    return;
+                }
+            }
+
+            foreach (TreeNode gn in groups.Nodes)
+            {
+                if (is_group)
+                {
+                    if (((ContactTreeTag)gn.Tag).id == id)
+                    {
+                        OpenTabForContact(gn, media_reason);
+                        return;
+                    }
+                }
+                else
+                {
+                    foreach (TreeNode mn in contacts.Nodes)
+                    {
+                        if (((ContactTreeTag)mn.Tag).id == id)
+                        {
+                            OpenTabForContact(mn, media_reason);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Opens new tab for contact or group
+        /// </summary>
+        /// <param name="tn">tree node containing information about contact/group</param>
+        /// <param name="media_reason">0 - text communication, 1 - audio communication, 2 - video communication</param>
+        private void OpenTabForContact(TreeNode tn, int media_reason = 0)
         {
             if (tn.Text == "Kontakty" || tn.Text == "Grupy")
                 return;
@@ -271,9 +321,34 @@ namespace Komin
             tpage.TabIndex = 1;
             tpage.Text = tn.Text;
             tpage.UseVisualStyleBackColor = true;
-            //ContactData c = null; //###########################
             if (receiver_is_group)
+            {
                 tpage.ImageIndex = 3;
+                switch (media_reason)
+                {
+                    case 1: //add audio controls
+                        {
+                            AudioMessagingPanel amp = new AudioMessagingPanel(connection, receiver_id, true, tpage);
+                            amp.Enabled = true;
+                            amp.Visible = true;
+                            amp.Location = new System.Drawing.Point(0, 0);
+                            tpage.Controls.Add(amp);
+                            foreach (GroupData gd in connection.userdata.groups)
+                            {
+                                if (gd.group_id == receiver_id)
+                                {
+                                    foreach (ContactData md in gd.members)
+                                        if (connection.userdata.contact_id != md.contact_id)
+                                            amp.AddContact(md, md.contact_id == gd.creators_id);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    case 2: //add video controls
+                        break;
+                }
+            }
             else
             {
                 //find contact on contact list
@@ -281,7 +356,21 @@ namespace Komin
                     if (cd.contact_id == receiver_id)
                     {
                         tpage.ImageIndex = (int)(cd.status & (uint)KominClientStatusCodes.Mask);
-                        //c = cd; //#############################
+                        switch (media_reason)
+                        {
+                            case 1: //add audio control
+                                {
+                                    AudioMessagingPanel amp = new AudioMessagingPanel(connection, receiver_id, false, tpage);
+                                    amp.Enabled = true;
+                                    amp.Visible = true;
+                                    amp.Location = new System.Drawing.Point(0, 0);
+                                    tpage.Controls.Add(amp);
+                                    amp.AddContact(cd, false);
+                                    break;
+                                }
+                            case 2: //add video control
+                                break;
+                        }
                         break;
                     }
             }
@@ -290,13 +379,6 @@ namespace Komin
             add_page.Add(tpage);
             next_page = tpage;
             MainTabPanel.ContextMenuStrip = contactTabContextMenu;
-
-            /*AudioMessagingPanel amp = new AudioMessagingPanel(connection, receiver_id, receiver_is_group, tpage);
-            amp.Enabled = true;
-            amp.Visible = true;
-            amp.Location = new System.Drawing.Point(0, 0);
-            tpage.Controls.Add(amp);
-            amp.AddContact(c, false);*/
         }
 
         private void onError(string err_text, KominNetworkPacket packet)
@@ -468,11 +550,14 @@ namespace Komin
                 }
 
             //find contact on groups members list
+            List<uint> group_holders = new List<uint>();
             foreach (GroupData gd in connection.userdata.groups)
                 foreach (ContactData cd in gd.members)
                     if (cd.contact_id == changed_contact.contact_id)
                     {
                         cd.status = changed_contact.status;
+                        if(changed_contact.contact_id == gd.creators_id) //store group holder group
+                            group_holders.Add(gd.group_id);
                         break;
                     }
 
@@ -510,10 +595,44 @@ namespace Komin
 
             //find contact in opened tabs
             foreach (TabPage tp in MainTabPanel.TabPages)
-                if (tp.Name == "C" + changed_contact.contact_id)
+                if (tp.Name == "C" + changed_contact.contact_id) //contact tabs
                 {
                     tp.ImageIndex = (int)(changed_contact.status & (uint)KominClientStatusCodes.Mask);
+                    //check for tab contents that require status notifications
+                    foreach (Control c in tp.Controls)
+                    {
+                        switch (c.Name)
+                        {
+                            case "AudioMessagingPanel":
+                                ((AudioMessagingPanel)c).SetContact(changed_contact, false);
+                                break;
+                            /*case "VideoMessaagingPanel":
+                                break;*/
+                        }
+                    }
                     break;
+                }
+                else if(tp.Name[0] == 'G') //group tabs
+                {
+                    bool is_group_holder = false;
+                    foreach(uint gid in group_holders)
+                        if ("G" + gid == tp.Name)
+                        {
+                            is_group_holder = true;
+                            break;
+                        }
+                    //check for tab contents that require status notifications
+                    foreach (Control c in tp.Controls)
+                    {
+                        switch (c.Name)
+                        {
+                            case "AudioMessagingPanel":
+                                ((AudioMessagingPanel)c).SetContact(changed_contact, is_group_holder);
+                                break;
+                            /*case "VideoMessaagingPanel":
+                                break;*/
+                        }
+                    }
                 }
         }
 
@@ -613,7 +732,36 @@ namespace Komin
 
         private bool onGroupInvite(GroupData gd, ContactData invitor)
         {
-            switch (MessageBox.Show(invitor.contact_name + " zaprasza Cię do grupy " + gd.group_name, "Zaproszenie do grupy", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            int hardware_test_result = 0;
+            string invitation_text = invitor.contact_name + " zaprasza Cię do grupy " + gd.group_name + "." + Environment.NewLine + Environment.NewLine + "media wykorzystywane w grupie:" + Environment.NewLine;
+            if ((gd.communication_type & 0x008) != 0)
+                invitation_text += "- komunikacja tekstowa" + Environment.NewLine;
+            if ((gd.communication_type & 0x010) != 0)
+            {
+                invitation_text += "- komunikacja głosowa" + Environment.NewLine;
+                if (!KominAudioCodec.HardwareTest())
+                    hardware_test_result |= 0x01;
+                if (!KominAudioInput.HardwareTest())
+                    hardware_test_result |= 0x02;
+                if (!KominAudioOutput.HardwareTest())
+                    hardware_test_result |= 0x04;
+            }
+            if ((gd.communication_type & 0x020) != 0)
+            {
+                invitation_text += "- komunikacja audio-wideo" + Environment.NewLine;
+                if (!KominAudioCodec.HardwareTest())
+                    hardware_test_result |= 0x01;
+                if (!KominAudioInput.HardwareTest())
+                    hardware_test_result |= 0x02;
+                if (!KominAudioOutput.HardwareTest())
+                    hardware_test_result |= 0x04;
+                //###### add video based hardware tests
+            }
+            if ((gd.communication_type & 0x100) != 0)
+                invitation_text += "- przesyłanie plików" + Environment.NewLine;
+            if (hardware_test_result != 0)
+                return false;
+            switch (MessageBox.Show(invitation_text, "Zaproszenie do grupy", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 case DialogResult.Yes:
                     return true;
@@ -672,6 +820,49 @@ namespace Komin
             MessageBox.Show("Serwer zakończył połączenie", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
             ResetPanel();
             ShowConnectOptionsOnLoginTab();
+        }
+
+        private void onAudioCallRequest(uint contact_id, uint job_id)
+        {
+            if (AudioMessagingPanel.Singleton != null)
+            {
+                connection.CloseCall(contact_id, job_id);
+                return;
+            }
+            ContactData cd = null;
+            foreach (ContactData c in connection.userdata.contacts)
+            {
+                if (c.contact_id == contact_id)
+                {
+                    cd = c;
+                    break;
+                }
+            }
+            if(cd==null)
+                foreach (GroupData gd in connection.userdata.groups)
+                {
+                    foreach (ContactData md in gd.members)
+                    {
+                        if (md.contact_id == contact_id)
+                        {
+                            cd = md;
+                            break;
+                        }
+                    }
+                    if (cd != null)
+                        break;
+                }
+            if (cd == null)
+                return;
+            RequestAcceptanceAskForm raaf = new RequestAcceptanceAskForm(connection, cd, job_id, false);
+            switch (raaf.ShowDialog())
+            {
+                case DialogResult.OK:
+                    OpenTabForContact(cd.contact_id, false);
+                    break;
+                default:
+                    break;
+            }
         }
 
         int ContactDataComparison_ByNameAsc(ContactData _1, ContactData _2)
@@ -848,6 +1039,20 @@ namespace Komin
 
             var archive = new ArchiveForm("Archive/" + connection.userdata.contact_name + "/" + contactId + ".txt");
             archive.Visible = true;
+        }
+
+        private void audioMessageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RequestAcceptanceWaitingForm rawf = new RequestAcceptanceWaitingForm(connection, ((ContactTreeTag)clickedContactNode.Tag).id, false);
+            switch (rawf.ShowDialog())
+            {
+                case DialogResult.OK:
+                    OpenTabForContact(clickedContactNode, 1);
+                    break;
+                default:
+                    MessageBox.Show("Anulowano", "Potwierdzenie", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+            }
         }
     }
 }

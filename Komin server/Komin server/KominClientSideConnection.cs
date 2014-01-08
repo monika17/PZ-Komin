@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using System.ComponentModel;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using System.IO;
 
 namespace Komin
 {
@@ -171,7 +170,7 @@ namespace Komin
 
             waiting_for_ping_request = true;
             had_ping_request = false;
-            PingTimer.Enabled = true;
+            //PingTimer.Enabled = true;
 
             while (!commune.CancellationPending)
             {
@@ -315,7 +314,13 @@ namespace Komin
                     jobs.MarkNewArrival(packet.job_id, packet);
                     break;
                 case KominProtocolCommands.Error: //server notifies an error
-                    jobs.MarkNewArrival(packet.job_id, packet);
+                    if (!jobs.MarkNewArrival(packet.job_id, packet))
+                    {
+                        if (onError != null)
+                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
+                        else
+                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                    }
                     break;
                 /*case KominProtocolCommands.AddContactToList: //server is not allowed to insert into contact lists
                     break;*/
@@ -349,10 +354,30 @@ namespace Komin
                 /*case KominProtocolCommands.PingMessages: //client doesn't store any messages
                     break;*/
                 case KominProtocolCommands.RequestAudioCall: //other user requests an audio call
+                    if (packet.content == 0)
+                    {
+                        uint sender = packet.sender;
+                        uint job_id = packet.job_id;
+                        Accept(packet);
+                        if (onAudioCallRequest != null)
+                            onAudioCallRequest(sender, job_id);
+                    }
                     break;
                 case KominProtocolCommands.RequestVideoCall: //other user requests a video call
                     break;
                 case KominProtocolCommands.CloseCall: //other user requests to close audio or video call
+                    if (packet.content == 0)
+                    {
+                        if (packet.job_id != 0)
+                        {
+                            jobs.MarkNewArrival(packet.job_id, packet);
+                        }
+                        else
+                        {
+                            if (onCloseCall != null)
+                                onCloseCall();
+                        }
+                    }
                     break;
                 case KominProtocolCommands.SwitchToAudioCall: //other user requests to change call type
                     break;
@@ -1156,12 +1181,20 @@ namespace Komin
             InsertPacketForSending(packet);
         }
 
-        public void RequestAudioCall(uint contact_id) //request an audio call from contact
+        public void RequestAudioCall(uint contact_id, ref bool cancel_req, ref int result) //request an audio call from contact
+        /*result codes:
+            0 - accepted
+            1 - declined
+            -1 - server error
+            -2 - cancelled
+        */
         {
             if (userdata.contact_id == 0)
                 return;
             if (contact_id == userdata.contact_id)
                 return;
+
+            int stage = 0;
 
             KominNetworkJob job = jobs.AddJob(contact_id, false);
             bool finished = false;
@@ -1174,13 +1207,25 @@ namespace Komin
             packet.command = (uint)KominProtocolCommands.RequestAudioCall;
             packet.DeleteContent();
             InsertPacketForSending(packet);
+            stage++;
 
             do
             {
-                job.WaitForNewArrival();
-                packet = job.Packet;
-                if (packet == null) //job cancelled
+                //wait for new packet
+                while (!job.new_arrival)
                 {
+                    if (cancel_req)
+                    {
+                        CloseCall(contact_id, job.JobID);
+                        job.CancelJob(contact_id, false);
+                        break;
+                    }
+                    Thread.Sleep(10);
+                }
+                packet = job.Packet;
+                if (packet == null) //job cancelled (possibly by requester)
+                {
+                    result = -2;
                     jobs.FinishJob(job);
                     //information would be nice
                     return;
@@ -1188,11 +1233,27 @@ namespace Komin
                 switch ((KominProtocolCommands)packet.command)
                 {
                     case KominProtocolCommands.Accept:
+                        switch (stage)
+                        {
+                            case 0: //arrival confirmation
+                                stage++;
+                                break;
+                            case 2: //invitation acceptance
+                                finished = true;
+                                stage++;
+                                result = 0;
+                                break;
+                        }
+                        break;
+                    case KominProtocolCommands.CloseCall:
+                        result = 1;
                         finished = true;
                         break;
                     case KominProtocolCommands.Error:
+                        result = -1;
                         finished = true;
                         jobs.FinishJob(job);
+                        result = -1;
                         if (onError != null)
                         {
                             onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
@@ -1210,52 +1271,34 @@ namespace Komin
         {
         }
 
-        public void CloseCall(uint contact_id) //request closing of a call
+        public void AcceptCall(uint contact_id, uint job_id) //accept requested call
         {
             if (userdata.contact_id == 0)
                 return;
-
-            KominNetworkJob job = jobs.AddJob(contact_id, false);
-            bool finished = false;
 
             KominNetworkPacket packet = new KominNetworkPacket();
             packet.sender = userdata.contact_id;
             packet.target = contact_id;
             packet.target_is_group = false;
-            packet.job_id = job.JobID;
-            packet.command = (uint)KominProtocolCommands.RequestAudioCall;
+            packet.job_id = job_id;
+            packet.command = (uint)KominProtocolCommands.Accept;
             packet.DeleteContent();
             InsertPacketForSending(packet);
+        }
 
-            do
-            {
-                job.WaitForNewArrival();
-                packet = job.Packet;
-                if (packet == null) //job cancelled
-                {
-                    jobs.FinishJob(job);
-                    //information would be nice
-                    return;
-                }
-                switch ((KominProtocolCommands)packet.command)
-                {
-                    case KominProtocolCommands.Accept:
-                        finished = true;
-                        break;
-                    case KominProtocolCommands.Error:
-                        finished = true;
-                        jobs.FinishJob(job);
-                        if (onError != null)
-                        {
-                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
-                            return;
-                        }
-                        else
-                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
-                }
-            } while (!finished);
+        public void CloseCall(uint contact_id, uint job_id = 0) //request closing of a call. also call decline signal
+        {
+            if (userdata.contact_id == 0)
+                return;
 
-            jobs.FinishJob(job);
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id;
+            packet.target = contact_id;
+            packet.target_is_group = false;
+            packet.job_id = job_id;
+            packet.command = (uint)KominProtocolCommands.CloseCall;
+            packet.DeleteContent();
+            InsertPacketForSending(packet);
         }
 
         public void SwitchToAudioCall(uint contact_id) //request change to audio call
@@ -1297,7 +1340,7 @@ namespace Komin
             GroupData gd = new GroupData();
             gd.creators_id = userdata.contact_id;
             gd.group_name = group_name;
-            gd.communication_type = capabilities & 0x130;
+            gd.communication_type = capabilities & 0x138;
             packet.InsertContent(KominProtocolContentTypes.GroupData, gd);
             InsertPacketForSending(packet);
 
@@ -1582,9 +1625,9 @@ namespace Komin
     public delegate void NewVideoMessage(uint sender, uint receiver, bool receiver_is_group, byte[] msg);
     public delegate void ServerForcedLogout();
     public delegate void StatusNotificationArrived(ContactData changed_contact);
-    public delegate bool AudioCallRequest(KominNetworkPacket packet);
-    public delegate bool VideoCallRequest(KominNetworkPacket packet);
-    public delegate void CloseCallNotification(KominNetworkPacket packet);
+    public delegate void AudioCallRequest(uint contact_id, uint job_id);
+    public delegate void VideoCallRequest(uint contact_id, uint job_id);
+    public delegate void CloseCallNotification();
     public delegate bool SwitchToAudioRequest(KominNetworkPacket packet);
     public delegate bool SwitchToVideoRequest(KominNetworkPacket packet);
     public delegate bool FileTransferRequest(KominNetworkPacket packet); //file part message missing

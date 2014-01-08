@@ -53,6 +53,18 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RequestAcceptanceAskForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RequestAcceptanceAskForm.Designer.cs">
+      <DependentUpon>RequestAcceptanceAskForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RequestAcceptanceWaitingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RequestAcceptanceWaitingForm.Designer.cs">
+      <DependentUpon>RequestAcceptanceWaitingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="AddContactForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -123,6 +135,12 @@
     <Compile Include="TextMessagingPanel.Designer.cs">
       <DependentUpon>TextMessagingPanel.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RequestAcceptanceAskForm.resx">
+      <DependentUpon>RequestAcceptanceAskForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RequestAcceptanceWaitingForm.resx">
+      <DependentUpon>RequestAcceptanceWaitingForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AddContactForm.resx">
       <DependentUpon>AddContactForm.cs</DependentUpon>
     </EmbeddedResource>

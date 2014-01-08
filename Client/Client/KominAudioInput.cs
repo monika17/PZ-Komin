@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using NAudio;
 using NAudio.Wave;
 
 namespace Komin
@@ -33,6 +34,25 @@ namespace Komin
                 requests.Add(4);
                 while (thread_working) ;
             }
+        }
+
+        /// <returns>true if test succeded</returns>
+        public static bool HardwareTest()
+        {
+            WaveInEvent wevt = new WaveInEvent();
+            wevt.BufferMilliseconds = 100;
+            wevt.DeviceNumber = 0;
+            wevt.WaveFormat = new WaveFormat(8000, 16, 1);
+            try
+            {
+                wevt.StartRecording();
+                wevt.StopRecording();
+            }
+            catch (MmException)
+            {
+                return false;
+            }
+            return true;
         }
 
         private void thread_master()

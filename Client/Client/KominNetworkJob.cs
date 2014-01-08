@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading;
 
 namespace Komin
 {
@@ -40,14 +37,15 @@ namespace Komin
             job_id = 0;
         }
 
-        public void MarkNewArrival(uint job_id, KominNetworkPacket packet)
+        public bool MarkNewArrival(uint job_id, KominNetworkPacket packet)
         {
             foreach (KominNetworkJob job in jobs)
                 if (job.JobID == job_id)
                 {
                     job.Packet = packet;
-                    break;
+                    return true;
                 }
+            return false;
         }
 
         public void WaitForJobsFinished()
@@ -80,7 +78,7 @@ namespace Komin
         }
         public uint opposite_id { get; private set; }
         public bool opposite_is_group { get; private set; }
-        private bool new_arrival;
+        public bool new_arrival { get; private set; }
         private KominNetworkPacket packet;
         public KominNetworkPacket Packet
         {
@@ -107,7 +105,8 @@ namespace Komin
 
         public void WaitForNewArrival()
         {
-            while (new_arrival == false) ;
+            while (new_arrival == false)
+                Thread.Sleep(10);
         }
 
         public void CancelJob(uint opposite_id, bool opposite_is_group)

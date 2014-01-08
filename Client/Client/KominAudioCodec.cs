@@ -51,6 +51,12 @@ namespace Komin
             }
         }
 
+        /// <returns>true if test succeded</returns>
+        public static bool HardwareTest()
+        {
+            return (new KominAudioCodec()).IsAvailable;
+        }
+
         /// <summary>
         /// Bitrate
         /// </summary>

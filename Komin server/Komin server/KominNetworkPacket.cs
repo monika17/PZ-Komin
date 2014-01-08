@@ -1119,7 +1119,7 @@ namespace Komin
         GroupNotExists = "Grupa nie istnieje",
         GroupAlreadyExists = "Grupa już istnieje",
         SenderNotInGroup = "Nie należysz do tej grupy",
-        CallNotStartedYet = "Rozmowa nie została jeszcze rozpoczęta",
+        CallNotStartedYet = "Rozmowa nie została rozpoczęta",
         //ServerFull = "Serwer przepełniony - nie można sie zalogować",
         ServerFileStorageFull = "Serwer nie może przyjąć pliku",
         UserIsAlreadyGroupHolder = "Wskazany użytkownik już jest założycielem grupy",
