@@ -1,0 +1,2482 @@
+/*
+
+    Document   : style
+
+    Description: Codecs.com CSS stylesheet.
+
+*/
+
+html * {margin: 0; padding: 0; border: 0 none;}
+
+body {
+
+    background: #DBE6E8 url('../images/body-background.png') left top repeat;
+
+    font: normal normal 12px Arial, sans-serif;
+
+}
+
+ul {list-style: none;}
+
+a {text-decoration: none;}
+
+a:focus, object:focus {outline:none;}
+
+#wrapper {width: 100%; margin: 6px 0 0 0; background: transparent url(../images/mainnav_bg.png) 0 72px repeat-x;}
+
+#page {
+
+margin: 0 auto;
+
+width: 965px;
+
+
+
+}
+
+
+
+#header {width: 100%;}
+
+#headerTop {width: auto; height: 72px; margin: 0 0 0 5px;}
+
+#logoWrapper {float: left;}
+
+#hdrBoxWrapper {float: right; margin-right: 25px;}
+
+#hdrBox {
+
+    width: 470px; padding: 2px 0 0 0;
+
+/*    background: transparent url(../images/hdrbox_bg.jpg) 0 0 no-repeat;*/
+
+}
+
+#hdrBoxBody {
+
+    width: 450px; max-height: 100px; overflow: hidden;
+
+    padding: 5px 10px;
+
+/*    background: transparent url(../images/hdrbox_body_bg.jpg) 0 0 repeat-y;*/
+
+    white-space: normal;
+
+}
+
+#hdrBoxBtm {
+
+    width: 100%; height: 2px;
+
+/*    background: transparent url(../images/hdrbox_btm_bg.jpg) left bottom no-repeat;*/
+
+}
+
+#contentWrapper {margin: 10px 0 45px; }
+
+.clearBoth, #listing .clearBoth, #listingTop50 .clearBoth {
+
+    clear: both; height: 0px; min-height: 0; font-size: 1px;
+
+    margin: 0; padding: 0; border: 0 none;
+
+}
+
+.clearLeft, #listing .clearLeft, #listingTop50 .clearLeft {
+
+    clear: left; height: 0px; min-height: 0px;
+
+    margin: 0; padding: 0; border: 0 none;
+
+    font-size: 1px;
+
+}
+
+.clearRight {
+
+    clear: right; margin: 0; padding: 0; font-size: 1px;
+
+}
+
+.noDisplay {display: none;}
+
+span.required-field {color: #f30; font-weight: bold;}
+
+/*
+
+main navigation bar
+
+*/
+
+#mainNavbar {width: 100%; height: 40px; background: transparent url(../images/mainnav_bg.png) left top repeat-x;}
+
+ul#mainNav {float: left; list-style: none; margin: 0;}
+
+ul#mainNav li {list-style-type: none; float: left;}
+
+ul#mainNav li a, ul#mainNav li a:visited {
+
+    display: block; float: left;
+
+    padding: 6px 13px;
+
+    font: normal normal 18px "Trebuchet MS", Arial, sans-serif; color: #fff;
+
+    background: transparent url(../images/mainnav_link_line.png) right center no-repeat;
+
+}
+
+ul#mainNav li a.first {
+
+    padding: 6px 13px 8px 3px;
+
+}
+
+ul#mainNav li a.last {background: none;}
+
+ul#mainNav li a:hover {
+
+/*  color: #BBEEF7; text-decoration: underline; */	
+
+	background-color:#488CAB;
+
+}
+
+#searchField {float: left; margin-left: 33px; padding-top: 5px;}
+
+#searchField #fieldContainer {
+
+    width: 240px; height: 28px;
+
+    background: transparent url(../images/search_input_bg.png) 0 0 no-repeat;
+
+    overflow: hidden;
+
+}
+
+#searchField #fieldContainer #gsearchForm {
+
+    width: 230px; height: 28px;
+
+    background: transparent;
+
+    overflow: hidden; margin: 0 0 0 8px;
+
+    *margin: -1px 0 0 8px;
+
+}
+
+#searchField #fieldContainer #myField {
+
+    margin: 1px 0 0 -1px; height: 20px; width: 187px;
+
+}
+
+#searchField #fieldContainer #googleSearch {
+
+    height: 28px; width: auto; overflow: hidden; float: left;
+
+}
+
+#searchField #fieldContainer #mySearch {
+
+    float: left; width: 38px; height: 28px; display:block; border:none;
+
+}
+
+/*
+
+banners
+
+*/
+
+#bannerTop {
+
+    width: 728px; height: 105px; margin: 10px auto 0 auto;
+
+    border: 1px solid #d1d9e1; 
+
+}
+
+/*
+
+left and right bar
+
+*/
+
+#leftBar, #rightBar {width: 171px; float: left;}
+
+#rightBar {margin-left: 11px;}
+
+.margin10 {margin-top: 10px;}
+
+.section, .sectionRight {
+
+    width: inherit; padding-bottom: 24px;
+
+    background: transparent url(../images/section_bg.png) 0 0 repeat-y;
+
+}
+
+.banners-right {
+
+    width: inherit; padding-bottom: 24px;
+
+    background: transparent; background-image: none;
+
+}
+
+.sectionRight {
+
+    width: inherit; padding: 0 0 10px 1px;
+
+}
+
+.sectionEnd {
+
+    width: 189px; height: 5px;
+
+    background: transparent url(../images/section_end_bg.png) 0 0 no-repeat;
+
+}
+
+.sectionTitle {
+
+    text-align: center;
+
+    padding: 15px 15px 13px;
+
+    background: transparent url(../images/section_top_bg.png) 0 0 no-repeat;
+
+}
+
+.sectionTitleRight {
+
+    text-align: center;
+
+    padding: 15px 15px 13px;
+
+    background: transparent url(../images/section_top_bg.png) 0 0 no-repeat;
+
+}
+
+ul.sectionList, dl.sectionList {width: inherit; list-style: none;}
+
+dl.sectionList {
+
+    width: 162px;
+
+    margin-bottom: 1px;
+
+    padding: 15px 5px 0 2px;
+
+/*    background: #fff url(../images/right_section_bg.png) left bottom repeat-x;*/
+
+}
+
+dl.sectionList dt a {
+
+    color: #CE3527; font-weight: bold; margin: 0 0 3px 0px; letter-spacing: -0.2px;
+
+    background: transparent url(../images/red_dot.png) 0 50% no-repeat;
+
+}
+
+dl.sectionList dt a:hover {
+
+    text-decoration: underline;
+
+}
+
+dl.sectionList dd {
+
+    margin: 0 0 7px 15px; line-height: 15px;
+
+}
+
+ul.sectionBanners {
+
+    width: 150px; margin-left: 18px; padding-top: 12px; background: transparent;
+
+}
+
+ul.sectionBanners li {
+
+    width: 125px; padding: 0 0 12px 12px; text-align: center;
+
+}
+
+#dlBtmLine {border-bottom: 1px solid #dee5e7;}
+
+li.sectionListTitle {
+
+    width: 161px; height: 30px;
+
+    margin-left: 2px;
+
+    background: transparent url(../images/section_list_title_bg.png) 0 0 repeat-x;
+
+    padding: 10px 0 5px 6px;
+
+}
+
+li.sectionListTitle a {
+
+    display: block; width: inherit;
+
+    padding-left: 15px;
+
+    font-size: 18px; color: #3e648c;
+
+}
+
+li.sectionListTitle a[title='Video Codecs'] {
+
+    background: transparent url(../images/section_title_link_bg.png) 0 50% no-repeat;
+
+}
+
+li.sectionListTitle a[title='Audio Codecs'] {
+
+    background: transparent url(../images/section_title_link_bg_audio.png) 0 50% no-repeat;
+
+}
+
+li.sectionListTitle a[title='Codec Packs'] {
+
+    background: transparent url(../images/section_title_link_bg_codec.png) 0 50% no-repeat;
+
+}
+
+li.sectionListTitle a[title='Tools'] {
+
+    background: transparent url(../images/section_title_link_bg_tools.png) 0 50% no-repeat;
+
+}
+
+li.sectionListItem {
+
+    width: 161px; height: 22px;
+
+    background: transparent url(../images/section_list_bg.png) left bottom repeat-x;
+
+    padding-left: 5px;
+
+}
+
+li.sectionListItem.orderedList {
+
+    padding-left:2px;
+
+}
+
+li.sectionListItemLast {
+
+    width: 171px; height: 22px;
+
+    border-bottom: 1px solid #ebebe3;
+
+    padding-left: 15px;
+
+}
+
+li.sectionListItem a, li.sectionListItemLast a {
+
+    display: block; 
+
+    height: 22px;
+
+    background: transparent url(../images/section_link_bg.png) 0 50% no-repeat;
+
+    padding: 5px 0 0 10px;
+
+    color: #5c5c5c;
+
+}
+
+li.sectionListItem.orderedList a {
+
+    display: inline-block;
+
+    background: none;
+
+    padding: 5px 0 0;
+
+}
+
+li.sectionListItem.orderedList span {
+
+    float:left;
+
+    width: 22px;
+
+    padding-top:5px;
+
+    text-align:center;
+
+    color:#9EB1C5;
+
+    font-style:italic;
+
+}
+
+li.sectionListItem a:hover, li.sectionListItemLast a:hover {
+
+    text-decoration: underline;
+
+}
+
+a.sidebar-last-link {
+
+   display: block; float: right; width: auto; color: #5c5c5c; padding: 5px 10px 0 10px;
+
+   background: transparent url(../images/section_link_bg.png) 0 10px no-repeat;
+
+   text-decoration: underline;
+
+
+
+}
+
+a:hover.sidebar-last-link {
+
+    text-decoration: none;
+
+}
+
+/*
+
+content
+
+*/
+
+#mainContent {
+
+    width: 589px; float: left;
+
+    margin: 0 0 0 11px;
+
+    /*background-color: #fff;*/
+
+    border-bottom: 1px solid #b9c4c7;
+
+}
+
+#mainContentTop {
+
+    width: 589px; padding-left: 3px;
+
+    background: transparent url(../images/main_content_top_bg.png) left top no-repeat;
+
+}
+
+#mainContentTopMiddle {
+
+    position: relative; width: 583px; min-height: 40px;
+
+    float: left; padding-top: 4px;
+
+    background: transparent url(../images/main_content_top_middle_bg.png) left top repeat-x;
+
+    *min-height: 42px;
+
+    *padding-top: 2px;
+
+}
+
+#mainContentTopRight {
+
+    width: 3px; height: 44px;  float: left;
+
+    background: transparent url(../images/main_content_top_right_bg.png) left top no-repeat;
+
+}
+
+#tabs {
+
+    position: absolute; left: 0; top: 0;
+
+}
+
+a.showNewsInactive, a.showNewsActive {
+
+    display: block; float: left; width: 155px; height: 60px;
+
+    background: transparent url(../images/news2.png) left top no-repeat;
+
+    z-index: 100 !important;
+
+}
+
+a.showReviewsInactive, a.showReviewsActive {
+
+    display: block; float: left; width: 157px; height: 60px; margin-left: -3px;
+
+    background: transparent url(../images/reviews2.png) left top no-repeat;
+
+    z-index: 100 !important;
+
+}
+
+a.showNewsActive, a.showReviewsActive {
+
+    background-position: 0 -60px;
+
+    z-index: 100 !important;
+
+}
+
+ul#breadcrumbs {
+
+    list-style: none; font-weight: bold;
+
+    position: absolute; left: 10px; top: 15px;
+
+    background: transparent; width: auto; height: auto;
+
+}
+
+ul#breadcrumbs li {
+
+    height: 12px; padding: 0 5px 9px 10px; color: #494d4e; float: left;
+
+    background: transparent url(../images/breadcrumb_arrow.png) 0 5px no-repeat;
+
+}
+
+ul#breadcrumbs li.first {
+
+    background: none;
+
+}
+
+ul#breadcrumbs li a {
+
+    color: #2b7797; text-decoration: underline;
+
+}
+
+ul#breadcrumbs li a:hover {
+
+    text-decoration: none;
+
+}
+
+ul#news, ul#reviews {
+
+    width: 587px; position: relative; overflow:hidden; margin: 0 0 0 -3px; padding: 20px 0 20px;
+
+    border-left: 1px solid #a0afb4;
+
+    border-right: 1px solid #a0afb4;
+
+}
+
+ul#news li, ul#reviews li {
+
+    width: 587px; height: 30px; position: absolute; top: 14px !important; left: 10px !important; display: none;
+
+}
+
+/*ul#news li:first-child {display: block;}*/
+
+ul#news li a, ul#reviews li a {
+
+    color: #2b7797; text-decoration: underline; font: normal 12px Arial, sans-serif; font-weight: bold;
+
+}
+
+ul#news li a:hover, ul#reviews li a:hover {
+
+    text-decoration: none;
+
+}
+
+/*ul#news li.odd, ul#reviews li.odd {
+
+    background: transparent url(../images/news_reviews_list_odd.png) 0 5px no-repeat;
+
+
+
+}
+
+ul#news li.even, ul#reviews li.even {
+
+    background: transparent url(../images/news_reviews_list_even.png) 0 5px no-repeat;
+
+}*/
+
+.paginationWrapper {
+
+    position: relative;
+
+    width: 587px; height: 44px;
+
+    border-bottom: 1px solid #d5dcdd;
+
+    border-left: 1px solid #a0afb4;
+
+    border-right: 1px solid #a0afb4;
+
+    background-color: #F9F9F9;
+
+}
+
+ul.pagination {
+
+    float: left; margin: 12px 10px 0;
+
+}
+
+ul.pagination li {
+
+    float: left; width: 20px; height: 20px;
+
+    border: 1px solid #a0afb4; margin: 0 2px 0 0;
+
+}
+
+ul.pagination li a {
+
+    display: block; width: 12px; height: 12px; padding: 3px 4px 5px 4px; color: #478d56;
+
+    font: normal 12px Arial, sans-serif; font-weight: bold; text-align: center;
+
+}
+
+ul.pagination li a.currentPage {
+
+    background-color: #D9F5FA;
+
+    color: #346c8e;
+
+}
+
+ul.pagination li.threeDots {
+
+    vertical-align: bottom; font-weight: bold;
+
+    color: #478d56; border: 0 none; margin: 0; padding: 0;
+
+    position: relative; left: 4px; top: 9px;
+
+}
+
+ul.pagination a:hover{
+
+color: #FFFFFF;
+
+text-decoration: underline;
+
+background-color: #4A94AD;
+
+}
+
+/*
+
+    sort by list
+
+
+
+form#listSortBy {
+
+    position: relative; float: right; margin: 8px 10px 0 10px;
+
+}
+
+form#listSortBy span.listLabel {
+
+    font: normal 12px Arial, sans-serif; font-weight: bold; color: #494d4e;
+
+}
+
+form#listSortBy select {
+
+    background: #e7f7ff; border: 1px solid #aec4c5; padding: 0;
+
+}
+
+*/
+
+
+
+/*
+
+    sort options form
+
+*/
+
+.sortOptionsWraper {
+
+    position: absolute; left: 440px; top: 5px;
+
+    z-index: 1000 !important; width: 143px;
+
+}
+
+span.listLabel {
+
+    font: normal 12px Arial, sans-serif; 
+
+    font-weight: bold; color: #494d4e;
+
+    position: absolute; left: 0px; top: 10px;
+
+    width: 50px;
+
+}
+
+form.sortOptions {
+
+    position: relative; left: 40px;
+
+    margin: 8px 10px 0 10px; width: 90px;
+
+    overflow: hidden; height: 19px;
+
+    border: 1px solid #aac1c1;
+
+    color: #494d4e;
+
+    line-height: 19px;
+
+    background: #e7f7ff;
+
+    text-decoration:none;
+
+}
+
+form.sortOptions div.arrow {
+
+    display: block; position: absolute; left: 80px; top: 7px;
+
+    width: 7px; height: 7px;
+
+    background:transparent url(../images/list_arrow.png) 0 -7px no-repeat;
+
+}
+
+form.sortOptions div.hover {
+
+    background-position: 0 0;
+
+}
+
+form.sortOptions a {
+
+    display:block; width: 63px; height: 19px;
+
+    padding: 0 24px 0 3px; color: #494d4e;
+
+    z-index: 1000 !important;
+
+}
+
+form.sortOptions a.first-option {
+
+    color: #CE3527;
+
+}
+
+form.sortOptions a:hover {
+
+    color: #fff; background-color: #4a94ad;
+
+}
+
+
+
+/*
+
+    listing
+
+*/
+
+#listing, #listingTop50 {
+
+    border-left: 1px solid #a0afb4;
+
+    border-right: 1px solid #a0afb4;
+
+}
+
+/*software description*/
+
+#listing div {
+
+    padding: 12px 12px 12px 25px; border-bottom: 1px solid #d4d4d4;
+
+    color: #000000; font-size: 12px; min-height: 40px;
+
+}
+
+#listing div a, #listingTop50 div a {
+
+    color: #5789ca;
+
+}
+
+#listing div a:hover, #listingTop50 div a:hover {
+
+    text-decoration: none;
+
+}
+
+#listing div.listing_heading {
+
+    padding:0; border:none; min-height:0; width:100%;
+
+}
+
+#listing div.listing_heading h2 {
+
+    display:inline-block; width:520px;
+
+}
+
+*+html #listing div.listing_heading h2 {
+
+    float:left;
+
+}
+
+#listing div.listing_heading .reviews {
+
+    float:right; width:24px; height:23px; padding-top:1px; padding-top:2px\0/; text-align:center;
+
+    color:#ffffff; font-size:11px; font-weight:bold; background: url(../images/reviews_green.png) 0 0 no-repeat;
+
+}
+
+#listing div.listing_heading p.reviews {
+
+    background: url(../images/reviews_gray.png) 0 0 no-repeat; color:#000000;
+
+}
+
+#searchContent {
+
+    background-color: #fff;
+
+    border-left: 1px solid #A3AEB5;
+
+    border-right: 1px solid #A3AEB5;
+
+    border-bottom: 1px solid #A3AEB5;
+
+}
+
+#searchContent div {
+
+    padding: 12px 12px 12px 25px;
+
+    color: #5c5c5c; font-size: 12px;
+
+}
+
+#searchContent div a {
+
+    text-decoration: underline;
+
+}
+
+#searchContent div a:hover {
+
+    text-decoration: none;
+
+}
+
+#searchContent div p {
+
+    margin-top: 5px;
+
+}
+
+#searchContent #searchPagination span,
+
+#searchContent #searchPagination a {
+
+    margin-right: 5px; font-size: 13px;
+
+}
+
+ol#searchResults {
+
+    margin-left: 20px;
+
+}
+
+#cse-search-results {
+
+    margin-left: -25px;
+
+}
+
+ol#searchResults li {
+
+    margin-bottom: 10px;
+
+}
+
+#softwareFullDescr a {
+
+    text-decoration: underline;
+
+}
+
+#softwareFullDescr a:hover {
+
+    text-decoration: none;
+
+}
+
+p.softwareListData, p.softwareListData a,
+
+#listingTop50 div p.softwareListData, #listingTop50 div p.softwareListData a{
+
+    margin-top: 3px; color: #789BA3; text-decoration: none;
+
+    font-size: 11px; line-height: 13px;
+
+}
+
+#listing div h2, #listing div h2 a,
+
+#listingTop50 div h2, #listingTop50 div h2 a {
+
+    font: normal 16px Arial, sans-serif; color: #3a854a; font-weight: bold;
+
+}
+
+.featured-sft {
+
+    width: 550px; margin-left: -3px;
+
+    background-color: #eef4f8;
+
+    border-left: 1px solid #a0afb4;
+
+    border-right: 1px solid #a0afb4;
+
+    border-bottom: 1px solid #a0afb4;
+
+    padding: 12px 12px 12px 25px;
+
+}
+
+.featured-sft a {
+
+    color: #5789ca; text-decoration: none;
+
+}
+
+.featured-sft a:hover {
+
+    text-decoration: underline;
+
+}
+
+.featured-sft h2, .featured-sft h2 a {
+
+    font: normal 16px Arial, sans-serif; color: #6e8bc1; font-weight: bold;
+
+}
+
+.featured-sft h2 a:hover {
+
+    text-decoration: underline;
+
+}
+
+#listing div h2 a:hover, #listingTop50 div h2 a:hover {
+
+    text-decoration: underline;
+
+}
+
+#listing div h2 sup.newSoftware, #listingTop50 div h2 sup.newSoftware,
+
+#listing div h2 sup.updatedSoftware, #listingTop50 div h2 sup.updatedSoftware,
+
+#listing div h2 sup.featuredSoftware, #listingTop50 div h2 sup.featuredSoftware {
+
+    font-weight: normal; font-size: 11px; color: #ff9933;
+
+}
+
+#listing div h2 sup.updatedSoftware, #listingTop50 div h2 sup.updatedSoftware { color: #aac648; }
+
+#listing div h2 sup.featuredSoftware, #listingTop50 div h2 sup.featuredSoftware {color: #ff02ad;}
+
+#listing div.listElementOdd, #listingTop50 div.listElementOdd {
+
+    background-color: #fff; position:relative;
+
+}
+
+#listing div.listElementEven, #listingTop50 div.listElementEven {
+
+    background: #fff url(../images/list_element_even_bg.png) 0 1px repeat-x; position:relative;
+
+}
+
+.bullet {
+
+    position:absolute; left:10px; top:19px;
+
+}
+
+.bullet_star {
+
+    position:absolute; left:7px; top:15px;
+
+}
+
+.bullet_flame {
+
+    position:absolute; left:7px; top:15px;
+
+}
+
+.bullet_heart {
+
+    position:absolute; left:7px; top:15px;
+
+}
+
+p.sft-lead {margin-top: 7px; color: #000000}
+
+.label-fresh, .label-obsolete,
+
+.label-featured, .label-popular {
+
+    color: #fff; margin: 0 4px 0 0; padding: 1px 3px;
+
+    font-size: 10px; line-height: 10px;
+
+}
+
+.label-fresh {background-color: #a8bf77;}
+
+.label-popular {background-color: #c16e97;}
+
+.label-obsolete {background-color: #b7afbf;}
+
+.label-featured {background-color: #6e8bc1;}
+
+.label-addreview {
+
+    margin: 7px 4px 0 0; padding: 5px 8px; font-size: 12px;
+
+    line-height: 12px; background-color: #CE3527; font-weight:bold;
+
+}
+
+p#numReviewsTop a.label-addreview {
+
+    color: #fff; display: block;
+
+}
+
+/*
+
+footer
+
+*/
+
+#footerWrapper {
+
+    width: 100%; background-color: #4999ba; border-top: 1px solid #415268; text-align: center;
+
+}
+
+#footerContent {
+
+    width: 100%; background-color: #4999ba; border-top: 1px solid #99c6d8;
+
+    padding: 0;
+
+}
+
+#footerBodyUp {
+
+    width: 100%; color: #fff; margin: 20px 0 0 0; padding-bottom: 15px;
+
+    background: transparent url(../images/footer_body_up_bg.png) bottom center no-repeat;
+
+}
+
+#footerBodyDown {
+
+    color: #fff; padding: 15px 0;
+
+}
+
+#footerBodyDown a {
+
+    color: #fff;  font: normal 14px "Myriad Pro", Arial, sans-serif; text-decoration: none; font-weight: bold;
+
+}
+
+#footerBodyDown a:hover {
+
+    text-decoration: underline;
+
+}
+
+#footerEnd {
+
+    background-color: #3383a4; padding: 10px 0; color: #cbeffe;
+
+}
+
+#footerEndContent {
+
+    width: auto; text-align: center;
+
+}
+
+#footerEndContent a {
+
+    color: #cbeffe; text-decoration: none;
+
+}
+
+#footerEndContent a:hover {
+
+    text-decoration: underline;
+
+}
+
+#footerLogoAndSearch {
+
+    width: 920px; position: relative; left: 50%; margin-left: -460px;
+
+    *left: 25%; *margin-left: -50%;
+
+}
+
+#footerLogoAndSearch img {display: block; float: left;}
+
+#footerLogoAndSearch a {display: block; float: left;}
+
+#footerLogoAndSearch a#footerScanLogo {margin-left: 480px;}
+
+/* category page */
+
+#categoryNameDesc, #subcategoriesList {
+
+    width: 587px; background-color: #dbeaf4; text-align: center;
+
+    border-left: 1px solid #a3aeb5;
+
+    border-right: 1px solid #a3aeb5;
+
+    margin-left: -3px;
+
+}
+
+#subcategoriesList {
+
+    width: 567px; padding: 15px 10px 20px 10px; text-align: center;
+
+    border-bottom: 1px solid #a3aeb5;
+
+}
+
+#subcategoriesList ul {
+
+    width: 565px;
+
+}
+
+#subcategoriesList ul li {
+
+    display: inline; margin: 0 8px; *display: block; *float: left;
+
+}
+
+#subcategoriesList ul li a {
+
+    color: #2b7797; padding-left: 12px; background: transparent url(../images/subcategory_list_bg.png) left center no-repeat;
+
+    text-decoration: underline; font-size: 13px; line-height: 18px;
+
+}
+
+#subcategoriesList ul li a:hover {
+
+    text-decoration: none;
+
+}
+
+#subcategoriesList ul li a.firstLink {
+
+    background: none;
+
+}
+
+#subcategoriesList a.featuredSoftware {color: #ff02ad;}
+
+#categoryNameDesc p#categoryName {
+
+    background-color: #d6e7ef; color: #40638c;
+
+    font: normal normal 20px "Trebuchet MS", Arial, sans-serif;
+
+    font-weight: bold; padding: 3px 0; padding: 9px 0 9px 22px;
+
+}
+
+#categoryNameDesc p#categoryDesc {
+
+    background-color: #fff;  padding: 5px 0
+
+}
+
+/* software page */
+
+#softwareIntroText {
+
+    background-color: #FFF; border: none 0 !important;
+
+}
+
+p#numReviewsTop {
+
+    float: right; text-align: center;
+
+    color: #40628f; font-size: 10px;
+
+}
+
+p#numReviewsTop a {
+
+    color: #40628f; display: block;
+
+}
+
+p#numReviewsTop a:hover {
+
+    text-decoration: underline;
+
+}
+
+#softwareName {
+
+    width: 587px; min-height: 44px;
+
+    background-color: #dbeaf4; text-align: left;
+
+    border-left: 1px solid #a3aeb5;
+
+    border-right: 1px solid #a3aeb5;
+
+    margin-left: -3px;
+
+}
+
+#softwareName p#name {
+
+    background-color: #eef4f8; color: #40638c;
+
+    width: 565px;
+
+    font: normal normal 23px "Trebuchet MS", Arial, sans-serif;
+
+    font-weight: bold; padding: 9px 0 9px 22px;
+
+}
+
+#softwareName p#name a {
+
+    text-decoration: none; color: #40638c;
+
+}
+
+#softwareName p#name a {
+
+    color: #40638c;
+
+}
+
+#softwareName #softwareInfoLine {
+
+    background-color: #F7F9FB; text-align: center; color: #5789ca;
+
+    line-height: 22px; font-size: 11px;
+
+}
+
+#softwareName #softwareInfoLine p#sft-lead {
+
+    float: left; margin-left: 23px;
+
+}
+
+#softwareName #softwareInfoLine p#developerLink {
+
+    float: right; margin-right: 5px;
+
+}
+
+#softwareName #softwareInfoLine a {
+
+    color: #5789ca;
+
+}
+
+#softwareName #softwareInfoLine span {
+
+}
+
+#softwareName #softwareInfoLine a {
+
+    font-size: 12px; color: #5789ca; text-decoration: underline;
+
+}
+
+#softwareName #softwareInfoLine a:hover {
+
+    text-decoration: none;
+
+}
+
+#softwareName #softwareInfoLine span a:hover {
+
+    text-decoration: none;
+
+}
+
+#listing #downloadLink, #listing #buyLink {
+
+    text-align: center; min-height: 10px; border: 0 none;
+
+    background-color: #DFEDF2;
+
+}
+
+#listing #buyLink {
+
+    background-color: #eef4f8;
+
+}
+
+#listing #downloadLink a, #listing #buyLink a {
+
+    color: #3a854a; font-size: 17px; 
+
+    text-decoration: underline;
+
+    font-weight: bold;
+
+}
+
+#listing #buyLink a {
+
+    color: #45678b; text-decoration: none;
+
+}
+
+#listing #downloadLink a:hover {
+
+    text-decoration: none;
+
+}
+
+#listing #buyLink a:hover {
+
+    text-decoration: underline;
+
+}
+
+#listing #softwareFullDescr {
+
+    position: relative; background-color: #fff;
+
+    border: 0 none; padding: 12px 12px 0 25px;
+
+}
+
+#listing #softwareFullDescr #bannerInTxtRight {
+
+    float: left; border: 0 none; padding: 2px 10px;
+
+}
+
+#listing #fullDescrTxt {
+
+    border: 0 none;
+
+}
+
+/* reviews and tell a friend on software page */
+
+#reviewsListing {
+
+    padding: 15px 0 25px 0;
+
+}
+
+#listing #reviewsWrapper, #reviewsListing #reviewsWrapper {
+
+    margin-top: 25px; padding: 0; border: 0 none;
+
+}
+
+#reviewsListing #reviewsWrapper {
+
+    margin-top: 0;
+
+}
+
+#reviewsTitleBar, #reviewsListing #reviewsTitleBar {
+
+    width: 563px;
+
+    font: normal normal 18px Arial, sans-serif; color: #40638c;
+
+    background: transparent url(../images/reviews_title_bg.png) left top repeat-x;
+
+    border-bottom: 0 none;
+
+    padding: 8px 10px 3px 14px !important;
+
+    margin-bottom: 10px;
+
+}
+
+#listing #reviewsTitleBar {
+
+    margin-left: -25px; border: 0 none;
+
+    width: 555px;
+
+    font: normal normal 18px Arial, sans-serif; color: #40638c;
+
+    background: transparent url(../images/reviews_title_bg.png) left top repeat-x;
+
+    padding: 8px 10px 3px 22px !important;
+
+    margin-bottom: 10px;
+
+}
+
+#reviewsTitleBar p#title,
+
+#reviewsListing #reviewsTitleBar p#title {
+
+    float: left;
+
+}
+
+#reviewsTitleBar p#title a {
+
+    text-decoration: none;
+
+}
+
+#reviewsTitleBar p#title a:hover {
+
+    text-decoration: underline;
+
+}
+
+#reviewsTitleBar p#mark,
+
+#reviewsListing #reviewsTitleBar p#mark {
+
+    float: left; color: #CE3527; font-size: 21px; font-weight: bold;
+
+    margin-right: 10px;
+
+}
+
+#listing .review, #reviewsListing .review {
+
+    border: 0 none; padding: 0; margin-left: -30px;
+
+}
+
+#reviewsListing .review {
+
+    margin: 0 0 15px -5px;
+
+}
+
+#listing .review * {
+
+    padding: 0; border: 0 none;
+
+}
+
+#listing .review .reviewMark,
+
+#reviewsListing .review .reviewMark {
+
+    float: left;
+
+    background: transparent url(../images/review_mark_bg.png) 0 0 no-repeat;
+
+    height: 35px; width: 37px; float: left;
+
+    font: normal normal 18px Arial, sans-serif; color: #fff;
+
+    padding-top: 5px; text-align: center;
+
+}
+
+#listing .review .infoText,
+
+#reviewsListing .review .infoText {
+
+    float: left;
+
+    background: transparent url(../images/review_info_line_bg.png) left top repeat-x;
+
+    width: 538px; padding: 3px 0 0 5px; height: 35px; float: left; margin: 0;
+
+}
+
+#listing .review .infoText p,
+
+#reviewsListing .review .infoText p {
+
+    float: left;
+
+}
+
+#listing .review .infoText a.reviewNum,
+
+#reviewsListing .review .infoText a.reviewNum {
+
+    display: block; float: right; margin-right: 11px;
+
+    color: #c0d8e8; text-decoration: underline; padding-top: 5px;
+
+    font-size: 15px; font-family: Arial, sans-serif; font-style: italic;
+
+}
+
+#listing .review .reviewText,
+
+#reviewsListing .review .reviewText {
+
+    width: 543px; margin: 0 0 7px 37px; padding: 7px 0 14px;
+
+    background: transparent url(../images/dotted_underline.png) bottom left repeat-x;
+
+}
+
+#reviewsListing .review .reviewText {
+
+    margin-bottom: 0;
+
+}
+
+span.reviewerName {
+
+    font-weight: bold; color: #80b10c;
+
+}
+
+#listing #viewReviews,
+
+#listing #viewReviews div {
+
+    border: 0 none; min-height: 10px;
+
+     margin: 0; padding: 0 5px 0 0;
+
+}
+
+#viewReviews, #viewReviews a, #viewReviews span {
+
+    color: #40638c; font-weight: bold;
+
+    font-size: 15px; text-decoration: none;
+
+    border: 0 none;
+
+}
+
+#viewReviews p {
+
+    float: right;
+
+}
+
+#viewReviews p a:hover {
+
+    text-decoration: underline;
+
+}
+
+p.red-text {
+
+    color: #CE3527; padding: 0 10px;
+
+}
+
+#listing #tellAFriendPrint {
+
+    border-top: 1px solid #d4d4d4;
+
+    border-bottom: 1px solid #a3aeb5;
+
+    border-left: 0 none;
+
+    border-right: 0 none;
+
+    padding: 0 0 0 22px; margin: 1px 0 0 -25px;
+
+    background: #fff url(../images/tellafr_print_bg.png) 0 0 repeat-x;
+
+    width: 562px; min-height: 39px;
+
+}
+
+#listing #tellAFriend {
+
+    border: 0 none; float: left;
+
+    width: auto; margin-left: -25px;
+
+    min-height: 10px;
+
+}
+
+#listing #print, #print {
+
+    border: 0 none; float: right; width: auto; margin-right: 5px;
+
+     min-height: 10px; padding: 10px 10px 0 0;
+
+}
+
+#tellAFriend a {
+
+    color: #2b7797; text-decoration: underline;
+
+}
+
+#tellAFriend span {
+
+    color: #2b7797;
+
+}
+
+#relatedSoftwareList, #commentGuideFormWrapper, #guideComments {
+
+    background-color: #fff;
+
+    margin: 20px 0 0 0; padding: 0;
+
+    border-top: 1px solid #c8cfd3;
+
+    border-bottom: 1px solid #c8cfd3;
+
+    border-left: 1px solid #a3aeb5;
+
+    border-right: 1px solid #a3aeb5;
+
+}
+
+#guideComments {
+
+    padding-bottom: 3px;
+
+}
+
+#relatedProductsTitle, #leaveComment {
+
+    background: transparent url(../images/related_prods_title_bg.png) 0 0 repeat-x;
+
+    height: 35px; padding: 8px 10px 3px 22px; color: #40638c;
+
+    font: normal normal 18px Arial, sans-serif;
+
+}
+
+p.relatedProdText {
+
+    margin: 0; padding: 5px 15px 5px 22px;
+
+    border-bottom: 1px solid #d4d4d4;
+
+    background: transparent url(/images/blue_star.png) 8px 8px no-repeat;
+
+}
+
+p.relatedProdText a {
+
+    color: #3a854a; font-weight: bold;
+
+}
+
+p.relatedProdText a:hover {
+
+    text-decoration: underline;
+
+}
+
+#copySoftwareLink {
+
+    text-align: center; border: 1px solid #b2bcc2;
+
+    margin: 20px 0 0 0; background-color: #fff;
+
+    padding: 7px 11px 18px 11px;
+
+}
+
+p#copySoftwareLinkString {
+
+    padding: 3px 3px 0 3px;
+
+    border-top: 1px solid #dce0ec;
+
+    border-bottom: 1px solid #dce0ec;
+
+    border-left: 1px dotted #dce0ec;
+
+    border-right: 1px dotted #dce0ec;
+
+}
+
+#copySoftwareLink p {
+
+    color: #303d4f;
+
+}
+
+#downloadLinkBottom {
+
+    background: transparent url(../images/download_sft_left_side.png) 0 0 no-repeat;
+
+    width: 668px; height: 48px; margin: 20px 0 0 0;
+
+}
+
+#downloadLinkBottom p {
+
+    float: left; width: 575px; height: 16px; margin-left: 4px;
+
+    background-color: #fff; text-align: center;
+
+    border-top: 1px solid #b2bcc2;
+
+    border-bottom: 1px solid #b2bcc2;
+
+    padding: 15px 5px;
+
+}
+
+#downloadLinkBottom p a {
+
+    color: #3a854a; font-size: 17px; 
+
+    font-weight: bold; text-decoration: underline;
+
+}
+
+#downloadLinkBottom p a:hover {
+
+    text-decoration: none;
+
+}
+
+#downloadLinkBottomRight {
+
+    background: transparent url(../images/download_sft_right_side.png) 0 100% no-repeat;
+
+    width: 4px; height: 48px; float: left;
+
+}
+
+/* download page */
+
+#downloadList {
+
+    border-left: 1px solid #a3aeb5;
+
+    border-right: 1px solid #a3aeb5;
+
+    background-color: #eef4f8;
+
+    padding: 0;
+
+}
+
+#downloadList p {
+
+background: #ffffff url('/images/download_arrow.png') 14px 14px no-repeat; text-align: left;
+
+    font: normal normal 13px Arial, sans-serif;
+
+    padding: 10px 30px; margin-bottom: 14px;
+
+}
+
+#downloadList p a {
+
+    color: #3a854a; text-decoration: none;
+
+}
+
+#downloadList p a:hover {
+
+    text-decoration: underline;
+
+}
+
+#tellAFriendRow {
+
+    border-top: 1px solid #d4d4d4;
+
+    border-bottom: 1px solid #d4d4d4;
+
+    border-left: 0 none;
+
+    border-right: 0 none;
+
+    padding: 13px 0 2px 15px; margin: 1px 0 0 0;
+
+    background: #fff url(../images/tellafr_print_bg.png) 0 0 repeat-x;
+
+    width: 572px; min-height: 24px;
+
+    color: #2b7797;
+
+}
+
+#tellAFriendRow a {
+
+    color: #2b7797; text-decoration: underline;
+
+}
+
+#tellAFriendRow a:hover {
+
+    text-decoration: none;
+
+}
+
+#howtoDownload {
+
+background: #ffffff url('/images/info.png') 15px 15px no-repeat; text-align: left;
+
+    padding: 15px 36px;
+
+    background-color: #fff;
+
+    border-left: 1px solid #a3aeb5;
+
+    border-right: 1px solid #a3aeb5;
+
+}
+
+#howtoDownload h3 {
+
+    color: #3e648c; font-size: 12px; font-family: Arial, sans-serif;
+
+}
+
+#howtoDownloadList {
+
+    list-style: none;
+
+    font-family: Arial, sans-serif;
+
+}
+
+#howtoDownloadList li {
+
+    margin-top: 10px;
+
+    width: 554px;
+
+}
+
+#howtoDownloadList li span.listNum {
+
+    color: #3e648c; font-weight: bold;
+
+}
+
+#howtoDownloadList li a {
+
+    color: #2b7797; text-decoration: underline;
+
+}
+
+#howtoDownloadList li a:hover {
+
+    text-decoration: none;
+
+}
+
+/* screenshots page */
+
+#screenshotsList {
+
+    border-left: 1px solid #a3aeb5;
+
+    border-right: 1px solid #a3aeb5;
+
+    border-bottom: 1px solid #a3aeb5;
+
+    background-color: #fff;
+
+    padding: 20px 0 0 0;
+
+}
+
+#screenshotsList p {
+
+    text-align: center;
+
+    font: normal normal 13px Arial, sans-serif;
+
+    padding: 10px 0;
+
+}
+
+/* guides pages */
+
+#guideInfoContent {
+
+    border-left: 1px solid #a0afb4;
+
+    border-right: 1px solid #a0afb4;
+
+    border-bottom: 1px solid #a0afb4;
+
+    padding: 15px 21px 0 21px; background-color: #fff;
+
+}
+
+p.guideLatsUpdateLine {
+
+    float: left;
+
+}
+
+p.guideTellFriend {
+
+    float: right; margin-right: 11px;
+
+    width: 103px !important;
+
+}
+
+p.guideTellFriend a {
+
+    display: block; float: left; margin-left: 3px;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 13px; color: #2b7797;
+
+    text-decoration: underline;
+
+}
+
+p.guideTellFriend a:hover {
+
+    text-decoration: none;
+
+}
+
+p.guideTellFriend img {
+
+    display: block; float: left; margin-top: 3px;
+
+}
+
+#guideInfoContent p {
+
+    margin: 5px 0 10px 0;
+
+}
+
+#guideInfoContent #tellAFriendPrint {
+
+    border-top: 1px solid #d4d4d4;
+
+    border-bottom: 1px solid #a3aeb5;
+
+    border-left: 0 none;
+
+    border-right: 0 none;
+
+    padding: 0 0 0 25px; margin: 20px 0 0 -21px;
+
+    background: #fff url(../images/tellafr_print_bg.png) 0 0 repeat-x;
+
+    width: 562px; min-height: 39px;
+
+}
+
+#guideInfoContent a {
+
+    text-decoration: underline;
+
+    color: #2b7797;
+
+}
+
+#guideInfoContent a:hover {
+
+    text-decoration: none;
+
+}
+
+#guideInfoContent #tellAFriend {
+
+    border: 0 none; float: left;
+
+    width: auto; margin: 0;
+
+    padding: 10px 0 0 0;
+
+    min-height: 10px;
+
+}
+
+#commentGuideFormWrapper {
+
+    padding: 0 0 10px 0; border-bottom: 1px solid #a0afb4;
+
+}
+
+#commentGuideFormWrapper form {
+
+    padding: 10px;
+
+}
+
+#commentGuideFormWrapper form .input-wrapper,
+
+#commentGuideFormWrapper form .text-wrapper {
+
+    border: 1px solid #aec4c4;
+
+    width: 221px; height: 32px; float: left;
+
+}
+
+#commentGuideFormWrapper form .text-wrapper {
+
+    width: 430px; height: 168px;
+
+}
+
+#commentGuideFormWrapper form input.form-input {
+
+    border-top: 1px solid #dedede;
+
+    border-left: 1px solid #dedede;
+
+    width: 210px; height: 20px;
+
+    padding: 5px;
+
+    background: #f3f7f9 url(../images/input_field_bg.png) bottom left repeat-x;
+
+}
+
+#commentGuideFormWrapper form textarea.form-input {
+
+    border-top: 1px solid #dedede;
+
+    border-left: 1px solid #dedede;
+
+    width: 419px; height: 156px;
+
+    padding: 5px;
+
+    background: #f3f7f9 url(../images/text_bg.png) bottom left repeat-x;
+
+}
+
+#commentGuideFormWrapper form label {
+
+    display: block; float: left; width: 90px;
+
+    margin-top: 8px; font-weight: bold;
+
+}
+
+#commentGuideFormWrapper form .form-field-note {
+
+    margin: 5px 0 0 90px;
+
+}
+
+#commentGuideFormWrapper form .form-block span {
+
+    font-size: 10px; margin-left: 90px;
+
+}
+
+#commentGuideFormWrapper form .form-block span.required-field {
+
+    margin: 0; font-size: 12px; font-weight: bold;
+
+}
+
+#commentGuideFormWrapper .form-block {
+
+    margin: 7px 0 0 0;
+
+}
+
+#form-submit {
+
+    margin: 25px 0 0 90px;
+
+}
+
+/* reviews page */
+
+#postReviewLink {
+
+    background-color: #fff; padding: 10px 0; text-align: center;
+
+}
+
+#postReviewLink a {
+
+    color: #5288c5; text-decoration: underline;
+
+    font: normal bold 14px "Trebuchet MS", Arial, sans-serif;
+
+}
+
+#reviewsListing {
+
+    background-color: #fff;
+
+    border-left: 1px solid #a0afb4;
+
+    border-right: 1px solid #a0afb4;
+
+}
+
+#reviewsListing .review .reviewMark {
+
+    *margin-left: -4px;
+
+}
+
+#reviewsListing .comments-reply-like-line {
+
+    width: 536px; height: 25px; margin-left: 36px; padding: 6px 5px 5px;
+
+    background: #f2f6f9 url(../images/comments_reply_like_bg.png) bottom left repeat-x;
+
+}
+
+#reviewsListing .comments-reply-like-line p.comments-reply {
+
+    float: left; padding-top: 5px; color: #40638c;
+
+}
+
+#reviewsListing .comments-reply-like-line p.comments-reply a {
+
+    color: #40638c; text-decoration: underline;
+
+}
+
+#reviewsListing .comments-reply-like-line .like {
+
+    float: right; color: #5c5c5c; padding-top: 6px;
+
+}
+
+#reviewsListing .comments-reply-like-line .like a {
+
+    color: #40638c; font-weight: bold; text-decoration: none;
+
+    width: auto; height: 16px; padding: 0 0 0 20px;
+
+    display: block; float: left;
+
+    background: transparent url(../images/like_btn.png) center left no-repeat;
+
+
+
+}
+
+#reviewsListing .comments-reply-like-line .like p {
+
+    float: left; margin-left: 5px;
+
+}
+
+strong.software-name {
+
+    color: #374351;
+
+}
+
+#guideComments .comment-info-line {
+
+    width: 540px; height: 23px; padding: 6px 5px 0;  margin-left: 36px;
+
+    background: url(../images/comments_reply_like_bg.png) repeat-x scroll left bottom #F2F6F9;
+
+}
+
+.comment-info-line .guide-rating {
+
+    color: #CE3527; font-weight: bold; font-size: 14px;
+
+}
+
+span.separator {
+
+    margin: 0 3px;
+
+}
+
+/* top 50 software */
+
+#listingTop50 {
+
+    background-color: #fff;
+
+}
+
+#listingTop50 .topSoftwareNumOdd, #listingTop50  .topSoftwareNumEven {
+
+    float: left; width: 32px; height: 32px; border: 0 none; text-align: center;
+
+    color: #388452; font: italic normal 18px Arial, sans-serif;
+
+    padding: 4px 0 0 0; margin-top: 14px;
+
+}
+
+.topSoftwareNumOdd {
+
+    background: transparent url(../images/top_software_num_odd.png) 0 0 no-repeat;
+
+}
+
+.topSoftwareNumEven {
+
+    background: transparent url(../images/top_software_num_even.png) 0 0 no-repeat;
+
+}
+
+#listingTop50 .topSoftware {
+
+    float: left; border: 0 none; width: 420px;
+
+    padding: 10px 0 0 10px;
+
+}
+
+#listingTop50 .topSoftwareDownloadsNum {
+
+    float: left; border: 0 none; margin: 10px 0 0 5px;
+
+    font: normal normal 14px Arial, sans-serif; color: #5789ca;
+
+}
+
+#listingTop50 div {
+
+    padding: 8px; border-bottom: 1px solid #d4d4d4;
+
+    color: #000000; font-size: 12px;
+
+}
+
+#listingTop50 #softwareDownloadsLabel {
+
+    height: 18px; border-bottom: 1px solid #d5dcdd; position: relative;
+
+    background: transparent url(../images/software_downloads_label_bg.png) 0 0 repeat-x;
+
+}
+
+#listingTop50 #softwareDownloadsLabel #labelSoftware,
+
+#listingTop50 #softwareDownloadsLabel #labelDownloads {
+
+    color: #40638c; font: normal normal 18px Arial, sans-serif;
+
+}
+
+#listingTop50 #softwareDownloadsLabel #labelSoftware {
+
+    position: absolute; left: 32px; top: 8px;
+
+}
+
+#listingTop50 #softwareDownloadsLabel #labelDownloads {
+
+    position: absolute; left: 480px; top: 8px;
+
+}
+
+/* review comment / reply */
+
+form.review-comment-reply {
+
+    margin: 10px 0 10px 35px; display: none;
+
+}
+
+form.review-comment-reply p {
+
+    margin: 5px 0;
+
+}
+
+form.review-comment-reply textarea,
+
+form.review-comment-reply input.name-input {
+
+    border: 1px solid #458ca6; padding: 2px;
+
+    background-color: #f2f6f9; color: #303d4f;
+
+}
+
+form.review-comment-reply .submit-review-reply {
+
+    background-color: #458ca6; color: #fff;
+
+    display: block; padding: 2px 5px; cursor: pointer;
+
+}
+
+.submit-review-reply-messages {
+
+    margin: 10px 0 10px 35px; color: #415268;
+
+    border: 1px solid #458ca6; padding: 2px;
+
+    width: 540px; background-color: #f2f6f9;
+
+}
+
+.review-comments-wrapper {
+
+    display: none;
+
+}
+
+.review-comments {
+
+    margin: 10px 0 10px 50px;
+
+    width: 510px; padding: 0 2px 3px 2px;
+
+    background: transparent url(../images/dotted_underline.png) bottom left repeat-x;
+
+}
+
+.review-comments p.comms-name {
+
+    margin-top: 8px; color: #80b10c; font-weight: bold;
+
+}
+
+.dotted-line, #listing .dotted-line {
+
+    width: 587px; height: 2px; margin-left: -3px;
+
+    border-left: 1px solid #a0afb4;
+
+    border-right: 1px solid #a0afb4;
+
+    background: transparent url(../images/reviews_title_bg.png) left top repeat-x;
+
+    margin:0; padding:0;
+
+}
+
+#listing p.dotted-line {
+
+    width: 586px; height: 2px;
+
+    background: transparent url(../images/reviews_title_bg.png) left top repeat-x;
+
+}
+
+select#rating {
+
+    border: 1px solid #aec4c4;
+
+}
+
+#listing #softwareIntroText a:hover,
+
+#softwareIntroText a:hover {
+
+    text-decoration: underline;
+
+}
+
+a.view-reply, a:hover.view-reply, a:visited.view-reply {
+
+    display: block; color: #40638c;
+
+    margin: 0 0 5px 50px;
+
+    text-decoration: underline;
+
+}
+
+a:hover.view-reply {
+
+    text-decoration: none;
+
+}
+
+p.reviewsPag {
+
+    border-bottom: 1px solid #e8e8e8; padding: 5px 5px 5px 22px;
+
+    margin-bottom: 10px;
+
+}
+
+p.reviewsPag a:link, p.reviewsPag a:visited {font-weight: bold; font-size: 15px; text-decoration: none; padding: 3px; color: #2b7797}
+
+p.reviewsPag a:hover {text-decoration: underline !important}
+
+p.reviewsPag span {color: #ce3527; font-weight: bold; font-size: 15px;  padding: 3px}
+
+p.reviewsPag span.commonText {color: #141414; font-size: 12px}
+
+
+/* ----- offers ---- */
+
+td.news, td.title {text-align: center}
+
+td.title {font-size: 15px; font-weight: bold;}
+
+form#advert-form {color: #494d4e;}
+
+form#advert-form input[type="text"] {border: 1px solid #e8e8e8; padding: 2px;}
+
+
+/* ----- search page ---- */
+
+p.searchPageText {
+    margin: 0; padding: 5px 15px 5px 22px;
+    background: transparent url(/images/blue_star.png) 8px 8px no-repeat;
+}
+p.searchPageText a {
+    font: normal 16px Arial, sans-serif; color: #3a854a; font-weight: bold;
+}
+p.searchPageText a:hover {
+    text-decoration: underline;
+}

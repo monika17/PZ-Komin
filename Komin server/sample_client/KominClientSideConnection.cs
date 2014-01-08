@@ -47,6 +47,7 @@ namespace Komin
         public SomeError onError;
         public ContactListChange onContactListChange;
         public ServerLostConnection onServerLostConnection;
+        public ServerDisconnectNotification onServerDisconnected;
 
         public KominClientSideConnection()
         {
@@ -83,6 +84,7 @@ namespace Komin
             onError = null;
             onContactListChange = null;
             onServerLostConnection = null;
+            onServerDisconnected = null;
         }
 
         void PingTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -269,6 +271,7 @@ namespace Komin
                         jobs.CancelAllJobs();
                         if (onServerLogout != null)
                             onServerLogout();
+                        userdata.contact_id = 0;
                     }
                     break;
                 case KominProtocolCommands.SetStatus: //server sent status change notification
@@ -530,6 +533,8 @@ namespace Komin
                 /*case KominProtocolCommands.PeriodicPingAnswer: //client doesn't respond to periodic ping answers
                     break;*/
                 case KominProtocolCommands.Disconnect: //server requests disconnecting
+                    if (onServerDisconnected != null)
+                        onServerDisconnected();
                     SelfStop();
                     break;
             }
@@ -1115,7 +1120,7 @@ namespace Komin
             return tmsg;
         }
 
-        public void SendMessage(uint receiver, bool receiver_is_group, byte[] msg, bool is_video) //send audio or video message to contact or group
+        public void SendAVMessage(uint receiver, bool receiver_is_group, byte[] a_msg, byte[] v_msg) //send audio or video message to contact or group
         {
             if (userdata.contact_id == 0)
                 return; //basicaly it should be error: can't send messages when logged out
@@ -1129,7 +1134,10 @@ namespace Komin
             packet.job_id = 0; //messaging job id. all messages are directed by sender/target values and don't have return responses
             packet.command = (uint)KominProtocolCommands.SendMessage;
             packet.DeleteContent();
-            packet.InsertContent((is_video == false ? KominProtocolContentTypes.AudioMessageData : KominProtocolContentTypes.VideoMessageData), msg);
+            if (a_msg != null && a_msg.Length != 0)
+                packet.InsertContent(KominProtocolContentTypes.AudioMessageData, a_msg);
+            if (v_msg != null && v_msg.Length != 0)
+                packet.InsertContent(KominProtocolContentTypes.VideoMessageData, v_msg);
             InsertPacketForSending(packet);
         }
 
@@ -1150,6 +1158,52 @@ namespace Komin
 
         public void RequestAudioCall(uint contact_id) //request an audio call from contact
         {
+            if (userdata.contact_id == 0)
+                return;
+            if (contact_id == userdata.contact_id)
+                return;
+
+            KominNetworkJob job = jobs.AddJob(contact_id, false);
+            bool finished = false;
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id;
+            packet.target = contact_id;
+            packet.target_is_group = false;
+            packet.job_id = job.JobID;
+            packet.command = (uint)KominProtocolCommands.RequestAudioCall;
+            packet.DeleteContent();
+            InsertPacketForSending(packet);
+
+            do
+            {
+                job.WaitForNewArrival();
+                packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
+                switch ((KominProtocolCommands)packet.command)
+                {
+                    case KominProtocolCommands.Accept:
+                        finished = true;
+                        break;
+                    case KominProtocolCommands.Error:
+                        finished = true;
+                        jobs.FinishJob(job);
+                        if (onError != null)
+                        {
+                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
+                            return;
+                        }
+                        else
+                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                }
+            } while (!finished);
+
+            jobs.FinishJob(job);
         }
 
         public void RequestVideoCall(uint contact_id) //request a video call from contact
@@ -1158,6 +1212,50 @@ namespace Komin
 
         public void CloseCall(uint contact_id) //request closing of a call
         {
+            if (userdata.contact_id == 0)
+                return;
+
+            KominNetworkJob job = jobs.AddJob(contact_id, false);
+            bool finished = false;
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id;
+            packet.target = contact_id;
+            packet.target_is_group = false;
+            packet.job_id = job.JobID;
+            packet.command = (uint)KominProtocolCommands.RequestAudioCall;
+            packet.DeleteContent();
+            InsertPacketForSending(packet);
+
+            do
+            {
+                job.WaitForNewArrival();
+                packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
+                switch ((KominProtocolCommands)packet.command)
+                {
+                    case KominProtocolCommands.Accept:
+                        finished = true;
+                        break;
+                    case KominProtocolCommands.Error:
+                        finished = true;
+                        jobs.FinishJob(job);
+                        if (onError != null)
+                        {
+                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
+                            return;
+                        }
+                        else
+                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                }
+            } while (!finished);
+
+            jobs.FinishJob(job);
         }
 
         public void SwitchToAudioCall(uint contact_id) //request change to audio call
@@ -1501,6 +1599,7 @@ namespace Komin
     public delegate void SomeError(string err_text, KominNetworkPacket packet);
     public delegate void ContactListChange(UserData new_ud);
     public delegate void ServerLostConnection();
+    public delegate void ServerDisconnectNotification();
 
     public class KominClientErrorException : Exception
     {

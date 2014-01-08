@@ -113,5 +113,19 @@ namespace Komin
             buttonConnect.Enabled = ((textBoxhostIp.Text != "") && (textBoxPort.Text != ""));
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            RequestAcceptanceWaitingForm awf = new RequestAcceptanceWaitingForm(connection, 1, true);
+            switch (awf.ShowDialog())
+            {
+                case DialogResult.Cancel:
+                    MessageBox.Show("anulowano", "fgdshjfs", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+                case DialogResult.OK:
+                    MessageBox.Show("akceptowano", "fjdafsd", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+            }
+        }
+
     }
 }

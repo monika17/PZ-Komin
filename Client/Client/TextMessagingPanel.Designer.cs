@@ -31,7 +31,7 @@
             this.textSendButton = new System.Windows.Forms.Button();
             this.textMessageInput = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.textMessageContainer = new System.Windows.Forms.WebBrowser();
+            this.textMessageContainer = new System.Windows.Forms.RichTextBox();
             this.buttonAutoSend = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -77,15 +77,16 @@
             // 
             // textMessageContainer
             // 
-            this.textMessageContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.textMessageContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textMessageContainer.Location = new System.Drawing.Point(3, 3);
-            this.textMessageContainer.MinimumSize = new System.Drawing.Size(20, 20);
             this.textMessageContainer.Name = "textMessageContainer";
-            this.textMessageContainer.ScriptErrorsSuppressed = true;
+            this.textMessageContainer.ReadOnly = true;
             this.textMessageContainer.Size = new System.Drawing.Size(636, 434);
             this.textMessageContainer.TabIndex = 5;
+            this.textMessageContainer.Text = "";
+            this.textMessageContainer.TextChanged += new System.EventHandler(this.textMessageContainer_TextChanged);
             // 
             // buttonAutoSend
             // 
@@ -120,6 +121,6 @@
         private System.Windows.Forms.TextBox textMessageInput;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.CheckBox buttonAutoSend;
-        private System.Windows.Forms.WebBrowser textMessageContainer;
+        private System.Windows.Forms.RichTextBox textMessageContainer;
     }
 }

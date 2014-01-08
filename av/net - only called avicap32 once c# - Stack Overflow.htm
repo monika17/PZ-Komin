@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <title>.net - only called avicap32 once c# - Stack Overflow</title>
+    <link rel="shortcut icon" href="http://cdn.sstatic.net/stackoverflow/img/favicon.ico">
+    <link rel="apple-touch-icon image_src" href="http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon.png">
+    <link rel="search" type="application/opensearchdescription+xml" title="Stack Overflow" href="http://stackoverflow.com/opensearch.xml">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:domain" content="stackoverflow.com">
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon@2.png?v=fde65a5a78c6">
+    <meta name="og:title" content="only called avicap32 once c#">
+    <meta name="og:description" content="I wrote a c# program to take a photo by webcam using .net framework 2.0. I tried to use avicap32.dll to call the webcam.
+
+The problem is i can just call my webcam once, if i disconnect the web cam ...">
+    <meta name="og:url" content="http://stackoverflow.com/questions/18359868/only-called-avicap32-once-c-sharp">
+    <link rel="canonical" href="http://stackoverflow.com/questions/18359868/only-called-avicap32-once-c-sharp">
+
+    
+    
+    <script src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/ados" async="" type="text/javascript"></script><script src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/beacon.js" async=""></script><script src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/ga.js" async="" type="text/javascript"></script><script src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/quant.js" async="" type="text/javascript"></script><script src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/ados.js" async="" type="text/javascript"></script><script type="text/javascript" src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/jquery.js"></script>
+    <script src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/stub.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/all.css">
+    
+    <link rel="alternate" type="application/atom+xml" title="Feed for question 'only called avicap32 once c#'" href="http://stackoverflow.com/feeds/question/18359868">
+    <script type="text/javascript">
+        
+        StackExchange.ready(function () {
+            StackExchange.using("postValidation", function () {
+                StackExchange.postValidation.initOnBlurAndSubmit($('#post-form'), 2, 'answer');
+            });
+
+            
+            StackExchange.question.init({showAnswerHelp:true,totalCommentCount:0,shownCommentCount:0,highlightColor:'#F4A83D',backgroundColor:'#FFF',questionId:18359868});
+
+            styleCode();
+
+                StackExchange.realtime.subscribeToQuestion('1', '18359868');
+            
+                    });
+    </script>
+
+
+    <script type="text/javascript">
+        StackExchange.init({"locale":"en","stackAuthUrl":"https://stackauth.com","serverTime":1388759609,"styleCode":true,"enableUserHovercards":true,"site":{"name":"Stack Overflow","description":"Q&A for professional and enthusiast programmers","isNoticesTabEnabled":true,"recaptchaPublicKey":"6LdchgIAAAAAAJwGpIzRQSOFaO0pU6s44Xt8aTwc","recaptchaAudioLang":"en","nonAsciiTags":true,"enableSocialMediaInSharePopup":true},"user":{"fkey":"1e6805fcc7041168783208e60ae47fbc","isAnonymous":true,"ab":{"welcome_email":{"v":"a","g":1}}}});
+        StackExchange.using.setCacheBreakers({"js/prettify-full.en.js":"e0bbd4760e83","js/moderator.en.js":"f24049d774be","js/full-anon.en.js":"2902a23ad46f","js/full.en.js":"c63381338a59","js/wmd.en.js":"849f408083f3","js/third-party/jquery.autocomplete.min.js":"e5f01e97f7c3","js/third-party/jquery.autocomplete.min.en.js":"","js/mobile.en.js":"d1d834ef85d2","js/help.en.js":"d3cc74d8a93a","js/tageditor.en.js":"6d51a5f8d7f3","js/tageditornew.en.js":"111b781cf314","js/inline-tag-editing.en.js":"f951bd09dc69","js/revisions.en.js":"33fd38144303","js/review.en.js":"038b38e68e1a","js/tagsuggestions.en.js":"e4e7b952fcc7","js/post-validation.en.js":"c275fe37d674","js/explore-qlist.en.js":"73825bd006fc","js/events.en.js":"6f8a95d5c039"});
+        StackExchange.using("gps", function() {
+             StackExchange.gps.init(true);
+        });
+        
+    </script>
+    
+        <script type="text/javascript">
+            StackExchange.ready(function () {
+                $('#nav-tour').click(function () {
+                    StackExchange.using("gps", function() {
+                        StackExchange.gps.track("aboutpage.click", { aboutclick_location: "headermain" }, true);
+                    });
+                });
+            });
+        </script>
+<script src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/full-anon.js" type="text/javascript" async=""></script><script src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/post-validation.js" type="text/javascript" async=""></script><script src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/prettify-full.js" type="text/javascript" async=""></script><link rel="stylesheet" type="text/css" href="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/sidebar.css"><script src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/adFeedback.js" type="text/javascript"></script><link href="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/adFeedback.css" rel="stylesheet"></head>
+<body class="question-page new-topbar">
+    <noscript><div id="noscript-padding"></div></noscript>
+    <div id="notify-container"></div>
+    <div id="overlay-header"></div>
+    <div id="custom-header"></div>
+<div class="topbar">
+    <div class="topbar-wrapper">
+        
+        <div class="js-topbar-dialog-corral">
+
+<div class="topbar-dialog siteSwitcher-dialog dno">
+    <div class="header">
+        <h3><a href="http://stackexchange.com/sites">Explore our sites</a></h3>
+    </div>
+    <div class="modal-content">
+        <ul class="current-site">
+                <li>
+                        <a href="http://stackoverflow.com/" class="current-site-link site-link js-site-link js-gps-track" data-gps-track="site_switcher.click({ item_type:3 })">
+        <div class="site-icon favicon favicon-stackoverflow" title="Stack Overflow"></div>
+        Stack Overflow
+    </a>
+    <div class="related-links js-related-links">
+            <a href="http://chat.stackoverflow.com/" data-gps-track="site_switcher.click({ item_type:6 })">chat</a>
+                    <a href="http://blog.stackexchange.com/" data-gps-track="site_switcher.click({ item_type:7 })">blog</a>
+            </div>
+
+                </li>
+                <li class="related-site">
+                        <a href="http://meta.stackoverflow.com/" class="site-link js-site-link js-gps-track" data-gps-track="site.switch({ target_site:4, item_type:3 });site_switcher.click({ item_type:4 })">
+        <div class="site-icon favicon favicon-stackoverflowmeta" title="Meta Stack Overflow"></div>
+        Meta Stack Overflow
+    </a>
+
+                    
+                </li>
+                            <li class="related-site">
+                    <a class="site-link js-site-link" href="http://careers.stackoverflow.com/" data-gps-track="site_switcher.click({ item_type:9 })">
+                        <div class="site-icon favicon favicon-careers" title="Stack Overflow Careers"></div>
+                        Careers 2.0
+                    </a>
+                </li>
+        </ul>
+        
+
+
+        
+            <div class="child-content"></div>
+
+    </div>
+</div>        </div>
+
+        <div class="network-items">
+            
+            <a href="http://stackexchange.com/" class="topbar-icon icon-site-switcher js-site-switcher-button js-gps-track" data-gps-track="site_switcher.show" title="A list of all 114 Stack Exchange sites">
+                <span class="hidden-text">Stack Exchange</span>
+            </a>
+            
+        </div>
+
+        <div class="topbar-links">
+            
+                <div class="links-container">
+                    <span class="topbar-menu-links">
+                        <a href="http://stackoverflow.com/users/login?returnurl=%2fquestions%2f18359868%2fonly-called-avicap32-once-c-sharp" class="login-link">sign up</a>    
+                        <a href="http://stackoverflow.com/users/login?returnurl=%2fquestions%2f18359868%2fonly-called-avicap32-once-c-sharp" class="login-link">log in</a>
+                        <a href="http://stackoverflow.com/tour">tour</a>
+                        <a href="http://stackoverflow.com/help">help</a>
+                            <a href="http://careers.stackoverflow.com/">careers 2.0</a>
+                    </span>
+                </div>
+
+			<div class="search-container">
+                <form id="search" action="/search" method="get" autocomplete="off">
+                    <input name="q" placeholder="search" tabindex="1" autocomplete="off" maxlength="240" type="text">
+                </form>
+			</div>
+            	
+        </div>      
+    </div> 
+</div>
+<script>
+    StackExchange.ready(function () {
+        //topbar.init();
+        StackExchange.topbar.init();
+    });
+</script>    <div class="container">
+        <div id="header" class="headeranon">
+            <br class="cbt">
+            <div id="hlogo">
+                <a href="http://stackoverflow.com/">
+                    Stack Overflow
+                </a>
+            </div>
+            <div id="hmenus">
+                <div class="nav mainnavs mainnavsanon">
+                    <ul>
+                            <li class="youarehere"><a id="nav-questions" href="http://stackoverflow.com/questions">Questions</a></li>
+                            <li><a id="nav-tags" href="http://stackoverflow.com/tags">Tags</a></li>
+                            <li><a id="nav-tour" href="http://stackoverflow.com/about">Tour</a></li>
+                            <li><a id="nav-users" href="http://stackoverflow.com/users">Users</a></li>
+                    </ul>
+                </div>
+                <div class="nav askquestion">
+                    <ul>
+                        <li>
+                            <a id="nav-askquestion" href="http://stackoverflow.com/questions/ask">Ask Question</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+
+
+
+        <div id="content">
+            
+
+<div itemscope="" itemtype="http://schema.org/Article">
+	<link itemprop="image" href="http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon.png">
+			<!--googleoff: all-->
+<div id="herobox-mini">
+    <div id="hero-content">
+        <span id="controls">
+            <a href="http://stackoverflow.com/about" id="tell-me-more" class="button">Take the tour</a>
+            <span id="close"><a title="click to dismiss">×</a></span>
+        </span>
+        <div id="blurb">
+            Stack Overflow is a question and answer site for 
+professional and enthusiast programmers. It's 100% free, no registration
+ required.
+        </div>        
+    </div>
+    <script>
+        $('#tell-me-more').click(function () {
+            var clickSource = $("body").attr("class") + '-mini';
+            if ($("body").hasClass("questions-page")) {
+                clickSource = 'questionpagemini';
+            } else if ($("body").hasClass("question-page")) {
+                clickSource = 'questionpagemini';
+            } else if ($("body").hasClass("home-page")) {
+                clickSource = 'homepagemini';
+            }
+
+            StackExchange.using("gps", function () {
+                StackExchange.gps.track("aboutpage.click", { aboutclick_location: clickSource } , true);
+            });
+        });
+        $('#herobox-mini #close').click(function () {
+            StackExchange.using("gps", function () {
+                StackExchange.gps.track("hero.action", { hero_action_type: "close" }, true);
+            });
+            $.cookie("hero", "none", { path: "/" });
+            var $hero = $("#herobox-mini");
+            $hero.slideUp('fast', function () { $hero.remove(); });
+            return false;
+        });
+    </script>
+</div>
+			<!--googleon: all-->
+			<div id="question-header">
+			<h1 itemprop="name"><a href="http://stackoverflow.com/questions/18359868/only-called-avicap32-once-c-sharp" class="question-hyperlink">only called avicap32 once c#</a></h1>
+		</div>
+			<div id="mainbar">
+
+			
+
+<div class="question" data-questionid="18359868" id="question">
+    
+    <script type="text/javascript">
+                var ados = ados || {};ados.run = ados.run || [];
+                ados.run.push(function() { ados_add_placement(22,8277,"adzerk1056824483",4).setZone(43) ; });                    
+            </script>
+            <div class="everyonelovesstackoverflow adzerk-vote" id="adzerk1056824483">
+            <iframe id="ados_frame_adzerk1056824483_136655" frameborder="0" height="90" scrolling="no" width="728"></iframe><div class="adzerk-vote-controls" style="display:none;"><div class="adzerk-vote-option adzerk-vote-up"><div class="adzerk-vote-icon"></div></div><div class="adzerk-vote-option adzerk-vote-down"><div class="adzerk-vote-icon"></div></div></div><div class="adzerk-vote-survey" style="display:none;"><form><span>No problem. We won't show you that ad again. Why didn't you like it?</span><ul><li><label><input value="12" name="downvoteReason" type="radio">Uninteresting</label></li><li><label><input value="13" name="downvoteReason" type="radio">Misleading</label></li><li><label><input value="14" name="downvoteReason" type="radio">Offensive</label></li><li><label><input value="15" name="downvoteReason" type="radio">Repetitive</label></li></ul><a href="#" class="adzerk-vote-cancel">Oops! I didn't mean to do this.</a></form></div><img src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/i.gif" border="0" height="0px" width="0px"></div>    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input name="_id_" value="18359868" type="hidden">
+    <a class="vote-up-off" title="This question shows research effort; it is useful and clear">up vote</a>
+    <span class="vote-count-post ">0</span>
+    <a class="vote-down-off" title="This question does not show any research effort; it is unclear or not useful">down vote</a>
+    
+    <a class="star-off" href="#" title="This is a favorite question (click again to undo)">favorite</a>
+    <div class="favoritecount"><b></b></div>   
+
+</div>
+
+            </td>
+            
+<td class="postcell">
+<div>
+    <div class="post-text" itemprop="description">
+
+        <p>I wrote a c# program to take a photo by webcam using .net framework 2.0. I tried to use avicap32.dll to call the webcam.</p>
+
+<p>The problem is i can just call my webcam once, if i disconnect the 
+web cam and start it again via some buttons, then picturebox will show a
+ black photo and cannot call the webcam again. if i restart the program 
+again it will keep black in the picture box. Only if I restart my 
+computer. W.T.F. Any one can solve the problem?</p>
+
+<p>I put the source code below. Trying figure out what's going on. 
+Another broblem is the photo shows in picture box cannot set the central
+ of the image as well.</p>
+
+<p>here's the form1.cs</p>
+
+<pre style="" class="lang-cs prettyprint prettyprinted"><code><span class="pln">using </span><span class="typ">System</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Collections</span><span class="pun">.</span><span class="typ">Generic</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">ComponentModel</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Data</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Drawing</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Text</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Windows</span><span class="pun">.</span><span class="typ">Forms</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Runtime</span><span class="pun">.</span><span class="typ">InteropServices</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Threading</span><span class="pun">;</span><span class="pln">
+
+namespace </span><span class="typ">AutoCam</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">partial</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> form1 </span><span class="pun">:</span><span class="pln"> </span><span class="typ">Form</span><span class="pln">
+    </span><span class="pun">{</span><span class="pln">
+
+        </span><span class="kwd">public</span><span class="pln"> form1</span><span class="pun">()</span><span class="pln">
+        </span><span class="pun">{</span><span class="pln">
+            </span><span class="typ">InitializeComponent</span><span class="pun">();</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+        </span><span class="typ">Camera</span><span class="pln"> camera</span><span class="pun">;</span><span class="pln">
+
+        </span><span class="com">#region InitializeComponent</span><span class="pln">
+
+        </span><span class="com">#region btn_openCamera #endregion</span><span class="pln">
+        </span><span class="kwd">private</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> button1_Click</span><span class="pun">(</span><span class="kwd">object</span><span class="pln"> sender</span><span class="pun">,</span><span class="pln"> </span><span class="typ">EventArgs</span><span class="pln"> e</span><span class="pun">)</span><span class="pln">
+        </span><span class="pun">{</span><span class="pln">
+
+            </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">btn_openCamera</span><span class="pun">.</span><span class="typ">Enabled</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">false</span><span class="pun">;</span><span class="pln">
+            </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">btn_closeCam</span><span class="pun">.</span><span class="typ">Enabled</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">
+            </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">btn_cameraPic</span><span class="pun">.</span><span class="typ">Enabled</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">
+            camera </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Camera</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">.</span><span class="pln">pic_camera</span><span class="pun">.</span><span class="typ">Handle</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">pic_camera</span><span class="pun">.</span><span class="typ">Width</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">pic_camera</span><span class="pun">.</span><span class="typ">Height</span><span class="pun">);</span><span class="pln">
+            camera</span><span class="pun">.</span><span class="typ">StartWebCam</span><span class="pun">();</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+        </span><span class="com">#endregion</span><span class="pln">
+
+        </span><span class="com">#region btn_closeCam_Click</span><span class="pln">
+        </span><span class="kwd">private</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> btn_closeCam_Click</span><span class="pun">(</span><span class="kwd">object</span><span class="pln"> sender</span><span class="pun">,</span><span class="pln"> </span><span class="typ">EventArgs</span><span class="pln"> e</span><span class="pun">)</span><span class="pln">
+        </span><span class="pun">{</span><span class="pln">
+            </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">btn_openCamera</span><span class="pun">.</span><span class="typ">Enabled</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">
+            </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">btn_closeCam</span><span class="pun">.</span><span class="typ">Enabled</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">false</span><span class="pun">;</span><span class="pln">
+            </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">btn_cameraPic</span><span class="pun">.</span><span class="typ">Enabled</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">false</span><span class="pun">;</span><span class="pln">
+            camera</span><span class="pun">.</span><span class="typ">CloseWebcam</span><span class="pun">();</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+        </span><span class="com">#endregion</span><span class="pln">
+
+        </span><span class="com">#region btn_cameraPic_Click</span><span class="pln">
+        </span><span class="kwd">private</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> btn_cameraPic_Click</span><span class="pun">(</span><span class="kwd">object</span><span class="pln"> sender</span><span class="pun">,</span><span class="pln"> </span><span class="typ">EventArgs</span><span class="pln"> e</span><span class="pun">)</span><span class="pln">
+        </span><span class="pun">{</span><span class="pln">
+            camera</span><span class="pun">.</span><span class="typ">GrabImage</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">.</span><span class="pln">pic_camera</span><span class="pun">.</span><span class="typ">Handle</span><span class="pun">,</span><span class="pln"> </span><span class="str">"guying.bmp"</span><span class="pun">);</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+        </span><span class="com">#endregion</span><span class="pln">
+
+        </span><span class="kwd">private</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> quit_Click</span><span class="pun">(</span><span class="kwd">object</span><span class="pln"> sender</span><span class="pun">,</span><span class="pln"> </span><span class="typ">EventArgs</span><span class="pln"> e</span><span class="pun">)</span><span class="pln">
+        </span><span class="pun">{</span><span class="pln">
+            </span><span class="kwd">this</span><span class="pun">.</span><span class="typ">Close</span><span class="pun">();</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+<p>here's the camera.cs</p>
+
+<pre style="" class="lang-cs prettyprint prettyprinted"><code><span class="pln">using </span><span class="typ">System</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Collections</span><span class="pun">.</span><span class="typ">Generic</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Text</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Threading</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Runtime</span><span class="pun">.</span><span class="typ">InteropServices</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="pln">IO</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Windows</span><span class="pun">;</span><span class="pln">
+
+namespace </span><span class="typ">AutoCam</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+
+    </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">Camera</span><span class="pln">
+    </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">private</span><span class="pln"> </span><span class="typ">IntPtr</span><span class="pln"> lwndC</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">private</span><span class="pln"> </span><span class="typ">IntPtr</span><span class="pln"> mControlPtr</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">private</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> mWidth</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">private</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> mHeight</span><span class="pun">;</span><span class="pln">
+
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="typ">Camera</span><span class="pun">(</span><span class="typ">IntPtr</span><span class="pln"> handel</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> width</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> height</span><span class="pun">)</span><span class="pln">
+        </span><span class="pun">{</span><span class="pln">
+            mControlPtr </span><span class="pun">=</span><span class="pln"> handel</span><span class="pun">;</span><span class="pln"> </span><span class="com">//handle of video dom</span><span class="pln">
+            mWidth </span><span class="pun">=</span><span class="pln"> width</span><span class="pun">;</span><span class="pln"> </span><span class="com">//video width</span><span class="pln">
+            mHeight </span><span class="pun">=</span><span class="pln"> height</span><span class="pun">;</span><span class="pln"> </span><span class="com">//video height</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">StartWebCam</span><span class="pun">()</span><span class="pln">
+        </span><span class="pun">{</span><span class="pln">
+            </span><span class="kwd">byte</span><span class="pun">[]</span><span class="pln"> lpszName </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="kwd">byte</span><span class="pun">[</span><span class="lit">100</span><span class="pun">];</span><span class="pln">
+            </span><span class="kwd">byte</span><span class="pun">[]</span><span class="pln"> lpszVer </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="kwd">byte</span><span class="pun">[</span><span class="lit">100</span><span class="pun">];</span><span class="pln">
+            </span><span class="typ">CameraAPI</span><span class="pun">.</span><span class="pln">capGetDriverDescriptionA</span><span class="pun">(</span><span class="lit">0</span><span class="pun">,</span><span class="pln"> lpszName</span><span class="pun">,</span><span class="lit">100</span><span class="pun">,</span><span class="pln"> lpszVer</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">);</span><span class="pln">
+            </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">lwndC </span><span class="pun">=</span><span class="pln"> </span><span class="typ">CameraAPI</span><span class="pun">.</span><span class="pln">capCreateCaptureWindowA</span><span class="pun">(</span><span class="pln">lpszName</span><span class="pun">,</span><span class="pln"> </span><span class="typ">CameraAPI</span><span class="pun">.</span><span class="pln">WS_CHILD </span><span class="pun">|</span><span class="pln"> </span><span class="typ">CameraAPI</span><span class="pun">.</span><span class="pln">WS_VISIBLE</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> mWidth</span><span class="pun">,</span><span class="pln"> mHeight</span><span class="pun">,</span><span class="pln"> mControlPtr</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">);</span><span class="pln">
+            </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="typ">CameraAPI</span><span class="pun">.</span><span class="typ">SendMessage</span><span class="pun">(</span><span class="pln">lwndC</span><span class="pun">,</span><span class="pln"> </span><span class="typ">CameraAPI</span><span class="pun">.</span><span class="pln">WM_CAP_DRIVER_CONNECT</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">))</span><span class="pln">
+            </span><span class="pun">{</span><span class="pln">
+                </span><span class="typ">CameraAPI</span><span class="pun">.</span><span class="typ">SendMessage</span><span class="pun">(</span><span class="pln">lwndC</span><span class="pun">,</span><span class="pln"> </span><span class="typ">CameraAPI</span><span class="pun">.</span><span class="pln">WM_CAP_SET_PREVIEWRATE</span><span class="pun">,</span><span class="pln"> </span><span class="lit">100</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">);</span><span class="pln">
+                </span><span class="typ">CameraAPI</span><span class="pun">.</span><span class="typ">SendMessage</span><span class="pun">(</span><span class="pln">lwndC</span><span class="pun">,</span><span class="pln"> </span><span class="typ">CameraAPI</span><span class="pun">.</span><span class="pln">WM_CAP_SET_PREVIEW</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">);</span><span class="pln">
+            </span><span class="pun">}</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">CloseWebcam</span><span class="pun">()</span><span class="pln">
+        </span><span class="pun">{</span><span class="pln">
+            </span><span class="typ">CameraAPI</span><span class="pun">.</span><span class="typ">SendMessage</span><span class="pun">(</span><span class="pln">lwndC</span><span class="pun">,</span><span class="pln"> </span><span class="typ">CameraAPI</span><span class="pun">.</span><span class="pln">WM_CAP_DRIVER_DISCONNECT</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">);</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">GrabImage</span><span class="pun">(</span><span class="typ">IntPtr</span><span class="pln"> hWndC</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">string</span><span class="pln"> path</span><span class="pun">)</span><span class="pln">
+        </span><span class="pun">{</span><span class="pln">
+            </span><span class="typ">IntPtr</span><span class="pln"> hBmp </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Marshal</span><span class="pun">.</span><span class="typ">StringToHGlobalAnsi</span><span class="pun">(</span><span class="pln">path</span><span class="pun">);</span><span class="pln">
+            </span><span class="typ">CameraAPI</span><span class="pun">.</span><span class="typ">SendMessage</span><span class="pun">(</span><span class="pln">lwndC</span><span class="pun">,</span><span class="pln"> </span><span class="typ">CameraAPI</span><span class="pun">.</span><span class="pln">WM_CAP_SAVEDIB</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> hBmp</span><span class="pun">.</span><span class="typ">ToInt32</span><span class="pun">());</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+
+    </span><span class="pun">}</span><span class="pln">
+
+</span><span class="pun">}</span></code></pre>
+
+<p>here's the cameraAPI.cs</p>
+
+<pre style="" class="lang-cs prettyprint prettyprinted"><code><span class="pln">using </span><span class="typ">System</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Collections</span><span class="pun">.</span><span class="typ">Generic</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">ComponentModel</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Data</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Drawing</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Text</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Windows</span><span class="pun">.</span><span class="typ">Forms</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Runtime</span><span class="pun">.</span><span class="typ">InteropServices</span><span class="pun">;</span><span class="pln">
+using </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Threading</span><span class="pun">;</span><span class="pln">
+
+namespace </span><span class="typ">AutoCam</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">CameraAPI</span><span class="pln">
+    </span><span class="pun">{</span><span class="pln">
+        </span><span class="pun">[</span><span class="typ">DllImport</span><span class="pun">(</span><span class="str">"avicap32.dll"</span><span class="pun">)]</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> </span><span class="kwd">extern</span><span class="pln"> </span><span class="typ">IntPtr</span><span class="pln"> capCreateCaptureWindowA</span><span class="pun">(</span><span class="kwd">byte</span><span class="pun">[]</span><span class="pln"> lpszWindowName</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> dwStyle</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> x</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> y</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> nWidth</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> nHeight</span><span class="pun">,</span><span class="pln"> </span><span class="typ">IntPtr</span><span class="pln"> hWndParent</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> nID</span><span class="pun">);</span><span class="pln">
+        </span><span class="pun">[</span><span class="typ">DllImport</span><span class="pun">(</span><span class="str">"avicap32.dll"</span><span class="pun">)]</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> </span><span class="kwd">extern</span><span class="pln"> bool capGetDriverDescriptionA</span><span class="pun">(</span><span class="kwd">short</span><span class="pln"> wDriver</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">byte</span><span class="pun">[]</span><span class="pln"> lpszName</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> cbName</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">byte</span><span class="pun">[]</span><span class="pln"> lpszVer</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> cbVer</span><span class="pun">);</span><span class="pln">
+        </span><span class="pun">[</span><span class="typ">DllImport</span><span class="pun">(</span><span class="str">"User32.dll"</span><span class="pun">)]</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> </span><span class="kwd">extern</span><span class="pln"> bool </span><span class="typ">SendMessage</span><span class="pun">(</span><span class="typ">IntPtr</span><span class="pln"> hWnd</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> wMsg</span><span class="pun">,</span><span class="pln"> bool wParam</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> lParam</span><span class="pun">);</span><span class="pln">
+        </span><span class="pun">[</span><span class="typ">DllImport</span><span class="pun">(</span><span class="str">"User32.dll"</span><span class="pun">)]</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> </span><span class="kwd">extern</span><span class="pln"> bool </span><span class="typ">SendMessage</span><span class="pun">(</span><span class="typ">IntPtr</span><span class="pln"> hWnd</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> wMsg</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">short</span><span class="pln"> wParam</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> lParam</span><span class="pun">);</span><span class="pln">
+
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">const</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> WM_USER </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0x400</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">const</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> WS_CHILD </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0x40000000</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">const</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> WS_VISIBLE </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0x10000000</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">const</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> SWP_NOMOVE </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0x2</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">const</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> SWP_NOZORDER </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0x4</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">const</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> WM_CAP_DRIVER_CONNECT </span><span class="pun">=</span><span class="pln"> WM_USER </span><span class="pun">+</span><span class="pln"> </span><span class="lit">10</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">const</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> WM_CAP_DRIVER_DISCONNECT </span><span class="pun">=</span><span class="pln"> WM_USER </span><span class="pun">+</span><span class="lit">11</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">const</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> WM_CAP_SET_CALLBACK_FRAME </span><span class="pun">=</span><span class="pln"> WM_USER </span><span class="pun">+</span><span class="lit">5</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">const</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> WM_CAP_SET_PREVIEW </span><span class="pun">=</span><span class="pln"> WM_USER</span><span class="pun">+</span><span class="lit">50</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">const</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> WM_CAP_SET_PREVIEWFORMAT </span><span class="pun">=</span><span class="pln"> WM_USER </span><span class="pun">+</span><span class="pln"> </span><span class="lit">45</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">const</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> WM_CAP_SET_PREVIEWRATE </span><span class="pun">=</span><span class="pln"> WM_USER </span><span class="pun">+</span><span class="pln"> </span><span class="lit">52</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">const</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> WM_CAP_START </span><span class="pun">=</span><span class="pln"> WM_USER</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">const</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> WM_CAP_SAVEDIB </span><span class="pun">=</span><span class="pln"> WM_CAP_START </span><span class="pun">+</span><span class="pln"> </span><span class="lit">25</span><span class="pun">;</span><span class="pln">
+
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+    </div>
+    <div class="post-taglist">
+        <a href="http://stackoverflow.com/questions/tagged/c%23" class="post-tag" title="show questions tagged 'c#'" rel="tag">c#</a> <a href="http://stackoverflow.com/questions/tagged/.net" class="post-tag" title="show questions tagged '.net'" rel="tag">.net</a> <a href="http://stackoverflow.com/questions/tagged/webcam" class="post-tag" title="show questions tagged 'webcam'" rel="tag">webcam</a> <a href="http://stackoverflow.com/questions/tagged/photo" class="post-tag" title="show questions tagged 'photo'" rel="tag">photo</a> 
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+<div class="post-menu"><a href="http://stackoverflow.com/q/18359868" title="short permalink to this question" class="short-link" id="link-post-18359868">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/18359868/edit" class="suggest-edit-post" title="">improve this question</a></div>        
+    </td>
+    <td class="post-signature" align="right">
+<div class="user-info ">
+    <div class="user-action-time">
+        <a href="http://stackoverflow.com/posts/18359868/revisions" title="show all edits to this post">edited <span title="2013-08-21 14:19:53Z" class="relativetime">Aug 21 '13 at 14:19</span></a>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/1350762/maba"><div><img src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/ea9207087672bb4a67737bf493987979.png" alt="" height="32" width="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/1350762/maba">maba</a><br>
+        <span class="reputation-score" title="reputation score 11853" dir="ltr">11.9k</span><span title="2 gold badges"><span class="badge1"></span><span class="badgecount">2</span></span><span title="13 silver badges"><span class="badge2"></span><span class="badgecount">13</span></span><span title="34 bronze badges"><span class="badge3"></span><span class="badgecount">34</span></span>
+    </div>
+</div>    </td>
+    <td class="post-signature owner">
+        <div class="user-info ">
+    <div class="user-action-time">
+        asked <span title="2013-08-21 14:14:53Z" class="relativetime">Aug 21 '13 at 14:14</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/2703882/bill-tian"><div><img src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/655f81d9c1789e9e95b0c7a2b59c3e6d.png" alt="" height="32" width="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/2703882/bill-tian">Bill Tian</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">1</span><span title="1 bronze badge"><span class="badge3"></span><span class="badgecount">1</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</div>
+</td>
+        </tr>
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-18359868" class="comments dno" data-localized="true">
+		    <table>
+			    <tbody data-remaining-comments-count="0" data-addlink-html="add comment" data-addlink-disabled="true">
+					    <tr><td></td><td></td></tr>
+			    </tbody>
+		    </table>
+	    </div>
+			<a id="comments-link-18359868" data-rep="50" data-anon="true" class="comments-link disabled-link" title="Use comments to ask for more information or suggest improvements. Avoid answering questions in comments.">add comment</a>
+    </td>
+</tr>            </tbody></table>    
+</div>
+
+
+			<div id="answers">
+
+				<a name="tab-top"></a>
+				<div id="answers-header">
+					<div class="subheader answers-subheader">
+						<h2>
+								1 Answer
+						</h2>
+						<div>
+							<div id="tabs">
+        <a href="http://stackoverflow.com/questions/18359868/only-called-avicap32-once-c-sharp?answertab=active#tab-top" title="Answers with the latest activity first">active</a>
+        <a href="http://stackoverflow.com/questions/18359868/only-called-avicap32-once-c-sharp?answertab=oldest#tab-top" title="Answers in the order they were provided">oldest</a>
+        <a class="youarehere" href="http://stackoverflow.com/questions/18359868/only-called-avicap32-once-c-sharp?answertab=votes#tab-top" title="Answers with the highest score first">votes</a>
+</div>
+						</div>
+					</div>    
+				</div>    
+
+
+
+
+  
+<a name="18506909"></a>
+<div id="answer-18506909" class="answer" data-answerid="18506909">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input name="_id_" value="18506909" type="hidden">
+    <a class="vote-up-off" title="This answer is useful">up vote</a>
+    <span class="vote-count-post ">0</span>
+    <a class="vote-down-off" title="This answer is not useful">down vote</a>
+    
+
+
+</div>
+
+            </td>
+
+
+
+<td class="answercell">
+    <div class="post-text"><p>You can refer to this <a href="http://code.msdn.microsoft.com/Webcam-Capture-50295c7f" rel="nofollow">blog</a>, and modify your code. I have tried the code, which worked well.
+click stop:</p>
+
+<pre style="" class="lang-cs prettyprint prettyprinted"><code><span class="pln">            bStopped </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">
+            </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">timer</span><span class="pun">.</span><span class="typ">Stop</span><span class="pun">();</span><span class="pln">
+
+            </span><span class="typ">Application</span><span class="pun">.</span><span class="typ">DoEvents</span><span class="pun">();</span><span class="pln">
+
+            </span><span class="typ">SendMessage</span><span class="pun">(</span><span class="pln">m_CapHwnd</span><span class="pun">,</span><span class="pln"> WM_CAP_DISCONNECT</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">);</span><span class="pln">
+
+            </span><span class="typ">CloseClipboard</span><span class="pun">();</span></code></pre>
+
+<p>click start:</p>
+
+<pre style="" class="lang-cs prettyprint prettyprinted"><code><span class="pln">        stop</span><span class="pun">();</span><span class="pln">
+
+        m_CapHwnd </span><span class="pun">=</span><span class="pln"> capCreateCaptureWindowA</span><span class="pun">(</span><span class="str">"WebCap"</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> m_Width</span><span class="pun">,</span><span class="pln"> m_Height</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="typ">Handle</span><span class="pun">.</span><span class="typ">ToInt32</span><span class="pun">(),</span><span class="pln"> </span><span class="lit">0</span><span class="pun">);</span><span class="pln">
+
+        </span><span class="typ">Application</span><span class="pun">.</span><span class="typ">DoEvents</span><span class="pun">();</span><span class="pln">
+
+        </span><span class="typ">SendMessage</span><span class="pun">(</span><span class="pln">m_CapHwnd</span><span class="pun">,</span><span class="pln"> WM_CAP_CONNECT</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">);</span><span class="pln">
+
+        </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">timer</span><span class="pun">.</span><span class="typ">Interval</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="lit">1</span><span class="pun">;</span><span class="pln">
+
+        bStopped </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">false</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">timer</span><span class="pun">.</span><span class="typ">Start</span><span class="pun">();</span></code></pre>
+
+<p>timer callback:</p>
+
+<pre style="" class="lang-cs prettyprint prettyprinted"><code><span class="pln">        </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">timer</span><span class="pun">.</span><span class="typ">Stop</span><span class="pun">();</span><span class="pln">
+
+        </span><span class="typ">SendMessage</span><span class="pun">(</span><span class="pln">m_CapHwnd</span><span class="pun">,</span><span class="pln"> WM_CAP_GT_FRAME</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">);</span><span class="pln">
+
+        </span><span class="typ">SendMessage</span><span class="pun">(</span><span class="pln">m_CapHwnd</span><span class="pun">,</span><span class="pln"> WM_CAP_COPY</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">);</span><span class="pln">
+
+        </span><span class="typ">OpenClipboard</span><span class="pun">(</span><span class="pln">m_CapHwnd</span><span class="pun">);</span><span class="pln">
+
+        </span><span class="typ">CloseClipboard</span><span class="pun">();</span><span class="pln">
+
+        </span><span class="typ">IDataObject</span><span class="pln"> dataObj </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Clipboard</span><span class="pun">.</span><span class="typ">GetDataObject</span><span class="pun">();</span><span class="pln">
+        </span><span class="typ">Image</span><span class="pln"> img </span><span class="pun">=</span><span class="pln"> </span><span class="pun">(</span><span class="typ">System</span><span class="pun">.</span><span class="typ">Drawing</span><span class="pun">.</span><span class="typ">Bitmap</span><span class="pun">)</span><span class="pln">dataObj</span><span class="pun">.</span><span class="typ">GetData</span><span class="pun">(</span><span class="typ">DataFormats</span><span class="pun">.</span><span class="typ">Bitmap</span><span class="pun">);</span><span class="pln">
+        </span><span class="com">//img.Save("e:\\test_" + DateTime.UtcNow.Ticks + ".jpg");</span><span class="pln">
+        pictureBox</span><span class="pun">.</span><span class="typ">Image</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> img</span><span class="pun">;</span><span class="pln">
+
+        pictureBox</span><span class="pun">.</span><span class="typ">Refresh</span><span class="pun">();</span><span class="pln">
+
+        </span><span class="typ">Application</span><span class="pun">.</span><span class="typ">DoEvents</span><span class="pun">();</span><span class="pln">
+
+        </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(!</span><span class="pln">bStopped</span><span class="pun">)</span><span class="pln">
+        </span><span class="pun">{</span><span class="pln">
+            </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">timer</span><span class="pun">.</span><span class="typ">Start</span><span class="pun">();</span><span class="pln">
+        </span><span class="pun">}</span></code></pre>
+</div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+<div class="post-menu"><a href="http://stackoverflow.com/a/18506909" title="short permalink to this answer" class="short-link" id="link-post-18506909">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/18506909/edit" class="suggest-edit-post" title="">improve this answer</a></div>                    </td>
+            
+
+
+    <td class="post-signature" align="right">   
+       
+
+    <div class="user-info user-hover">
+    <div class="user-action-time">
+        answered <span title="2013-08-29 09:20:36Z" class="relativetime">Aug 29 '13 at 9:20</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/644010/yushulx"><div class="gravatar-wrapper-32"><img src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/dDKQM.jpg" alt=""></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/644010/yushulx">yushulx</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">1,707</span><span title="2 gold badges"><span class="badge1"></span><span class="badgecount">2</span></span><span title="5 silver badges"><span class="badge2"></span><span class="badgecount">5</span></span><span title="12 bronze badges"><span class="badge3"></span><span class="badgecount">12</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</td>        </tr>
+
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-18506909" class="comments dno" data-localized="true">
+		    <table>
+			    <tbody data-remaining-comments-count="0" data-addlink-html="add comment" data-addlink-disabled="true">
+					    <tr><td></td><td></td></tr>
+			    </tbody>
+		    </table>
+	    </div>
+			<a id="comments-link-18506909" data-rep="50" data-anon="true" class="comments-link disabled-link" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”.">add comment</a>
+    </td>
+</tr>
+    </tbody></table>
+</div>
+									<a name="new-answer"></a>
+						<form id="post-form" action="/questions/18359868/answer/submit" method="post" class="post-form">
+							<input id="post-id" value="18359868" type="hidden">
+							<h2 class="space">Your Answer</h2>
+
+
+
+    
+
+<script type="text/javascript">
+    StackExchange.ready(function() {
+        initTagRenderer("".split(" "), "".split(" "));
+         
+        prepareEditor({
+            heartbeatType: 'answer',
+            bindNavPrevention: true,
+            postfix: "",
+            onDemand: true,
+            discardSelector: ".discard-answer"
+            ,immediatelyShowMarkdownHelp:true
+        });
+        
+
+    });  
+</script>
+
+
+<div id="post-editor" class="post-editor">
+
+    <div style="position: relative;">     
+        <div class="wmd-container">
+            <div id="wmd-button-bar" class="wmd-button-bar"><ul id="wmd-button-row" class="wmd-button-row"><li style="left: 0px;" class="wmd-button" id="wmd-bold-button"><span style="background-position: 0px -20px;"></span></li><li style="left: 25px;" class="wmd-button" id="wmd-italic-button"><span style="background-position: -20px -20px;"></span></li><li style="left: 50px;" class="wmd-spacer" id="wmd-spacer1"><span style="background-position: -40px -20px;"></span></li><li style="left: 75px;" class="wmd-button" id="wmd-link-button"><span style="background-position: -40px -20px;"></span></li><li style="left: 100px;" class="wmd-button" id="wmd-quote-button"><span style="background-position: -60px -20px;"></span></li><li style="left: 125px;" class="wmd-button" id="wmd-code-button"><span style="background-position: -80px -20px;"></span></li><li style="left: 150px;" class="wmd-button" id="wmd-image-button"><span style="background-position: -100px -20px;"></span></li><li style="left: 175px;" class="wmd-spacer" id="wmd-spacer2"><span style="background-position: -120px -20px;"></span></li><li style="left: 200px;" class="wmd-button" id="wmd-olist-button"><span style="background-position: -120px -20px;"></span></li><li style="left: 225px;" class="wmd-button" id="wmd-ulist-button"><span style="background-position: -140px -20px;"></span></li><li style="left: 250px;" class="wmd-button" id="wmd-heading-button"><span style="background-position: -160px -20px;"></span></li><li style="left: 275px;" class="wmd-button" id="wmd-hr-button"><span style="background-position: -180px -20px;"></span></li><li style="left: 300px;" class="wmd-spacer" id="wmd-spacer3"><span style="background-position: -200px -20px;"></span></li><li style="left: 325px;" class="wmd-button" id="wmd-undo-button"><span style="background-position: -200px -20px;"></span></li><li style="left: 350px;" class="wmd-button" id="wmd-redo-button"><span style="background-position: -220px -20px;"></span></li></ul></div>
+            <textarea id="wmd-input" class="wmd-input" name="post-text" cols="92" rows="15" tabindex="101" data-min-length=""></textarea>
+        </div>
+    </div>
+
+    <div class="fl" style="margin-top: 8px; height:24px;">&nbsp;</div>
+    <div id="draft-saved" class="draft-saved community-option fl" style="margin-top: 8px; height:24px; display:none;">draft saved</div>
+
+    <div id="draft-discarded" class="draft-discarded community-option fl" style="margin-top: 8px; height:24px; display:none;">draft discarded</div>
+
+
+
+    <div id="wmd-preview" class="wmd-preview"></div>
+    <div></div>
+    <div class="edit-block">
+        <input id="fkey" name="fkey" value="1e6805fcc7041168783208e60ae47fbc" type="hidden">
+        <input id="author" name="author" type="text">
+    </div>
+</div>
+							<div style="position: relative;">
+								
+            <div class="form-item new-post-login">
+        
+                <div class="new-login-form">
+                    <div class="new-login-left">
+                        <h3>Sign up or <a id="login-link" href="http://stackoverflow.com/users/login?returnurl=%2fquestions%2f18359868%2fonly-called-avicap32-once-c-sharp%23new-answer">login</a></h3>
+                        <script type="text/javascript">
+                            StackExchange.ready(function () {
+                                StackExchange.helpers.onClickDraftSave('#login-link');
+                            });
+                        </script>
+                        <div class="preferred-login google-login">
+                            <p><span class="icon"></span><span>Sign up using Google</span></p>
+                        </div>
+                        <div class="preferred-login facebook-login">
+                            <p><span class="icon"></span><span>Sign up using Facebook</span></p>
+                        </div>
+                        <div class="preferred-login stackexchange-login">
+                            <p><span class="icon"></span><span>Sign up using Stack Exchange</span></p>
+                        </div>
+                    </div>
+                    <input name="manual-openid" class="manual-openid" type="hidden">
+                    <input name="use-facebook" class="use-facebook" value="false" type="hidden">
+                    <input class="submit-openid" value="Submit" style="display:none" type="button">
+                    <div class="new-login-right">
+                                <h3>Post as a guest</h3>
+    <div class="form-item">
+        <table>
+        <tbody><tr>
+                    <script type="text/javascript">
+                StackExchange.ready(function () {
+                    StackExchange.helpers.bindHelpOverlayEvents($('.vm input'));
+                });
+            </script>
+            <td class="vm">
+                <div>
+                    <label for="display-name">Name</label>
+                    <input id="display-name" name="display-name" size="30" maxlength="30" tabindex="105" type="text">
+                </div>
+                <div>
+                    <label for="m-address">Email</label>
+                    <input id="m-address" name="m-address" size="30" maxlength="100" tabindex="106" type="text">
+                    <span class="edit-field-overlay">required, but not shown</span>
+                </div>
+            </td>
+        </tr>
+        </tbody></table>
+    </div>
+
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                StackExchange.ready(
+                    function () {
+                        StackExchange.openid.initPostLogin('.new-post-login', '%2fquestions%2f18359868%2fonly-called-avicap32-once-c-sharp%23new-answer');
+                    }
+                );
+            </script>
+            <noscript>
+                        <h3>Post as a guest</h3>
+    <div class="form-item">
+        <table>
+        <tr>
+                    <script type="text/javascript">
+                StackExchange.ready(function () {
+                    StackExchange.helpers.bindHelpOverlayEvents($('.vm input'));
+                });
+            </script>
+            <td class="vm">
+                <div>
+                    <label for="display-name">Name</label>
+                    <input id="display-name" name="display-name" type="text" size="30" maxlength="30" value="" tabindex="105">
+                </div>
+                <div>
+                    <label for="m-address">Email</label>
+                    <input id="m-address" name="m-address" type="text" size="30" maxlength="100" value="" tabindex="106">
+                    <span class="edit-field-overlay">required, but not shown</span>
+                </div>
+            </td>
+        </tr>
+        </table>
+    </div>
+
+            </noscript>
+							</div>
+           
+															<div class="form-submit cbt">
+									<input id="submit-button" value="Post Your Answer" tabindex="110" type="submit">
+									<a href="#" class="discard-answer dno">discard</a>
+
+<p class="privacy-policy-agreement">
+By posting your answer, you agree to the <a href="http://stackexchange.com/legal/privacy-policy" target="_blank">privacy policy</a> and <a href="http://stackexchange.com/legal/terms-of-service" target="_blank">terms of service</a>.</p>
+<input name="legalLinksShown" value="1" type="hidden">								</div>
+						</form>
+
+
+
+						<h2 class="bottom-notice">
+Not the answer you're looking for?							Browse other questions tagged <a href="http://stackoverflow.com/questions/tagged/c%23" class="post-tag" title="show questions tagged 'c#'" rel="tag">c#</a> <a href="http://stackoverflow.com/questions/tagged/.net" class="post-tag" title="show questions tagged '.net'" rel="tag">.net</a> <a href="http://stackoverflow.com/questions/tagged/webcam" class="post-tag" title="show questions tagged 'webcam'" rel="tag">webcam</a> <a href="http://stackoverflow.com/questions/tagged/photo" class="post-tag" title="show questions tagged 'photo'" rel="tag">photo</a>  or <a href="http://stackoverflow.com/questions/ask">ask your own question</a>.						</h2>
+			</div>
+		</div>
+				<div id="sidebar" class="show-votes">
+							<div class="module question-stats">
+					<p class="label-key">tagged</p>
+					<div class="tagged"><a href="http://stackoverflow.com/questions/tagged/c%23" class="post-tag" title="show questions tagged 'c#'" rel="tag">c#</a>&nbsp;<span class="item-multiplier"><span class="item-multiplier-x">×</span>&nbsp;<span class="item-multiplier-count">569475</span></span><br>
+<a href="http://stackoverflow.com/questions/tagged/.net" class="post-tag" title="show questions tagged '.net'" rel="tag">.net</a>&nbsp;<span class="item-multiplier"><span class="item-multiplier-x">×</span>&nbsp;<span class="item-multiplier-count">174226</span></span><br>
+<a href="http://stackoverflow.com/questions/tagged/webcam" class="post-tag" title="show questions tagged 'webcam'" rel="tag">webcam</a>&nbsp;<span class="item-multiplier"><span class="item-multiplier-x">×</span>&nbsp;<span class="item-multiplier-count">1383</span></span><br>
+<a href="http://stackoverflow.com/questions/tagged/photo" class="post-tag" title="show questions tagged 'photo'" rel="tag">photo</a>&nbsp;<span class="item-multiplier"><span class="item-multiplier-x">×</span>&nbsp;<span class="item-multiplier-count">1230</span></span><br>
+</div>
+					<table id="qinfo">
+						<tbody><tr>
+							<td>
+								<p class="label-key">asked</p>
+							</td>
+							<td style="padding-left: 10px">
+								<p class="label-key" title="2013-08-21 14:14:53Z"><b>4 months ago</b></p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p class="label-key">viewed</p>
+							</td>
+
+							<td style="padding-left: 10px">
+								<p class="label-key">
+									<b>273 times</b>
+								</p>
+							</td>
+						</tr>
+							<tr>
+								<td>
+									<p class="label-key">active</p>
+								</td>
+								<td style="padding-left: 10px">
+									<p class="label-key"><b><a href="http://stackoverflow.com/questions/18359868/only-called-avicap32-once-c-sharp?lastactivity" class="lastactivity-link" title="2013-08-29 09:20:36Z">4 months ago</a></b></p>
+								</td>
+							</tr>
+					</tbody></table>
+				</div>
+						
+			<script type="text/javascript">
+                var ados = ados || {};ados.run = ados.run || [];
+                ados.run.push(function() { ados_add_placement(22,8277,"adzerk1246051769",17).setZone(45) ; });                    
+            </script>
+              
+    <div id="hireme"> <a href="http://careers.stackoverflow.com/jobs?a=144" class="top" target="_blank"></a> <ul class="jobs"> <li> <a href="http://careers.stackoverflow.com/jobs/45231/html-developer-x-trade-brokers-dm-s-a?a=TaaQhgOI" target="_blank" title="HTML Developer at X-Trade Brokers DM S.A. Click to learn more."> HTML Developer<br> <span class="company">X-Trade Brokers DM S.A</span> <span class="location">Warsaw, Poland</span> </a> </li> <li> <a href="http://careers.stackoverflow.com/jobs/45581/awesome-python-developer-egnyte?a=TADHE2Na" target="_blank" title="Awesome Python Developer at Egnyte. Click to learn more."> Awesome Python Developer<br> <span class="company">Egnyte</span> <span class="location">Poznan, Poland / relocation</span> </a> </li> <li> <a href="http://careers.stackoverflow.com/jobs/45100/senior-ruby-on-rails-engineer-hover-inc?a=T0fwsR1K" target="_blank" title="Senior Ruby on Rails Engineer at Hover. Click to learn more."> Senior Ruby on Rails Engineer<br> <span class="company">Hover</span> <span class="location">San Francisco, CA</span> </a> </li> </ul> <img alt="" class="impression" src="net%20-%20only%20called%20avicap32%20once%20c%23%20-%20Stack%20Overflow_pliki/TaaQhgOI-TADHE2Na-T0fwsR1K-144.gif" style="display:none"></div>
+			  
+    
+            
+
+				<div class="module sidebar-related">
+					<h4 id="h-related">Related</h4>
+                    <div class="related js-gps-related-questions" data-tracker="rq=1">
+                        <div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/2683867?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted default">1
+    </div>
+</a><a href="http://stackoverflow.com/questions/2683867/invalid-algorithm-specified-on-windows-2003-server-only?rq=1" class="question-hyperlink">Invalid algorithm specified on Windows 2003 Server only</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/2961722?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted default">1
+    </div>
+</a><a href="http://stackoverflow.com/questions/2961722/webcam-api-error-when-accessed-from-asp-net-server-side-code?rq=1" class="question-hyperlink">Webcam api error when accessed from ASP.NET Server-side code</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/5431123?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted default">1
+    </div>
+</a><a href="http://stackoverflow.com/questions/5431123/show-message-only-once?rq=1" class="question-hyperlink">Show message only once</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/13058161?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted default">2
+    </div>
+</a><a href="http://stackoverflow.com/questions/13058161/how-to-get-list-of-connected-webcams-in-avicap32-dll?rq=1" class="question-hyperlink">How to get list of connected WebCams in avicap32.dll?</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/14298250?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes default">2
+    </div>
+</a><a href="http://stackoverflow.com/questions/14298250/vb-net-and-webcam-select-video-source-dialog?rq=1" class="question-hyperlink">VB.NET and WebCam Select Video Source dialog</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/16184659?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted default">4
+    </div>
+</a><a href="http://stackoverflow.com/questions/16184659/how-to-copy-image-without-using-the-clipboard?rq=1" class="question-hyperlink">How to copy image without using the clipboard?</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/16741990?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes default">0
+    </div>
+</a><a href="http://stackoverflow.com/questions/16741990/why-does-this-webcam-code-not-work?rq=1" class="question-hyperlink">Why does this Webcam code not work?</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/19292074?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes default">0
+    </div>
+</a><a href="http://stackoverflow.com/questions/19292074/vb-net-capture-video-using-avicap32-dll-without-ui?rq=1" class="question-hyperlink">VB.Net Capture Video Using avicap32.dll without UI</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/20500456?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes default">1
+    </div>
+</a><a href="http://stackoverflow.com/questions/20500456/adjust-webcam-brightness-exposure-gain-c-sharp?rq=1" class="question-hyperlink">Adjust webcam brightness (exposure/gain) C#</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/20610600?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted default">-1
+    </div>
+</a><a href="http://stackoverflow.com/questions/20610600/calling-a-dll-method-but-it-is-saying-is-a-field-but-is-used-like-a-type?rq=1" class="question-hyperlink">calling a dll method but it is saying “is a field but is used like a type”</a>
+</div>
+
+                    </div>
+				</div>
+            
+<div id="hot-network-questions" class="module">
+    <h4>
+        <a href="http://stackexchange.com/questions?tab=hot" class="js-gps-track" data-gps-track="posts_hot_network.click({ item_type:1, location:11 })">
+            Hot Network Questions
+        </a>
+    </h4>
+    <ul>
+            <li>
+                <div class="favicon favicon-codegolf" title="Programming Puzzles &amp; Code Golf Stack Exchange"></div><a href="http://codegolf.stackexchange.com/questions/17005/produce-the-number-2014-without-any-numbers-in-your-source-code" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:200 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Produce the number 2014 without any numbers in your source code
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-math" title="Mathematics Stack Exchange"></div><a href="http://math.stackexchange.com/questions/625223/do-we-know-if-there-exist-true-mathematical-statements-that-can-not-be-proven" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:69 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Do we know if there exist true mathematical statements that can not be proven?
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-tex" title="TeX - LaTeX Stack Exchange"></div><a href="http://tex.stackexchange.com/questions/152196/what-is-the-advantage-of-using-the-notation-fig-in-the-label" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:85 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    What is the advantage of using the notation 'fig:' in the \label {}?
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-codegolf" title="Programming Puzzles &amp; Code Golf Stack Exchange"></div><a href="http://codegolf.stackexchange.com/questions/16226/i-need-a-program-where-the-user-inputs-an-array-of-doubles-and-the-program-outpu" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:200 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    I need a program where the user inputs an array of doubles and the program outputs the array sorted
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-german" title="German Language Stack Exchange"></div><a href="http://german.stackexchange.com/questions/9444/used-to-verb" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:253 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    "used to [verb]"
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-stackoverflow" title="Stack Overflow"></div><a href="http://stackoverflow.com/questions/20877086/confusion-in-method-integer-valueofstring" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:1 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Confusion in method Integer.valueOf(String)
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-mathoverflow" title="MathOverflow"></div><a href="http://mathoverflow.net/questions/153302/teaching-homology-via-everyday-examples" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:504 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Teaching homology via everyday examples
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-codegolf" title="Programming Puzzles &amp; Code Golf Stack Exchange"></div><a href="http://codegolf.stackexchange.com/questions/17287/a-function-that-returns-most-occuring-element-in-a-list" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:200 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    A function that returns most occuring element in a list
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-english" title="English Language &amp; Usage Stack Exchange"></div><a href="http://english.stackexchange.com/questions/143782/idiom-or-word-for-a-very-crowded-place" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:97 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Idiom or word for a very crowded place
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-gaming" title="Arqade"></div><a href="http://gaming.stackexchange.com/questions/149078/do-you-loose-the-respective-trading-cards-when-uninstalling-a-steam-game" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:41 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Do you loose the respective trading cards when uninstalling a steam game?
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-gamedev" title="Game Development Stack Exchange"></div><a href="http://gamedev.stackexchange.com/questions/68263/is-this-really-the-reason-for-smoother-movement" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:53 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Is this really the reason for smoother movement?
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-ux" title="User Experience Stack Exchange"></div><a href="http://ux.stackexchange.com/questions/49651/web-design-workflow-without-photoshop" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:102 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Web design workflow without Photoshop
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-tex" title="TeX - LaTeX Stack Exchange"></div><a href="http://tex.stackexchange.com/questions/152222/how-do-i-insert-a-tie-under-expl3-syntax" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:85 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How do I insert a tie (~) under expl3 syntax?
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-physics" title="Physics Stack Exchange"></div><a href="http://physics.stackexchange.com/questions/92050/do-gravitational-lenses-have-a-focus-point" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:151 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Do gravitational lenses have a focus point?
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-unix" title="Unix &amp; Linux Stack Exchange"></div><a href="http://unix.stackexchange.com/questions/107678/omit-the-target-dir-from-find-results" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:106 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Omit the target dir from find results
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-electronics" title="Electrical Engineering Stack Exchange"></div><a href="http://electronics.stackexchange.com/questions/95217/how-can-i-indicate-pin-1-on-a-smt-package-footprint-without-silkscreen" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:135 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How can I indicate pin 1 on a SMT package footprint without silkscreen
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-codereview" title="Code Review Stack Exchange"></div><a href="http://codereview.stackexchange.com/questions/38435/javascript-templating-libraries-intelligibility-and-their-performance-compared" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:196 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Javascript templating libraries' intelligibility and their performance (compared to mine)
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-salesforce" title="Salesforce Stack Exchange"></div><a href="http://salesforce.stackexchange.com/questions/23413/how-to-query-all-user-with-salesforce-license" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:459 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How to query all user with salesforce license?
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-sharepoint" title="SharePoint Stack Exchange"></div><a href="http://sharepoint.stackexchange.com/questions/86353/sharepoint-page-custom-list-to-page" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:232 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    SharePoint page custom list to page
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-tex" title="TeX - LaTeX Stack Exchange"></div><a href="http://tex.stackexchange.com/questions/152254/increasing-space-between-columns-in-a-list-of-acronyms" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:85 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Increasing space between columns in a list of acronyms
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-tridion" title="Tridion Stack Exchange"></div><a href="http://tridion.stackexchange.com/questions/4044/odata-component-content" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:485 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    ODATA component content
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-security" title="Information Security Stack Exchange"></div><a href="http://security.stackexchange.com/questions/47913/is-the-concept-of-authenticated-anonymity-possible" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:162 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Is the concept of Authenticated Anonymity possible?
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-movies" title="Movies &amp; TV Stack Exchange"></div><a href="http://movies.stackexchange.com/questions/16358/how-realistic-is-the-portrayed-mentalism" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:367 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How realistic is the portrayed mentalism?
+                </a>
+
+            </li>
+            <li class="dno js-hidden">
+                <div class="favicon favicon-apple" title="Ask Different"></div><a href="http://apple.stackexchange.com/questions/115920/will-restoring-from-timemachine-keep-my-bootcamp-partition-intact" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:118 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Will restoring from TimeMachine keep my bootcamp partition intact?
+                </a>
+
+            </li>
+    </ul>
+
+        <a href="#" class="show-more js-show-more js-gps-track" data-gps-track="posts_hot_network.click({ item_type:3, location:11 })">
+            more hot questions
+        </a>
+        <script>
+            StackExchange.ready(function () {
+                var $div = $('#hot-network-questions');
+                $div.find('.js-show-more').click(function () {
+                    $div.find('.js-hidden').show();
+                    $(this).remove();
+                    return false;
+                });
+            });
+        </script>
+</div>
+		</div>
+	
+<div id="feed-link">
+    <div id="feed-link-text"><a href="http://stackoverflow.com/feeds/question/18359868" title="feed of this question and its answers"><span class="feed-icon"></span>question feed</a></div>
+</div>
+	<script type="text/javascript">
+StackExchange.ready(function(){$.get('/posts/18359868/ivc/2c9c');});
+</script>
+<noscript>
+    <div><img src="/posts/18359868/ivc/2c9c" class="dno" alt="" width="0" height="0"></div>
+</noscript><div style="display:none" id="prettify-lang">lang-cs</div></div>
+
+
+        </div>
+    </div>
+    <div id="footer" class="categories">
+        <div class="footerwrap">
+            <div id="footer-menu">
+                <div class="top-footer-links">
+                        <a href="http://stackoverflow.com/about">about</a>
+                    <a href="http://stackoverflow.com/help">help</a>
+                        <a href="http://stackoverflow.com/help/badges">badges</a>
+                    <a href="http://blog.stackexchange.com/?blb=1">blog</a>
+                        <a href="http://chat.stackoverflow.com/">chat</a>
+                    <a href="http://data.stackexchange.com/">data</a>
+                    <a href="http://stackexchange.com/legal">legal</a>
+                    <a href="http://stackexchange.com/legal/privacy-policy">privacy policy</a>
+                    <a href="http://stackexchange.com/about/hiring">jobs</a>
+                    <a href="http://engine.adzerk.net/r?e=eyJhdiI6NDE0LCJhdCI6MjAsImNtIjo5NTQsImNoIjoxMTc4LCJjciI6Mjc3NiwiZG0iOjQsImZjIjoyODYyLCJmbCI6Mjc1MSwibnciOjIyLCJydiI6MCwicHIiOjExNSwic3QiOjAsInVyIjoiaHR0cDovL3N0YWNrb3ZlcmZsb3cuY29tL2Fib3V0L2NvbnRhY3QiLCJyZSI6MX0&amp;s=hRods5B22XvRBwWIwtIMekcyNF8">advertising info</a>
+
+                    <a onclick='StackExchange.switchMobile("on")'>mobile</a>
+                    <b><a href="http://stackoverflow.com/contact">contact us</a></b>
+                        <b><a href="http://meta.stackoverflow.com/">feedback</a></b>
+                    
+                </div>
+                <div id="footer-sites">
+                    <table>
+    <tbody><tr>
+            <th colspan="3">
+                Technology
+            </th>
+            <th>
+                Life / Arts
+            </th>
+            <th>
+                Culture / Recreation
+            </th>
+            <th>
+                Science
+            </th>
+            <th>
+                Other
+            </th>
+    </tr>
+    <tr>
+            <td>
+                <ol>
+                        <li><a href="http://stackoverflow.com/" title="professional and enthusiast programmers">Stack Overflow</a></li>
+                        <li><a href="http://serverfault.com/" title="professional system and network administrators">Server Fault</a></li>
+                        <li><a href="http://superuser.com/" title="computer enthusiasts and power users">Super User</a></li>
+                        <li><a href="http://webapps.stackexchange.com/" title="power users of web applications">Web Applications</a></li>
+                        <li><a href="http://askubuntu.com/" title="Ubuntu users and developers">Ask Ubuntu</a></li>
+                        <li><a href="http://webmasters.stackexchange.com/" title="pro webmasters">Webmasters</a></li>
+                        <li><a href="http://gamedev.stackexchange.com/" title="professional and independent game developers">Game Development</a></li>
+                        <li><a href="http://tex.stackexchange.com/" title="users of TeX, LaTeX, ConTeXt, and related typesetting systems">TeX - LaTeX</a></li>
+                            </ol></td><td><ol>
+                        <li><a href="http://programmers.stackexchange.com/" title="professional programmers interested in conceptual questions about software development">Programmers</a></li>
+                        <li><a href="http://unix.stackexchange.com/" title="users of Linux, FreeBSD and other Un*x-like operating systems.">Unix &amp; Linux</a></li>
+                        <li><a href="http://apple.stackexchange.com/" title="power users of Apple hardware and software">Ask Different (Apple)</a></li>
+                        <li><a href="http://wordpress.stackexchange.com/" title="WordPress developers and administrators">WordPress Answers</a></li>
+                        <li><a href="http://gis.stackexchange.com/" title="cartographers, geographers and GIS professionals">Geographic Information Systems</a></li>
+                        <li><a href="http://electronics.stackexchange.com/" title="electronics and electrical engineering professionals, students, and enthusiasts">Electrical Engineering</a></li>
+                        <li><a href="http://android.stackexchange.com/" title="enthusiasts and power users of the Android operating system">Android Enthusiasts</a></li>
+                        <li><a href="http://security.stackexchange.com/" title="Information security professionals">Information Security</a></li>
+                            </ol></td><td><ol>
+                        <li><a href="http://dba.stackexchange.com/" title="database professionals who wish to improve their database skills and learn from others in the community">Database Administrators</a></li>
+                        <li><a href="http://drupal.stackexchange.com/" title="Drupal developers and administrators">Drupal Answers</a></li>
+                        <li><a href="http://sharepoint.stackexchange.com/" title="SharePoint enthusiasts">SharePoint</a></li>
+                        <li><a href="http://ux.stackexchange.com/" title="user experience researchers and experts">User Experience</a></li>
+                        <li><a href="http://mathematica.stackexchange.com/" title="users of Mathematica">Mathematica</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#technology" class="more">
+                                more (14)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://photo.stackexchange.com/" title="professional, enthusiast and amateur photographers">Photography</a></li>
+                        <li><a href="http://scifi.stackexchange.com/" title="science fiction and fantasy enthusiasts">Science Fiction &amp; Fantasy</a></li>
+                        <li><a href="http://cooking.stackexchange.com/" title="professional and amateur chefs">Seasoned Advice (cooking)</a></li>
+                        <li><a href="http://diy.stackexchange.com/" title="contractors and serious DIYers">Home Improvement</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#lifearts" class="more">
+                                more (13)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://english.stackexchange.com/" title="linguists, etymologists, and serious English language enthusiasts">English Language &amp; Usage</a></li>
+                        <li><a href="http://skeptics.stackexchange.com/" title="scientific skepticism">Skeptics</a></li>
+                        <li><a href="http://judaism.stackexchange.com/" title="those who base their lives on Jewish law and tradition and anyone interested in learning more">Mi Yodeya (Judaism)</a></li>
+                        <li><a href="http://travel.stackexchange.com/" title="road warriors and seasoned travelers">Travel</a></li>
+                        <li><a href="http://christianity.stackexchange.com/" title="committed Christians, experts in Christianity and those interested in learning more">Christianity</a></li>
+                        <li><a href="http://gaming.stackexchange.com/" title="passionate videogamers on all platforms">Arqade (gaming)</a></li>
+                        <li><a href="http://bicycles.stackexchange.com/" title="people who build and repair bicycles, people who train cycling, or commute on bicycles">Bicycles</a></li>
+                        <li><a href="http://rpg.stackexchange.com/" title="gamemasters and players of tabletop, paper-and-pencil role-playing games">Role-playing Games</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#culturerecreation" class="more">
+                                more (21)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://math.stackexchange.com/" title="people studying math at any level and professionals in related fields">Mathematics</a></li>
+                        <li><a href="http://stats.stackexchange.com/" title="statisticians, data analysts, data miners and data visualization experts">Cross Validated (stats)</a></li>
+                        <li><a href="http://cstheory.stackexchange.com/" title="theoretical computer scientists and researchers in related fields">Theoretical Computer Science</a></li>
+                        <li><a href="http://physics.stackexchange.com/" title="active researchers, academics and students of physics">Physics</a></li>
+                        <li><a href="http://mathoverflow.net/" title="professional mathematicians">MathOverflow</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#science" class="more">
+                                more (7)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://stackapps.com/" title="apps, scripts, and development with the Stack Exchange API">Stack Apps</a></li>
+                        <li><a href="http://meta.stackoverflow.com/" title="meta-discussion of the Stack Exchange family of Q&amp;A websites">Meta Stack Overflow</a></li>
+                        <li><a href="http://area51.stackexchange.com/" title="proposing new sites in the Stack Exchange network">Area 51</a></li>
+                        <li><a href="http://careers.stackoverflow.com/">Stack Overflow Careers</a></li>
+                    
+                </ol>
+            </td>
+    </tr>
+</tbody></table>
+                </div>
+            </div>
+
+            <div id="copyright">
+                site design / logo © 2014 stack exchange inc; user contributions licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license">cc-wiki</a> 
+ with <a href="http://blog.stackoverflow.com/2009/06/attribution-required/" rel="license">attribution required</a>
+            </div>
+            <div id="footer-flair">
+                <a href="http://creativecommons.org/licenses/by-sa/3.0/" class="cc-wiki-link"></a>
+            </div>
+            <div id="svnrev">
+                rev 2013.12.31.1271
+            </div>
+            
+        </div>
+    </div>
+    <noscript>
+        <div id="noscript-warning">Stack Overflow works best with JavaScript enabled<img src="http://pixel.quantserve.com/pixel/p-c1rF4kxgLUzNc.gif" alt="" class="dno"></div>
+    </noscript>
+<script type="text/javascript">var p = "http", d = "static"; if (document.location.protocol == "https:") { p += "s"; d = "engine"; } var z = document.createElement("script"); z.type = "text/javascript"; z.async = true; z.src = p + "://" + d + ".adzerk.net/ados.js"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(z, s);</script>
+<script type="text/javascript">
+    var ados = ados || {};
+    ados.run = ados.run || [];
+    ados.run.push(function () { ados_setKeywords('c%23,.net,webcam,photo');; ados_load(); });         
+</script>
+
+    <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(['_setAccount','UA-5620270-1']);
+        _gaq.push(['_setCustomVar', 1, 'tags', '|c#|.net|webcam|photo|']); 
+_gaq.push(['_trackPageview']);
+    var _qevents = _qevents || [];
+    var _comscore = _comscore || [];
+    (function () {
+        var ssl='https:'==document.location.protocol,
+            s=document.getElementsByTagName('script')[0],
+            ga=document.createElement('script');
+        ga.type='text/javascript';
+        ga.async=true;
+        ga.src=(ssl?'https://ssl':'http://www')+'.google-analytics.com/ga.js';
+        s.parentNode.insertBefore(ga,s);
+        var sc=document.createElement('script');
+        sc.type='text/javascript';
+        sc.async=true;
+        sc.src=(ssl?'https://secure':'http://edge')+'.quantserve.com/quant.js';
+        s.parentNode.insertBefore(sc, s);
+        
+        var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
+        s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
+        el.parentNode.insertBefore(s, el);
+        
+    })();
+    _comscore.push({ c1: "2", c2: "17440561" });
+    _qevents.push({ qacct: "p-c1rF4kxgLUzNc" });
+    </script>
+            
+
+</body></html>

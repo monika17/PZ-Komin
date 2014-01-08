@@ -32,7 +32,6 @@ namespace Komin
             InitializeComponent();
             TextInsertTimer.Start();
             this.Visible = true;
-            textMessageContainer.DocumentText = "";
         }
 
         public TextMessagingPanel(KominClientSideConnection conn, uint receiver_id, bool receiver_is_group, Form callingForm)
@@ -50,10 +49,7 @@ namespace Komin
             while (on_inserting) ;
             on_inserting = true;
             if (text_insert != null)
-            {
-                textMessageContainer.Document.Write(text_insert);
-                textMessageContainer.Document.Window.ScrollTo(0, textMessageContainer.Document.Body.ScrollRectangle.Height);
-            }
+                textMessageContainer.Text += text_insert;
 
             text_insert = null;
             on_inserting = false;
@@ -104,17 +100,7 @@ namespace Komin
                 return;
             //insert loopback
             if (!receiver_is_group)
-                InsertText(HtmlText(tmsg.send_date, conn.userdata.contact_name, tmsg.message));
-        }
-
-        private string HtmlText(DateTime sendDate, string contactName, string message)
-        {
-            var width = 435;
-            return "<div style='width: " + width + "px; background-color: #EEEEEE; border-bottom:1px dashed #AAAAAA; padding: 3px; font-family: Verdana, Tahoma, Arial'>" +
-                   "<span style='font-size:8pt'>" + String.Format("{0:d/M/yyyy HH:mm:ss}", sendDate) + "</span>  " +
-                   "<b><span style='font-size: 9pt'>" + contactName + ":</span></b> " +
-                   "<span style='font-size: 9pt'>" + message + "</span><br>" +
-                   "</div>";
+                InsertText("[" + tmsg.send_date + "]  " + conn.userdata.contact_name + ":\r\n" + tmsg.message + "\r\n");
         }
 
         private void onError(string err_text, KominNetworkPacket packet)
@@ -143,6 +129,10 @@ namespace Komin
             Size = new Size(Size.Width, Size.Height + height);
         }
 
-
+        private void textMessageContainer_TextChanged(object sender, EventArgs e)
+        {
+            textMessageContainer.SelectionStart = textMessageContainer.Text.Length;
+            textMessageContainer.ScrollToCaret();
+        }
     }
 }

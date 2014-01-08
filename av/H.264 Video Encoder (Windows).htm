@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><link rel="canonical" href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd797816%28v=vs.85%29.aspx">
+        <title>H.264 Video Encoder (Windows)</title>
+
+
+
+
+<meta name="DCS.dcsuri" content="/en-us/library/windows/desktop/dd797816(d=default,l=en-us,v=vs.85).aspx">
+
+<meta name="NormalizedUrl" content="http://msdn.microsoft.com/en-us/library/windows/desktop/dd797816(d=default,l=en-us,v=vs.85).aspx">
+
+<meta name="VotingContextUrl" content="http://msdn.microsoft.com/en-us/library/windows/desktop/dd797816(d=default,l=en-us,v=vs.85).aspx">
+
+<meta name="MN" content="EE4293CD-7:08:59 AM">
+
+<meta name="Search.ShortId" content="dd797816">
+
+<meta name="Ms.Locale" content="en-us">
+
+
+
+
+
+
+
+        
+    <link rel="shortcut icon" href="http://msdn.microsoft.com/Areas/Epx/Themes/Windows/Content/Winlogo_favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="H.264%20Video%20Encoder%20%28Windows%29_pliki/Combined.css"><script src="H.264%20Video%20Encoder%20%28Windows%29_pliki/ms2.js" async="" type="text/javascript"></script><script class="mtps-injected">try {
+/**/
+(window.MTPS || (window.MTPS = {})).cdnDomains || (window.MTPS.cdnDomains = { 
+	"image": "http://i.msdn.microsoft.com", 
+	"js": "http://i2.msdn.microsoft.com", 
+	"css": "http://i3.msdn.microsoft.com"
+});
+/**/
+} finally { MTPS._injectNextScript_0 && MTPS._injectNextScript_0(); }</script><script src="H.264%20Video%20Encoder%20%28Windows%29_pliki/jquery-1.js" class="mtps-injected"></script><script class="mtps-injected">try {
+//
+  var literalNormalizedUrl = '/en-us/library/windows/desktop/dd797816(d=default,l=en-us,v=vs.85).aspx';
+  var wt_nvr_ru = 'WT_NVR_RU';
+  var wt_fpcdom = '.microsoft.com';
+  var wt_domlist = 'msdn.microsoft.com';
+  var wt_pathlist = '';
+  var wt_paramlist = 'DCSext.mtps_devcenter';
+  var wt_siteid = 'MSDN';
+  var gDomain = 'm.webtrends.com';
+  var gDcsId = 'dcsmgru7m99k7mqmgrhudo0k8_8c6m';
+  var gFpc = 'WT_FPC';
+
+
+
+  if (document.cookie.indexOf(gFpc + "=") == -1) {
+    var wtidJs = document.createElement("script");
+    wtidJs.src = "//" + gDomain + "/" + gDcsId + "/wtid.js";
+    document.getElementsByTagName("head")[0].appendChild(wtidJs);
+  }
+
+
+
+  var detectedLocale = 'en-us';
+  var wtsp = '_msdn_';
+  var gTrackEvents = '0';
+/**/
+} finally { MTPS._injectNextScript_2 && MTPS._injectNextScript_2(); }</script><script class="mtps-injected">try {
+/**/
+  var omni_guid = "bfa7569d-dc85-4056-a479-d9fc120b8a4c";
+/**/
+} finally { MTPS._injectNextScript_3 && MTPS._injectNextScript_3(); }</script><script src="H.264%20Video%20Encoder%20%28Windows%29_pliki/Combined_003.js" class="mtps-injected"></script><meta content="windows desktop" name="ms.Center"><meta content="windows desktop: learn" name="ms.Section"><meta content="dd797816" name="ms.ShortId"><meta content="windows desktop: learn: dd797816" name="ms.TOC"><script src="H.264%20Video%20Encoder%20%28Windows%29_pliki/SearchBox.js" class="mtps-injected"></script><script src="H.264%20Video%20Encoder%20%28Windows%29_pliki/Combined_002.js" class="mtps-injected"></script><script src="H.264%20Video%20Encoder%20%28Windows%29_pliki/jquery.js" class="mtps-injected"></script><script src="H.264%20Video%20Encoder%20%28Windows%29_pliki/Combined.js" class="mtps-injected"></script><script src="H.264%20Video%20Encoder%20%28Windows%29_pliki/broker.js"></script><script class="mtps-injected">try {
+$(document).ready(function() {
+        try {
+            var token = $("#globalRequestVerification input[name='__RequestVerificationToken']").clone();
+            $("#siteFeedbackForm").append(token);
+        } catch(err) {
+            
+        }
+    });
+} finally { MTPS._injectNextScript_9 && MTPS._injectNextScript_9(); }</script><link media="print" type="text/css" rel="stylesheet" href="H.264%20Video%20Encoder%20%28Windows%29_pliki/PrintView.css"></head>
+    <body class="library FF">
+        <div id="page">
+            
+            
+  
+            
+    
+    
+    <div id="ux-header" class="FF ltr">
+        <div id="headerContainer">
+            <div id="logoAndSearchBox">
+                <div id="logo">
+                    <a href="http://msdn.microsoft.com/windows/desktop/" title="Windows"><img alt="Windows" src="H.264%20Video%20Encoder%20%28Windows%29_pliki/Windows_logo.png"></a>       
+                </div>
+              
+        <div id="selectedTab">
+            <a class="dropDownToggle" href="javascript:void(0);">Dev Center - Desktop</a>    
+        </div>
+    <div id="toclevel1_menu" style="display: none; left: 157px; top: 67px;">
+        <ul>
+                <li><a href="http://msdn.microsoft.com/windows/" title="Dev Center Home">Dev Center Home</a></li>
+                <li><a href="http://msdn.microsoft.com/windows/apps/" title="Windows Store apps">Windows Store apps</a></li>
+                <li><a href="http://msdn.microsoft.com/ie/" title="Internet Explorer">Internet Explorer</a></li>
+                <li><a href="http://msdn.microsoft.com/windows/desktop/" title="Desktop">Desktop</a></li>
+                <li><a href="http://msdn.microsoft.com/windows/hardware/" title="Hardware">Hardware</a></li>
+        </ul>
+        <div style="clear: both"></div>
+    </div> 
+
+                
+                  
+
+    
+
+<div class="SearchBox">
+              <form id="HeaderSearchForm" name="HeaderSearchForm" method="get" action="http://social.msdn.microsoft.com/Search" onsubmit="return Epx.Controls.SearchBox.searchBoxOnSubmit(this, this.title);">
+            <input autocomplete="off" id="HeaderSearchTextBox" name="query" maxlength="200" onfocus="Epx.Controls.SearchBox.watermarkFocus(this, this.title, 'SearchBoxOnFocus')" onblur="Epx.Controls.SearchBox.watermarkBlur(this, this.title, 'SearchBoxOnFocus')" type="text">
+            <input id="RefinementId" name="refinement" value="181" type="hidden">
+            <button title="Search" id="HeaderSearchButton" value="" type="submit" class="header-search-button"></button>
+        <div style="display: none; text-align: left; border: 1px solid buttonshadow; position: absolute; z-index: 1000; padding: 2px; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;,&quot;Lucida Grande&quot;,Verdana,Arial,Helvetica,sans-serif; font-size: 12px;" id="SearchFlyoutContainer"><div id="SuggestionContainer"><ul style="list-style: none outside none; padding: 4px 2px 0px 1px; cursor: pointer; margin: 1px; white-space: nowrap;"></ul></div></div></form>
+        
+    
+</div>
+
+                <div class="Clear"></div>
+            </div>
+            <div class="Clear"></div>
+            <div class="ux-internav">
+    <div class="toclevel2"> 
+            <a class="normal" href="https://sysdev.microsoft.com/en-us/desktop/" title="Dashboard">Dashboard</a>
+            <a class="normal" href="http://msdn.microsoft.com/windows/desktop/bg161546" title="Get Started">Get Started</a>
+            <a class="normal" href="http://msdn.microsoft.com/windows/desktop/aa511258" title="Design">Design</a>
+            <a class="active" href="http://msdn.microsoft.com/windows/desktop/aa904962" title="Develop">Develop</a>
+            <a class="normal" href="http://msdn.microsoft.com/windows/desktop/dd535817" title="Certify">Certify</a>
+    </div>
+    <div class="clear"></div>
+
+            </div>
+            <div id="signIn"><a class="scarabLink" href="https://login.live.com/login.srf?wa=wsignin1.0&amp;rpsnv=12&amp;ct=1388761739&amp;rver=6.0.5276.0&amp;wp=MCLBI&amp;wlcxt=MSDN%24MSDN%24MSDN&amp;wreply=http%3a%2f%2fmsdn.microsoft.com%2fen-us%2flibrary%2fwindows%2fdesktop%2fdd797816%2528v%3dvs.85%2529.aspx&amp;lc=1033&amp;id=254354&amp;mkt=en-US" title="Sign in">Sign in</a></div>
+        </div>  
+        <div id="blackBar">
+    <div class="toclevel3"> 
+            <a style="opacity: 1; left: 0px;" class="active" href="http://msdn.microsoft.com/library/windows/desktop/bg125389" title="Desktop technologies">Desktop technologies</a>
+            <a style="opacity: 1; left: 0px;" class="normal" href="http://msdn.microsoft.com/library/windows/desktop/bg125390" title="Server and system ">Server and system </a>
+            <a style="opacity: 1; left: 0px;" class="normal" href="http://msdn.microsoft.com/library/windows/desktop/hh920508%28vs.85%29" title="API index">API index</a>
+            <a style="opacity: 1; left: 0px;" class="normal" href="http://code.msdn.microsoft.com/windowsdesktop/" title="Samples">Samples</a>
+            <a style="opacity: 1; left: 0px;" class="normal" href="http://msdn.microsoft.com/windows/desktop/aa904945" title="Community">Community</a>
+    </div>
+    <div class="clear"></div>
+
+        </div>
+    </div>
+
+
+        
+            <div id="body">
+                
+
+
+
+
+
+
+
+    <div style="width: 280px; max-width: 480px; height: auto;" id="leftNav">
+
+
+
+<div style="" id="tocnav">
+            <div style="padding-left: 0px;" class="toclevel0" data-toclevel="0">
+<a style="width: auto; height: auto; margin-top: 0px;" class="toc_collapsed" href="#">+</a><a data-tochassubtree="true" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ee663260%28v=vs.85%29.aspx" id="bg126512_VS.85_en-us" mtpsaliasid="" mtpsassetid="30595274-5234-4722-ac4e-4471b4d8dae2_VS.85_en-us" mtpsshortid="ee663260_VS.85_en-us" title="Audio and Video">Audio and Video</a>            </div>
+            <div style="padding-left: 0px;" class="toclevel0" data-toclevel="0">
+<a style="width: auto; height: auto; margin-top: 0px;" class="toc_collapsed" href="#">+</a><a data-tochassubtree="true" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms694197%28v=vs.85%29.aspx" id="dd206759_VS.85_en-us" mtpsaliasid="" mtpsassetid="0d355ad1-d674-432e-809a-9fb27ac5f610_VS.85_en-us" mtpsshortid="ms694197_VS.85_en-us" title="Microsoft Media Foundation">Microsoft Media Foundation</a>            </div>
+            <div style="padding-left: 0px;" class="toclevel0" data-toclevel="0">
+<a style="width: auto; height: auto; margin-top: 0px;" class="toc_collapsed" href="#">+</a><a data-tochassubtree="true" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms704847%28v=vs.85%29.aspx" id="dd799033_VS.85_en-us" mtpsaliasid="" mtpsassetid="f16f1461-89bc-474d-a57e-5ef9efd0d5a6_VS.85_en-us" mtpsshortid="ms704847_VS.85_en-us" title="Media Foundation Programming Reference">Media Foundation Programming Reference</a>            </div>
+            <div data-childrenloaded="true" style="padding-left: 13px;" class="toclevel1" data-toclevel="1">
+<a style="width: auto; height: auto; margin-top: 0px;" class="toc_expanded" href="#">-</a><a data-tochassubtree="true" href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff819077%28v=vs.85%29.aspx" id="dd799034_VS.85_en-us" mtpsaliasid="" mtpsassetid="c944e5df-c375-4bad-92dc-bb3d8c09b1b3_VS.85_en-us" mtpsshortid="ff819077_VS.85_en-us" title="Codec Objects">Codec Objects</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd742784%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="AAC Decoder">AAC Decoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd742785%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="AAC Encoder">AAC Encoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd940322%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="DV Video Decoder">DV Video Decoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447681%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Dolby Audio Decoder">Dolby Audio Decoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447682%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Dolby Digital Audio Encoder">Dolby Digital Audio Encoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd797815%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="H.264 Video Decoder">H.264 Video Decoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2 current" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd797816%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="H.264 Video Encoder">H.264 Video Encoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh162907%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="MP3 Audio Encoder">MP3 Audio Encoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh706793%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="MPEG Audio Decoder">MPEG Audio Decoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh162908%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="MPEG-2 Audio Encoder">MPEG-2 Audio Encoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh162909%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="MPEG-2 Video Decoder">MPEG-2 Video Decoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff819454%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="MPEG-4 Part 2 Video Decoder">MPEG-4 Part 2 Video Decoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff819497%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Media Audio Decoder">Windows Media Audio Decoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff819498%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Media Audio Encoder">Windows Media Audio Encoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff819499%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Media Audio Voice Decoder">Windows Media Audio Voice Decoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff819500%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Media Audio Voice Encoder">Windows Media Audio Voice Encoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff819509%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Media MP3 Decoder">Windows Media MP3 Decoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff819502%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Media MPEG4 V1/V2 Decoder">Windows Media MPEG4 V1/V2 Decoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff819503%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Media MPEG-4 V3 Decoder">Windows Media MPEG-4 V3 Decoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff819510%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Media Video 7/8 Encoder">Windows Media Video 7/8 Encoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff819504%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Media Video 9 Decoder">Windows Media Video 9 Decoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff819505%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Media Video 9 Encoder">Windows Media Video 9 Encoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff819506%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Media Video 9 Screen Decoder">Windows Media Video 9 Screen Decoder</a>            </div>
+            <div style="padding-left: 26px;" class="toclevel2" data-toclevel="2">
+<span style="width: auto; height: auto; margin-top: 0px;" class="toc_empty">●</span><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff819507%28v=vs.85%29.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Media Video 9 Screen Encoder">Windows Media Video 9 Screen Encoder</a>            </div>
+</div>
+        
+
+        
+
+        
+        
+        <div style="height: 7003px;" id="toc-resizable-ew" class="toc-resizable-ew"></div>
+        
+
+<a style="left: 280px; display: inline-block;" id="NavigationResize" href="javascript:void(0)">
+    <img style="" class="cl_nav_resize_open" src="H.264%20Video%20Encoder%20%28Windows%29_pliki/ImageSprite.png" title="Expand" alt="Expand">
+    <img style="display: none;" class="cl_nav_resize_close" src="H.264%20Video%20Encoder%20%28Windows%29_pliki/ImageSprite.png" title="Minimize" alt="Minimize">
+</a>
+
+
+
+    </div>
+<div style="margin-left: 280px; width: auto;" id="content" class="content">
+
+
+
+
+
+
+
+        
+
+<div class="topic" xmlns="http://www.w3.org/1999/xhtml">
+  <h1 class="title">H.264 Video Encoder</h1>
+  
+  <div id="mainSection">
+<div class="clsServerSDKContent">
+
+</div>
+<p>
+        The Microsoft Media Foundation H.264 video encoder is a <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms703138%28v=vs.85%29.aspx">Media Foundation transform</a> that supports the following H.264 profiles:
+      </p>
+<ul>
+<li>Baseline Profile</li>
+<li>Main Profile</li>
+<li>
+            High profile (requires Windows&nbsp;8)
+          </li>
+</ul>
+<p>The H.264 video encoder exposes the following interfaces:</p>
+<ul>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd311953%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ICodecAPI</strong></a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms696260%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IMFTransform</strong></a>
+</li>
+</ul>
+<h2><a id="input_types"></a><a id="INPUT_TYPES"></a>Input Types</h2>
+<p>The input media type must have one of the following subtypes:</p>
+<ul>
+<li><strong>MFVideoFormat_I420</strong></li>
+<li><strong>MFVideoFormat_IYUV</strong></li>
+<li><strong>MFVideoFormat_NV12</strong></li>
+<li><strong>MFVideoFormat_YUY2</strong></li>
+<li><strong>MFVideoFormat_YV12</strong></li>
+</ul>
+<p>
+          For more information about these subtypes, see <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/aa370819%28v=vs.85%29.aspx">Video Subtype GUIDs</a>.
+        </p>
+<p>
+          The output type must be set before the input type. Until the output type is set, the encoder's <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms700113%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IMFTransform::SetInputType</strong></a> method returns <strong>MF_E_TRANSFORM_TYPE_NOT_SET</strong>.
+        </p>
+<h2><a id="output_types"></a><a id="OUTPUT_TYPES"></a>Output Types</h2>
+<p>The encoder supports a single output subtype:</p>
+<ul>
+<li><strong>MFVideoFormat_H264</strong></li>
+</ul>
+<p>Set the following attributes on the output media type.</p>
+<table>
+<tbody><tr><th>Attribute</th><th>Description</th></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms702272%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MF_MT_MAJOR_TYPE</strong></a>
+</td><td>
+              Major type. Must be <strong>MFMediaType_Video</strong>.
+            </td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms700208%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MF_MT_SUBTYPE</strong></a>
+</td><td>
+              Video subtype.
+              Must be <strong>MFVideoFormat_H264</strong>.
+            </td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms703792%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MF_MT_AVG_BITRATE</strong></a>
+</td><td>Average encoded bit rate, in bits per second.  Must be greater than zero.</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms700140%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MF_MT_FRAME_RATE</strong></a>
+</td><td>Frame rate.</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms701619%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MF_MT_FRAME_SIZE</strong></a>
+</td><td>Frame size.</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms694868%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MF_MT_INTERLACE_MODE</strong></a>
+</td><td>Interlace mode.</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms700193%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MF_MT_MPEG2_PROFILE </strong></a>
+</td><td>
+<p>H.264 encoding profile.</p>
+<p>The supported values are:</p>
+<ul>
+<li><strong>eAVEncH264VProfile_Base</strong> (default)
+                </li>
+<li><strong>eAVEncH264VProfile_Main</strong></li>
+<li><strong>eAVEncH264VProfile_High</strong> (requires Windows&nbsp;8)
+                  </li>
+</ul>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms700203%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MF_MT_MPEG2_LEVEL</strong></a>
+</td><td>
+<p>Optional. Specifies the H.264 encoding level.</p>
+<p>The default value is –1, indicating that the encoder will select the encoding level.</p>
+<p> It is recommended not to set the level in the media type, and allow 
+the encoder to select the level. The encoder can derive the proper level
+ for a given video stream, taking into account the format constraints 
+and the characteristics of the video.  For more information about 
+profile and level constraints, refer to Annex A of ITU-T H.264.</p>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms704767%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MF_MT_PIXEL_ASPECT_RATIO</strong></a>
+</td><td>Optional. Specifies the pixel aspect ratio. The default value is 1:1.</td></tr>
+</tbody></table>
+<p>&nbsp;</p>
+<p>
+          After the output type is set, the video encoder updates the type by adding the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms694847%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MF_MT_MPEG_SEQUENCE_HEADER</strong></a> attribute. This attribute contains the sequence header.
+        </p>
+<h2><a id="Codec_Properties"></a><a id="codec_properties"></a><a id="CODEC_PROPERTIES"></a>Codec Properties</h2>
+<p>
+          The H.264 encoder implements the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd311953%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ICodecAPI</strong></a> interface for setting encoding parameters. 
+       It supports the following properties.
+        </p>
+<p>For the codec requirements for HCK encoder certification, see the <strong>Certified Hardware Encoder</strong> section below.</p>
+<p>
+            The following properties are supported in Windows&nbsp;7.
+          </p>
+<table>
+<tbody><tr><th>Property</th><th>Description</th></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317842%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CODECAPI_AVEncCommonRateControlMode</strong></a>
+</td><td>
+              Sets the rate control mode. See Remarks. The default mode is unconstrained variable bit rate (VBR).
+            </td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317841%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CODECAPI_AVEncCommonQuality</strong></a>
+</td><td>
+<p>
+                Sets the quality level. This property applies when the rate control mode is quality-based VBR (<strong>eAVEncCommonRateControlMode_Quality</strong>).
+                The valid range is 1–100. The default value is 70.
+              </p>
+<p>
+                  To set this parameter, set the property before calling <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms702016%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IMFTransform::SetOutputType</strong></a>.
+                </p>
+<p>
+                  To set this parameter in Windows&nbsp;7, set the property before calling <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms702016%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IMFTransform::SetOutputType</strong></a>. The encoder ignores changes after the output type is set.
+                </p>
+<p>
+                  In Windows&nbsp;8, this property can be set at any 
+time during encoding. Changes are applied starting at the next input 
+frame.
+                </p>
+<p>
+                  Internally, the encoder converts this property to an <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447581%28v=vs.85%29.aspx">AVEncVideoEncodeQP</a> value.
+                </p>
+</td></tr>
+</tbody></table>
+<p>&nbsp;</p>
+<p>
+            The following properties require Windows&nbsp;8.
+          </p>
+<table>
+<tbody><tr><th>Property</th><th>Description</th></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447561%28v=vs.85%29.aspx">CODECAPI_AVEncAdaptiveMode</a>
+</td><td>
+<p>
+                  Sets the adaptive encoding mode. The H.264 encoder supports the following modes in Windows&nbsp;8:</p><ul>
+<li><strong>eAVEncAdaptiveMode_None</strong>. No adaptive encoding. (Default.)
+                    </li>
+<li><strong>eAVEncAdaptiveMode_FrameRate</strong>. Adaptively change the frame rate.
+                    </li>
+</ul>
+
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317651%28v=vs.85%29.aspx">CODECAPI_AVEncCommonBufferSize</a>
+</td><td>
+<p>Sets the buffer size, in bytes, for constant bit rate (CBR) encoding.</p>
+<p>
+                  The valid range is [1 ... 2<span class="sup">32</span>–1].
+                </p>
+<p>
+                  Requires Windows&nbsp;8.
+                </p>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317658%28v=vs.85%29.aspx">CODECAPI_AVEncCommonMaxBitRate</a>
+</td><td>
+<p>
+                  For constrained VBR encoding, specifies the rate at 
+which the "leaky bucket" is drained, in bits per second. This property 
+applies when the rate control mode is <strong>eAVEncCommonRateControlMode_PeakConstrainedVBR</strong>.
+                </p>
+<p>
+                  The valid range is [1 ... 2<span class="sup">32</span>–1].
+                </p>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317662%28v=vs.85%29.aspx">CODECAPI_AVEncCommonMeanBitRate</a>
+</td><td>
+<p>
+                  Sets the average bit rate for the encoded bit stream, 
+in bits per second. This property is ignored if the rate control mode is
+ <strong>eAVEncCommonRateControlMode_Quality</strong>.
+                </p>
+<p>
+                  The valid range is [1 ... 2<span class="sup">32</span>–1].
+                </p>
+<p>
+                  In CBR and unconstrained VBR modes, the average bit 
+rate determines the final size of the file. In CBR mode, the average bit
+ rate is also the rate at which compressed bits are drained from the 
+"leaky bucket." (For more information, see <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd206751%28v=vs.85%29.aspx">The Leaky Bucket Buffer Model</a>.)
+                </p>
+<p>
+                  In Windows&nbsp;7, the average bit rate is specified by the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms703792%28v=vs.85%29.aspx">MF_MT_AVG_BITRATE</a> attribute on the media type.
+                </p>
+<p>
+                  In Windows&nbsp;8, you can set the average bit rate using either the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms703792%28v=vs.85%29.aspx">MF_MT_AVG_BITRATE</a> attribute or the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317662%28v=vs.85%29.aspx">CODECAPI_AVEncCommonMeanBitRate</a>
+ property. If both are set, CODECAPI_AVEncCommonMeanBitRate overrides.
+                In Windows&nbsp;8, you can set the average bit rate 
+during encoding. If the bit rate changes, the encoder uses adaptive 
+encoding.</p>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317840%28v=vs.85%29.aspx">CODECAPI_AVEncCommonQualityVsSpeed</a>
+</td><td>
+<p>
+                  Sets the quality/speed tradeoff. Valid range:</p><ul>
+<li>
+                      0–33: Low complexity
+                    </li>
+<li>
+                      34–66: Medium complexity
+                      (default)
+                    </li>
+<li>
+                      67–100: High complexity
+                    </li>
+</ul>
+
+<p>This value affects how the encoder performs various encoding 
+operations, such as motion compensation. At higher complexity levels, 
+the encoder runs more slowly but produces better quality at the same bit
+ rate.</p>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447566%28v=vs.85%29.aspx">CODECAPI_AVEncH264CABACEnable</a>
+</td><td>
+<p>
+                  Enables or disables CABAC (context-adaptive binary 
+arithmetic coding) for H.264 entropy coding. The default value is <strong>VARIANT_FALSE</strong>.
+                </p>
+<p>CABAC is not used for Baseline profile.</p>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447572%28v=vs.85%29.aspx">CODECAPI_AVEncH264SPSID</a>
+</td><td>
+<p>
+                  Sets the value of <strong>seq_parameter_set_id</strong>  in the SPS NAL unit of the H.264 bitstream.
+                </p>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317879%28v=vs.85%29.aspx">CODECAPI_AVEncMPVDefaultBPictureCount</a>
+</td><td>Sets the maximum number of consecutive B frames in the output bitstream. Valid values are:<ul>
+<li>0: Do not use B frames (default).</li>
+<li>1: Use one B frame.</li>
+<li>2: Use two B frames.</li>
+</ul>
+<p>
+                  To set this parameter, set the property before calling <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms702016%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IMFTransform::SetOutputType</strong></a>.
+                </p>
+<p>For Baseline profile, the number of B frames is always zero. The encoder will override nonzero values.</p>
+<p>
+                  For other H.264 profiles, if this property is nonzero,
+ the encoding pattern is IBBPBBP, where the maximum number of 
+consecutive B frames is equal to <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317879%28v=vs.85%29.aspx">CODECAPI_AVEncMPVDefaultBPictureCount</a>.
+                </p>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317889%28v=vs.85%29.aspx">CODECAPI_AVEncMPVGOPSize</a>
+</td><td>
+<p>
+                  Sets the number of pictures from one GOP header to the
+ next, including the leading anchor but not the following one.
+
+                </p>
+<p>
+                  The valid range is [0 ... 2<span class="sup">32</span>–1]. If zero, the encoder selects the GOP size. The default value is zero.
+                </p>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447575%28v=vs.85%29.aspx">CODECAPI_AVEncNumWorkerThreads</a>
+</td><td>
+<p>Sets the number of worker threads used by a encoder.</p>
+<p>
+                  The valid range is 0–16. If zero, the encoder selects the number of threads.
+                </p>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447576%28v=vs.85%29.aspx">CODECAPI_AVEncVideoContentType</a>
+</td><td>
+<p>Indicates the type of video content.</p>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447581%28v=vs.85%29.aspx">CODECAPI_AVEncVideoEncodeQP</a>
+</td><td>
+<p>
+                  Valid range:
+                  16–51. The default value is 24.
+                </p>
+<p>
+                  This property applies when the rate control mode is <strong>eAVEncCommonRateControlMode_Quality</strong>.
+                </p>
+<p>
+                  This  property configures the same encoding setting as <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317841%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">AVEncCommonQuality</strong></a>. However, <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447581%28v=vs.85%29.aspx">AVEncVideoEncodeQP</a> enables the application to specify the value of QP directly. If both properties are set, AVEncVideoEncodeQP overrides.
+                </p>
+<p>The default value of 24 corresponds to the default value of 70 for the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317841%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">AVEncCommonQuality</strong></a> setting.</p>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447587%28v=vs.85%29.aspx">CODECAPI_AVEncVideoForceKeyFrame</a>
+</td><td>
+<p>Forces the encoder to code the next frame as a key frame.</p>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447589%28v=vs.85%29.aspx">CODECAPI_AVEncVideoMinQP</a>
+</td><td>
+<p>
+                  Valid range:
+                  0–51. The default value is 0.
+                </p>
+<p>This property applies to all rate control modes. The encoder should not produce a QP value lower than what is specified by the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447589%28v=vs.85%29.aspx">CODECAPI_AVEncVideoMinQP</a> property.</p>
+</td></tr>
+<tr><td>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447590%28v=vs.85%29.aspx">CODECAPI_AVLowLatencyMode</a>
+</td><td>
+<p>Enables or disables low-latency mode. See "Multithreading" in the Remarks section.</p>
+</td></tr>
+</tbody></table>
+<p>&nbsp;</p>
+<h2>Remarks</h2>
+<p>The encoder supports the following rate control modes.</p>
+<table>
+<tbody><tr><th>Mode</th><th>Constant</th><th>Description</th></tr>
+<tr><td>Constant bit rate (CBR)</td><td><strong>eAVEncCommonRateControlMode_CBR</strong></td><td>
+<p>
+                The encoder tries to achieve a constant bit rate, using a
+ "leaky bucket" model. The target bit rate is given by the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317662%28v=vs.85%29.aspx">CODECAPI_AVEncCommonMeanBitRate</a> property.
+              </p>
+<p>
+                Requires Windows&nbsp;8.
+              </p>
+</td></tr>
+<tr><td>
+              Constrained variable bit rate (VBR)
+            </td><td><strong>eAVEncCommonRateControlMode_PeakConstrainedVBR</strong></td><td>
+<p>
+                The encoder uses a "leaky bucket" model with a peak bit 
+rate. The drain rate for the leaky bucket is given by the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317658%28v=vs.85%29.aspx">CODECAPI_AVEncCommonMaxBitRate</a> property.
+              </p>
+<p>
+                Requires Windows&nbsp;8.
+              </p>
+</td></tr>
+<tr><td>Quality-based variable bit rate (VBR)</td><td><strong>eAVEncCommonRateControlMode_Quality</strong></td><td>
+              The encoder tries to achieve a constant quality level, given by the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317841%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">AVEncCommonQuality</strong></a> property.
+            </td></tr>
+<tr><td>Unconstrained VBR</td><td><strong>eAVEncCommonRateControlMode_UnconstrainedVBR</strong></td><td>
+              The encoder tries to achieve the target bitrate given by the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms703792%28v=vs.85%29.aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MF_MT_AVG_BITRATE</strong></a> attribute in the output media type.  This is the default mode.
+            </td></tr>
+</tbody></table>
+<p>&nbsp;</p>
+<p>
+            CBR and constrained VBR modes require Windows&nbsp;8.
+          </p>
+<p>In Windows&nbsp;8, the encoder sets the following attributes on the output samples:</p>
+<ul>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh162791%28v=vs.85%29.aspx">MFSampleExtension_DecodeTimestamp</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh162794%28v=vs.85%29.aspx">MFSampleExtension_VideoEncodePictureType</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh162795%28v=vs.85%29.aspx">MFSampleExtension_VideoEncodeQP</a>
+</li>
+</ul>
+<p>
+</p><p class="note"><strong>Note</strong>&nbsp;&nbsp;
+            A previous version of the documentation incorrectly stated 
+that the encoder is supported on Windows Server&nbsp;2008&nbsp;R2.
+          </p>
+
+<h3><a id="Multithreading"></a><a id="multithreading"></a><a id="MULTITHREADING"></a>Multithreading</h3>
+<p>In Windows&nbsp;8, the encoder supports two encoding modes:</p><ul>
+<li><strong>Slice encoding.</strong> In this mode, slices are encoded in
+ parallel. Each slice is encoded on a different thread. This mode has 
+low latency, because a single picture is encoded in parallel. However, 
+this approach does not scale as the number of cores increases, because 
+the number of slices is bounded by the number of macroblock rows in the 
+input picture.</li>
+<li><strong>Multi-frame encoding.</strong> In this mode, the encoder 
+accepts multiple frames of input and encodes them in parallel. This mode
+ scales better in a multicore environment, but introduces more latency. </li>
+</ul>
+
+<p>The encoder defaults to slice encoding, to minimize latency. To enable multi-frame encoding, set the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447590%28v=vs.85%29.aspx">CODECAPI_AVLowLatencyMode</a> 
+               property to <strong>VARIANT_FALSE</strong>.</p>
+<p>To set the number of worker threads used by the encoder, set the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447575%28v=vs.85%29.aspx">CODECAPI_AVEncNumWorkerThreads</a> property.</p>
+<p>In Windows&nbsp;7, the encoder always uses slice encoding.</p>
+<h3><a id="Certified_Hardware_Encoder"></a><a id="certified_hardware_encoder"></a><a id="CERTIFIED_HARDWARE_ENCODER"></a>Certified Hardware Encoder</h3>
+<p>If a certified hardware encoder is present, it will generally be used
+ instead of the inbox system encoder for Media Foundation related 
+scenarios.
+Certified encoders are required to support a certain set of <strong>ICodecAPI</strong>
+ properties and can optionally support another set of properties. The 
+certification process should guarantee that the required properties are 
+properly supported and, if an optional property is supported, that it is
+ also properly supported. 
+</p>
+<p>The following is the set of required and optional  <strong>ICodecAPI</strong> properties for encoders to pass the HCK encoder certification.</p>
+<p>The following Windows&nbsp;8 and Windows&nbsp;8.1 <strong>ICodecAPI</strong> properties are required: </p>
+<ul>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317842%28v=vs.85%29.aspx">CODECAPI_AVEncCommonRateControlMode</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317841%28v=vs.85%29.aspx">CODECAPI_AVEncCommonQuality</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317840%28v=vs.85%29.aspx">CODECAPI_AVEncCommonQualityVsSpeed</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317662%28v=vs.85%29.aspx">CODECAPI_AVEncCommonMeanBitRate</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317658%28v=vs.85%29.aspx">CODECAPI_AVEncCommonMaxBitRate</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317651%28v=vs.85%29.aspx">CODECAPI_AVEncCommonBufferSize</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317889%28v=vs.85%29.aspx">CODECAPI_AVEncMPVGOPSize</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447581%28v=vs.85%29.aspx">CODECAPI_AVEncVideoEncodeQP</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447587%28v=vs.85%29.aspx">CODECAPI_AVEncVideoForceKeyFrame</a>
+</li>
+</ul>
+<p>The following Windows&nbsp;8.1 <strong>ICodecAPI</strong> properties are optional, but are tested in HCK if supported.</p>
+<ul>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447589%28v=vs.85%29.aspx">CODECAPI_AVEncVideoMinQP</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dn280638%28v=vs.85%29.aspx">CODECAPI_AVEncVideoLTRBufferControl</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dn280639%28v=vs.85%29.aspx">CODECAPI_AVEncVideoMarkLTRFrame</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dn280646%28v=vs.85%29.aspx">CODECAPI_AVEncVideoUseLTRFrame</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dn280637%28v=vs.85%29.aspx">CODECAPI_AVEncVideoEncodeFrameTypeQP</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dn280634%28v=vs.85%29.aspx">CODECAPI_AVEncSliceControlMode</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dn280636%28v=vs.85%29.aspx">CODECAPI_AVEncSliceControlSize</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dn280640%28v=vs.85%29.aspx">CODECAPI_AVEncVideoMaxNumRefFrame</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dn280644%28v=vs.85%29.aspx">CODECAPI_AVEncVideoMeanAbsoluteDifference</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dn280643%28v=vs.85%29.aspx">CODECAPI_AVEncVideoMaxQP</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dn280645%28v=vs.85%29.aspx">CODECAPI_AVEncVideoROIEnabled</a>
+</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh869834%28v=vs.85%29.aspx">CODECAPI_AVEncVideoTemporalLayerCount</a> (Dynamic)</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447566%28v=vs.85%29.aspx">CODECAPI_AVEncH264CABACEnable</a>
+</li>
+</ul>
+<p>The following Windows&nbsp;8 and Windows&nbsp;8.1 <strong>ICodecAPI</strong> properties are optional, but are tested in HCK if supported.</p>
+<ul>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh869834%28v=vs.85%29.aspx">CODECAPI_AVEncVideoTemporalLayerCount</a>   (Static)</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/hh447590%28v=vs.85%29.aspx">CODECAPI_AVLowLatencyMode</a>
+</li>
+</ul>
+<p>The following <strong>ICodecAPI</strong> properties are optional. They  are not tested in HCK.</p>
+<ul>
+<li>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317879%28v=vs.85%29.aspx">CODECAPI_AVEncMPVDefaultBPictureCount</a>
+</li>
+</ul>
+<h2>Requirements</h2>
+<table>
+<tbody><tr><th>
+<p>Minimum supported client</p>
+</th><td>Windows&nbsp;7 [desktop apps only]</td></tr>
+<tr><th>
+<p>Minimum supported server</p>
+</th><td>None supported</td></tr>
+<tr><th>
+<p>DLL</p>
+</th><td>
+<dl>
+<dt>Mfh264enc.dll</dt>
+</dl>
+</td></tr>
+</tbody></table>
+<h2><a id="see_also"></a>See also</h2>
+<dl>
+<dt>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd757780%28v=vs.85%29.aspx">MPEG-4 Support in Media Foundation</a>
+</dt>
+<dt>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd757927%28v=vs.85%29.aspx">Supported Media Formats in Media Foundation</a>
+</dt>
+<dt>
+<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/aa473818%28v=vs.85%29.aspx">Video Media Types</a>
+</dt>
+</dl>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>Build date: 11/16/2013</p>
+</div>
+</div>
+
+    
+
+
+
+<script id="CommentTemplate" type="text/x-jquery-tmpl">
+    <div class="communityContentAnnotation">
+        <a name="${Index}"></a>
+        <h3>
+            ${Title}
+        </h3>
+        <div class="communityContentAnnotationBody">
+            {{html Body}}
+        </div>
+        <div class="communityContentAnnotationInfo">
+            <div class="communityContentAnnotationAvatarContainer">
+                <a href="${UserAvatar.Href}" title="${UserAvatar.ToolTip}" class="communityContentAnnotationAvatar"><img src="${UserAvatar.ImageUrl}" alt="${UserAvatar.ImageAltText}" width="34" height="34" /></a>
+            </div>
+            <div class="communityContentAnnotationUserDateContainer">
+                <div class="communityContentAnnotationUserContainer">
+                    <a href="${UserAvatar.Href}">
+                        ${User}
+                    </a>
+                </div>
+                <div class="communityContentAnnotationDateContainer">
+                    <span>${Date}</span>
+                    
+                    {{if EditLink}}
+                        <span>
+                            <a href="${EditLink.Href}" title="${EditLink.ToolTip}" class="communityContentCommentEditLink">${EditLink.Title}</a>
+                        </span>
+                    {{/if}}
+
+                    {{if DeleteLink}}
+                        <span>
+                            <a href="${DeleteLink.Href}" title="${DeleteLink.ToolTip}" class="communityContentDeleteLink">${DeleteLink.Title}</a>
+                        </span>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<div class="communityContentContainer">
+    <div id="CommunityContentHeader" class="communityContentHeader">
+        <div class="communityContentHeaderTitleContainer">
+            <h2>Community Additions</h2>
+                <a class="communityContentAddLink" href="http://msdn.microsoft.com/en-us/library/windows/desktop/community/add/dd797816%28v=vs.85%29.aspx">
+                    <span class="communityContentAddButton" title="Add">
+                        ADD
+                    </span>
+                </a>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    
+    <div id="CommunityComments" data-url="/en-us/library/windows/desktop/community/comments/dd797816(v=vs.85).aspx"><div class="communityContentAnnotation">         <a name="3"></a>         <h3>             Usage in a commercial app         </h3>         <div class="communityContentAnnotationBody">             <p>Hi,</p><br><p>Please confirm that I can use this encoder in a commercial application.</p>I'm having a strong wish not to run into licensing issues.<br><br><p>Thanks, Anton</p>         </div>         <div class="communityContentAnnotationInfo">             <div class="communityContentAnnotationAvatarContainer">                 <a href="http://social.msdn.microsoft.com/profile/anton%20a.%20shpakovsky/" title="" class="communityContentAnnotationAvatar"><img src="H.264%20Video%20Encoder%20%28Windows%29_pliki/avatar_003.jpg" alt="" height="34" width="34"></a>             </div>             <div class="communityContentAnnotationUserDateContainer">                 <div class="communityContentAnnotationUserContainer">                     <a href="http://social.msdn.microsoft.com/profile/anton%20a.%20shpakovsky/">                         Anton A. Shpakovsky                     </a>                 </div>                 <div class="communityContentAnnotationDateContainer">                     <span>4/18/2013</span>                                                                                 </div>             </div>         </div>     </div><div class="communityContentAnnotation">         <a name="2"></a>         <h3>             LKJHGFDSA         </h3>         <div class="communityContentAnnotationBody">             ASDFGHJKL         </div>         <div class="communityContentAnnotationInfo">             <div class="communityContentAnnotationAvatarContainer">                 <a href="http://social.msdn.microsoft.com/profile/vin%C3%ADcius%20valerini/" title="" class="communityContentAnnotationAvatar"><img src="H.264%20Video%20Encoder%20%28Windows%29_pliki/avatar_002.jpg" alt="" height="34" width="34"></a>             </div>             <div class="communityContentAnnotationUserDateContainer">                 <div class="communityContentAnnotationUserContainer">                     <a href="http://social.msdn.microsoft.com/profile/vin%C3%ADcius%20valerini/">                         Vinícius Valerini                     </a>                 </div>                 <div class="communityContentAnnotationDateContainer">                     <span>9/27/2012</span>                                                                                 </div>             </div>         </div>     </div><div class="communityContentAnnotation">         <a name="1"></a>         <h3>             H.264 Video Encoder (Windows)         </h3>         <div class="communityContentAnnotationBody">             <span>H.264 Video Decoder (Windows)</span>         </div>         <div class="communityContentAnnotationInfo">             <div class="communityContentAnnotationAvatarContainer">                 <a href="http://social.msdn.microsoft.com/profile/cdsimpson/" title="" class="communityContentAnnotationAvatar"><img src="H.264%20Video%20Encoder%20%28Windows%29_pliki/avatar.jpg" alt="" height="34" width="34"></a>             </div>             <div class="communityContentAnnotationUserDateContainer">                 <div class="communityContentAnnotationUserContainer">                     <a href="http://social.msdn.microsoft.com/profile/cdsimpson/">                         cdsimpson                     </a>                 </div>                 <div class="communityContentAnnotationDateContainer">                     <span>7/12/2012</span>                                                                                 </div>             </div>         </div>     </div></div>
+</div>
+
+
+
+
+<div class="libraryMemberFilter">
+    <div class="filterContainer">
+        <span>Show:</span>
+        <label>
+            <input class="libraryFilterInherited" checked="checked" value="Inherit" type="checkbox">Inherited
+        </label>
+        <label>
+            <input class="libraryFilterProtected" checked="checked" value="Protected" type="checkbox">Protected
+        </label>
+    </div>
+</div>
+    
+<input id="libraryMemberFilterEmptyWarning" value="There are no members available with your current filter settings." type="hidden">
+
+
+ 
+</div>
+
+
+
+            </div>
+            <div class="clear"></div>
+        
+            
+    
+<input name="__RequestVerificationToken" value="y3Qjfz7-_DfN6uswsiY-2BXzEWr-EEUfrTzjytNYVUwb4agrmQdlJb6XjbGpcjHC1r39obraHhUkFIf_0eJ-Js0bzUsBH45zQUTIX1bHQ5nzHBubtJgWl-M-S-_3epLqE4wubw2" type="hidden">
+<input id="ratingSubmitUrl" value="http://msdn.microsoft.com/en-us/library/feedback/add/dd797816(v=vs.85).aspx" type="hidden">
+<input id="isTopicRated" value="false" type="hidden">
+
+
+
+
+    
+
+
+    <div id="ux-footer" class="IE IE8 ltr">
+        
+            <div id="footerSock">
+                <div id="footerSockInner">
+                    <a name="feedback"></a>
+                    <div data-fragmentname="Survey" id="Fragment_Survey" xmlns="http://www.w3.org/1999/xhtml">
+  <div class="DetailedLink">
+    
+    <div class="Content">
+      <div class="title">Help us help you</div>
+      <div class="RichText">Answer questions that we’ll use to make the Dev Center better.</div>
+      <div class="link">
+        <a href="http://go.microsoft.com/fwlink/?LinkId=316293" target="_blank" id="Survey_35510_1" xmlns="http://www.w3.org/1999/xhtml">Take the survey</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="display: block;" class="rating">
+    <div id="ratingSection1">
+        <div class="title">
+            Was this page helpful?
+        </div>
+        <div class="description">
+            Your feedback about this content is important.<br>Let us know what you think.
+        </div>
+        <div class="buttons">
+            <button id="ratingYes">Yes</button>
+            <button id="ratingNo">No</button>
+        </div>
+        <input id="ratingValue" value="" type="hidden">
+    </div>
+    <div id="ratingSection2">
+        <div class="title">
+            Additional feedback?
+        </div>
+        <textarea id="ratingText" rows="6" cols=""></textarea>
+        <div class="buttons">
+            <button id="ratingSubmit">Submit</button>
+            <button id="ratingSkipThis">Skip this</button>
+        </div>
+    </div>
+    <div id="ratingSection3">
+        <div class="title">
+            Thank you!
+        </div>
+        <div class="description">
+            We appreciate your feedback.
+        </div>
+    </div>
+    
+    
+    <div id="contentFeedbackQAContainer" style="display: none;"></div>
+</div>
+
+
+                    <div data-fragmentname="SockLinks" id="Fragment_SockLinks" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="LinkList">
+    <div class="Links">
+      <ul class="LinkColumn" style="width: 100%">
+        <li>
+          <a href="http://go.microsoft.com/fwlink/p/?LinkId=317809" id="SockLinks_726_11" xmlns="http://www.w3.org/1999/xhtml">Find us on Facebook</a>
+        </li>
+        <li>
+          <a href="http://go.microsoft.com/fwlink/p/?LinkId=317811" id="SockLinks_726_12" xmlns="http://www.w3.org/1999/xhtml">Follow us on Twitter</a>
+        </li>
+        <li>
+          <a href="http://go.microsoft.com/fwlink/p/?linkid=301425" id="SockLinks_726_42" xmlns="http://www.w3.org/1999/xhtml">Get the newsletter</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        <div id="footerContainer">
+            <div id="fourColumnFooter">
+                <div data-fragmentname="Column1" id="Fragment_Column1" xmlns="http://www.w3.org/1999/xhtml">
+  <div class="ListOfLinkLists">
+    
+    <div class="LinkList" xmlns="http://www.w3.org/1999/xhtml">
+      <div class="LinkListTitle">Centers</div>
+      <div class="LinkListDescription"></div>
+      <div class="Links">
+        <ul class="LinkColumn" style="width: 100%">
+          <li>
+            <a href="http://msdn.microsoft.com/windows" id="Column1_726_13" xmlns="http://www.w3.org/1999/xhtml">Dev Center Home</a>
+          </li>
+          <li>
+            <a href="http://msdn.microsoft.com/windows/apps" id="Column1_726_14" xmlns="http://www.w3.org/1999/xhtml">Windows Store apps</a>
+          </li>
+          <li>
+            <a href="http://msdn.microsoft.com/ie" id="Column1_726_15" xmlns="http://www.w3.org/1999/xhtml">Internet Explorer</a>
+          </li>
+          <li>
+            <a href="http://msdn.microsoft.com/windows/desktop" id="Column1_726_16" xmlns="http://www.w3.org/1999/xhtml">Desktop</a>
+          </li>
+          <li>
+            <a href="http://msdn.microsoft.com/windows/hardware" id="Column1_726_17" xmlns="http://www.w3.org/1999/xhtml">Hardware</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>              
+                <div data-fragmentname="Column2" id="Fragment_Column2" xmlns="http://www.w3.org/1999/xhtml">
+  <div class="ListOfLinkLists">
+    
+    <div class="LinkList" xmlns="http://www.w3.org/1999/xhtml">
+      <div class="LinkListTitle">Related developer sites</div>
+      <div class="LinkListDescription"></div>
+      <div class="Links">
+        <ul class="LinkColumn" style="width: 100%">
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=285622" id="Column2_726_18" xmlns="http://www.w3.org/1999/xhtml">Microsoft Connect</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=285623" id="Column2_726_19" xmlns="http://www.w3.org/1999/xhtml">.NET Framework</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=282089" id="Column2_726_20" xmlns="http://www.w3.org/1999/xhtml">Visual Studio</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=280293" id="Column2_726_21" xmlns="http://www.w3.org/1999/xhtml">Windows Phone</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=282087" id="Column2_726_22" xmlns="http://www.w3.org/1999/xhtml">Windows Server</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="LinkList" xmlns="http://www.w3.org/1999/xhtml">
+      <div class="LinkListTitle">Other Windows sites</div>
+      <div class="LinkListDescription"></div>
+      <div class="Links">
+        <ul class="LinkColumn" style="width: 100%">
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=280294" id="Column2_726_23" xmlns="http://www.w3.org/1999/xhtml">Enterprise</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=280295" id="Column2_726_24" xmlns="http://www.w3.org/1999/xhtml">Small business</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=280296" id="Column2_726_25" xmlns="http://www.w3.org/1999/xhtml">Students</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=280297" id="Column2_726_26" xmlns="http://www.w3.org/1999/xhtml">Home users</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>              
+                <div data-fragmentname="Column3" id="Fragment_Column3" xmlns="http://www.w3.org/1999/xhtml">
+  <div class="ListOfLinkLists">
+    
+    <div class="LinkList" xmlns="http://www.w3.org/1999/xhtml">
+      <div class="LinkListTitle">Downloads</div>
+      <div class="LinkListDescription"></div>
+      <div class="Links">
+        <ul class="LinkColumn" style="width: 100%">
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=267554" id="Column3_726_27" xmlns="http://www.w3.org/1999/xhtml">Windows 8.1</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=328183" id="Column3_726_28" xmlns="http://www.w3.org/1999/xhtml">Windows SDK</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=316619" id="Column3_726_29" xmlns="http://www.w3.org/1999/xhtml">Visual Studio Express 2013</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=285626" id="Column3_726_30" xmlns="http://www.w3.org/1999/xhtml">More downloads</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="LinkList" xmlns="http://www.w3.org/1999/xhtml">
+      <div class="LinkListTitle">Support</div>
+      <div class="LinkListDescription"></div>
+      <div class="Links">
+        <ul class="LinkColumn" style="width: 100%">
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=285632" id="Column3_726_43" xmlns="http://www.w3.org/1999/xhtml">Forums</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=285633" id="Column3_726_44" xmlns="http://www.w3.org/1999/xhtml">More support options</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>              
+                <div data-fragmentname="Column4" id="Fragment_Column4" xmlns="http://www.w3.org/1999/xhtml">
+  <div class="ListOfLinkLists">
+    
+    <div class="LinkList" xmlns="http://www.w3.org/1999/xhtml">
+      <div class="LinkListTitle">Essentials</div>
+      <div class="LinkListDescription"></div>
+      <div class="Links">
+        <ul class="LinkColumn" style="width: 100%">
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=285627" id="Column4_726_35" xmlns="http://www.w3.org/1999/xhtml">Windows APIs</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=285628" id="Column4_726_36" xmlns="http://www.w3.org/1999/xhtml">Samples</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=285629" id="Column4_726_37" xmlns="http://www.w3.org/1999/xhtml">Compatibility and certification</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=285630" id="Column4_726_45" xmlns="http://www.w3.org/1999/xhtml">Desktop dashboard</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="LinkList" xmlns="http://www.w3.org/1999/xhtml">
+      <div class="LinkListTitle">Stay connected</div>
+      <div class="LinkListDescription"></div>
+      <div class="Links">
+        <ul class="LinkColumn" style="width: 100%">
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=285954" id="Column4_726_41" xmlns="http://www.w3.org/1999/xhtml">Microsoft events</a>
+          </li>
+          <li>
+            <a href="http://go.microsoft.com/fwlink/p/?linkid=313895" id="Column4_726_39" xmlns="http://www.w3.org/1999/xhtml">Windows App Builder Blog</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>              
+            </div>
+
+            <div id="baseFooterLogos">
+                <span class="microsoftlogo" title="Microsoft"></span>
+                <a href="http://msdn.microsoft.com/en-us" class="msdnlogo" title="MSDN"></a>
+            </div>
+        
+            <div id="baseFooter">
+                <div id="FooterCopyright">© 2014 Microsoft</div>
+                <div data-fragmentname="BaseFooterContent" id="Fragment_BaseFooterContent" xmlns="http://www.w3.org/1999/xhtml">
+  <div xmlns="http://www.w3.org/1999/xhtml">
+    <div xmlns:mtps="http://msdn2.microsoft.com/mtps">
+      <div data-fragmentname="BaseFooter" id="Fragment_BaseFooter">
+        
+        <div class="LinkList">
+          <div class="LinkListDescription"></div>
+          <div class="Links">
+            <ul class="LinkColumn horizontal">
+              <li>
+                <a href="http://msdn.microsoft.com/windows/apps/cc300389" id="BaseFooter_35351_1" xmlns="http://www.w3.org/1999/xhtml">Terms of Use</a>
+              </li>
+              <li>
+                <a href="http://www.microsoft.com/library/toolbar/3.0/trademarks/en-us.mspx" id="BaseFooter_35351_2" xmlns="http://www.w3.org/1999/xhtml">Trademarks</a>
+              </li>
+              <li>
+                <a href="http://www.microsoft.com/info/privacy.mspx" id="BaseFooter_35351_3" xmlns="http://www.w3.org/1999/xhtml">Privacy and Cookies</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div data-fragmentname="HelloText" id="Fragment_HelloText">Hello from Seattle.
+</div>
+    </div>
+  </div>
+</div>  
+                    <form class="selectLocale" id="selectLocaleForm" action="http://msdn.microsoft.com/en-us/windows/desktop/SelectLocale">
+        <input name="fromPage" value="http%3a%2f%2fmsdn.microsoft.com%2fen-us%2flibrary%2fwindows%2fdesktop%2fdd797816(v%3dvs.85).aspx" type="hidden">
+        <a href="#" onclick="$('#selectLocaleForm').submit();return false;" title="Change your language">United States (English)</a>
+    </form>    
+
+
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div> 
+
+
+            <div class="footerPrintView">
+                <div class="footerCopyrightPrintView">© 2014 Microsoft. All rights reserved.</div>
+            </div>
+
+            
+            
+    
+
+
+        
+            <input id="MtpsDevice" value="Default" type="hidden">
+
+
+<!--[CDATA[ Third party scripts and code linked to or referenced from this website are licensed to you by the parties that own such code, not by Microsoft.  See ASP.NET Ajax CDN Terms of Use – http://www.asp.net/ajaxlibrary/CDN.ashx. ]]-->
+        
+            
+            
+            
+            
+            
+        
+
+
+
+
+
+<noscript><div><img alt="DCSIMG" id="Img1" width="1" height="1" src="http://m.webtrends.com/dcsmgru7m99k7mqmgrhudo0k8_8c6m/njs.gif?dcsuri=/nojavascript&amp;WT.js=No" /></div></noscript>
+
+
+
+
+
+
+
+
+
+<noscript>
+  <a href="http://www.omniture.com" title="Web Analytics">
+    <img src="//msstonojsmsdn.112.2o7.net/b/ss/msstonojsmsdn/1/H.20.2--NS/0" height="1" width="1" border="0" alt="" />
+  </a>
+</noscript>
+
+
+
+
+<div id="globalRequestVerification">
+    <input name="__RequestVerificationToken" value="gQ2c-oAvu_4bZ-Hb3Pm8YR66F0SGQqzzcOjBVLDDYzObJ8vzeD1r2KDp0DDidrUmBB3_0oUtxXlPKDYU56LTHL_HGtLjfrgwz18FZxAPLPFx8KutuqWjb_eFF_IeN1LfdtznCg2" type="hidden">
+</div>
+
+
+        </div>
+    <script type="text/javascript" class="mtps-injected">
+/*<![CDATA[*/
+(function(window,document){"use strict";function preload(scripts){for(var result=[],script,e,i=0;i<scripts.length;i++)script=scripts[i],script.hasOwnProperty("url")&&(e=document.createElement("script"),e.src=script.url,script.throwaway=e),result.push(script);return result}function inject(scripts,index){var script,elem;if(index>=scripts.length){delete mtps.injectScripts;return}script=scripts[index];elem=document.createElement("script");elem.className="mtps-injected";elem.async=!1;var isLoaded=!1,timeoutId=0,injectNextFnName="",injectNext=elem.onerror=function(){isLoaded||(isLoaded=!0,inject(scripts,index+1),window.clearTimeout(timeoutId),elem.onload=elem.onerror=elem.onreadystatechange=null,injectNextFnName&&delete mtps[injectNextFnName],elem.removeEventListener&&elem.removeEventListener("load",injectNext,!1))};elem.addEventListener?elem.addEventListener("load",injectNext,!1):elem.readyState==="uninitialized"?elem.onreadystatechange=function(){(this.readyState==="loaded"||this.readyState==="complete")&&injectNext()}:elem.onload=injectNext;script.hasOwnProperty("url")?(timeoutId=window.setTimeout(injectNext,12e4),elem.src=script.url):(injectNextFnName="_injectNextScript_"+index,mtps[injectNextFnName]=injectNext,timeoutId=window.setTimeout(injectNext,2e3),elem.text="try {\n"+script.txt+"\n} finally { MTPS."+injectNextFnName+" && MTPS."+injectNextFnName+"(); }");parent.appendChild(elem)}var mtps=window.MTPS||(window.MTPS={}),parent=document.getElementsByTagName("head")[0];mtps.injectScripts=function(scripts){inject(preload(scripts),0)}})(window,document);
+MTPS.injectScripts([
+	{ txt: "/**/\r\n(window.MTPS || (window.MTPS = {})).cdnDomains || (window.MTPS.cdnDomains = { \r\n\t\"image\": \"http://i.msdn.microsoft.com\", \r\n\t\"js\": \"http://i2.msdn.microsoft.com\", \r\n\t\"css\": \"http://i3.msdn.microsoft.com\"\r\n});\r\n/**/" },
+	{ url: "http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js" },
+	{ txt: "//\n  var literalNormalizedUrl = \u0027/en-us/library/windows/desktop/dd797816(d=default,l=en-us,v=vs.85).aspx\u0027;\n  var wt_nvr_ru = \u0027WT_NVR_RU\u0027;\n  var wt_fpcdom = \u0027.microsoft.com\u0027;\n  var wt_domlist = \u0027msdn.microsoft.com\u0027;\n  var wt_pathlist = \u0027\u0027;\n  var wt_paramlist = \u0027DCSext.mtps_devcenter\u0027;\n  var wt_siteid = \u0027MSDN\u0027;\n  var gDomain = \u0027m.webtrends.com\u0027;\n  var gDcsId = \u0027dcsmgru7m99k7mqmgrhudo0k8_8c6m\u0027;\n  var gFpc = \u0027WT_FPC\u0027;\n\n\n\n  if (document.cookie.indexOf(gFpc + \"=\") == -1) {\n    var wtidJs = document.createElement(\"script\");\n    wtidJs.src = \"//\" + gDomain + \"/\" + gDcsId + \"/wtid.js\";\n    document.getElementsByTagName(\"head\")[0].appendChild(wtidJs);\n  }\n\n\n\n  var detectedLocale = \u0027en-us\u0027;\n  var wtsp = \u0027_msdn_\u0027;\n  var gTrackEvents = \u00270\u0027;\n/**/" },
+	{ txt: "/**/\n  var omni_guid = \"bfa7569d-dc85-4056-a479-d9fc120b8a4c\";\n/**/" },
+	{ url: "http://i2.msdn.microsoft.com/Combined.js?resources=0:Utilities,0:Topic,1:webtrendsscript,2:omni_rsid_MSDN,3:SearchBox;/Areas/Epx/Content/Scripts:0,/Areas/Global/Content/Webtrends/resources:1,/Areas/Global/Content/Omniture/resources/MSDN:2,/Areas/Epx/Themes/Base/Content:3\u0026amp;hashKey=9B53C4D2FC34522DCF65A603244675F2" },
+	{ url: "http://i4.services.social.microsoft.com/search/Widgets/SearchBox.jss?boxid=HeaderSearchTextBox\u0026btnid=HeaderSearchButton\u0026brand=MSDN\u0026loc=en-us\u0026Refinement=181\u0026focusOnInit=false\u0026iroot=windows%2fdesktop\u0026emptyWatermark=true\u0026searchButtonTooltip=Search" },
+	{ url: "http://i2.msdn.microsoft.com/Combined.js?resources=0:Header,1:Toc,1:NavigationResize;/Areas/Epx/Themes/Windows/Content:0,/Areas/Epx/Library/Content:1\u0026amp;hashKey=FE2B88EF1FCB31F60694889411AC262D" },
+	{ url: "http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js" },
+	{ url: "http://i2.msdn.microsoft.com/Combined.js?resources=0:CommunityContent,1:LibraryMemberFilter,1:Toc_Fixed,2:Rating,0:CodeSnippet,0:TopicNotInScope,0:CollapsibleArea,0:VersionSelector,0:SurveyBroker;/Areas/Epx/Content/Scripts:0,/Areas/Epx/Library/Content:1,/Areas/Epx/Themes/Base/Content:2\u0026amp;hashKey=488C881B21756E98E550B99E49CDD6B3" },
+	{ txt: "$(document).ready(function() {\n        try {\n            var token = $(\"#globalRequestVerification input[name=\u0027__RequestVerificationToken\u0027]\").clone();\n            $(\"#siteFeedbackForm\").append(token);\n        } catch(err) {\n            \n        }\n    });" }
+]);
+
+/*]]>*/
+</script>
+<script src="H.264%20Video%20Encoder%20%28Windows%29_pliki/broker-config.js"></script><div id="_WEDCSInsertedData" style="display: none;"><iframe id="_msnFrame" src="H.264%20Video%20Encoder%20%28Windows%29_pliki/c_002.gif" style="z-index:-1;height:1px;width:1px;display:none;visibility:hidden;" onload="javascript:MscomBeacon();"></iframe></div></body></html>

@@ -309,6 +309,23 @@ namespace Komin
             return 0;
         }
 
+        public int SetGroupCommunicationType(uint group_id, uint new_type)
+        {
+            //check is group_id valid
+            WaitForRequestExecution(MakeReaderRequest("select id_grupy from grupy where id_grupy=" + group_id));
+            if (!ReqRdr.HasRows) //group doesn't exist
+            {
+                MarkReaderRequestCompleted();
+                return -1;
+            }
+            MarkReaderRequestCompleted();
+
+            //set new group creator
+            WaitForRequestExecution(MakeExecuteRequest("update grupy set rodzaj_komunikacji=" + new_type + " where id_grupy=" + group_id));
+
+            return 0;
+        }
+
         public int InsertContactIntoList(uint list_id, bool is_group, uint contact_id)
         {
             //check is contact a valid user

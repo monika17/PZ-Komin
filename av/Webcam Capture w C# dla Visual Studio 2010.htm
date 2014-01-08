@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html class=" js no-flexbox flexbox-legacy canvas canvastext no-webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths" xmlns="http://www.w3.org/1999/xhtml"><head id="Head1">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta content="windowsdesktop" name="WT.seg_1"><link href="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/e86525faf87e54eca3cbfab1c99d032f-a34853673af13856ced49f2d778.css" rel="Stylesheet" type="text/css"><meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="description" content="For a long time, I have been looking for a good way to capture images without too much trouble. All you need to do is call one method to get the image.I have used Windows Image Acquisition (WIA) to capture images. WIA provides a great deal of compatibility with webcams already ru">
+    <meta name="Search.BRAND" content="Msdn">
+    <meta name="Search.IROOT" content="msdn">
+
+    <link rel="shortcut icon" href="http://i1.code.msdn.s-msft.com/GlobalResources/images/Msdn/favicon.ico" type="image/x-icon"> <meta name="CommunityInfo" content=" B=Msdn;A=Samples;L=pl-PL;">
+    <script src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/ms2.js" async="" type="text/javascript"></script><script src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/jquery-1.js" type="text/javascript" language="javascript"></script>
+    <script src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/a40fe9366ee05384079db10a1d511c5a-2627c2e4707836274afeda5d12aa.js" type="text/javascript"></script>    
+    <title>Webcam Capture w C# dla Visual Studio 2010</title> 
+        <link href="http://code.msdn.microsoft.com/site/feeds/searchRss" rel="Alternate" type="application/rss+xml" title="Przykładowy kod — przykłady dotyczące sieci MSDN w językach C#, VB.NET, C++, JavaScript, F#">
+    <link rel="P3Pv1" href="http://code.msdn.microsoft.com/W3C/p3p.xml">
+    
+    
+            <link rel="canonical" href="http://code.msdn.microsoft.com/windowsdesktop/Webcam-Capture-50295c7f">
+    
+    <meta name="ContentLanguage" content="L=en-US;">
+
+<!--
+Third party scripts and code linked to or referenced from this website are licensed to you by the parties that own such code, not by Microsoft.  See ASP.NET Ajax CDN Terms of Use – http://www.asp.net/ajaxlibrary/CDN.ashx.
+-->
+<script src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/loader.js" async="" type="text/javascript"></script><script src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/broker.js" async="" type="text/javascript"></script><script src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/jquery.js" type="text/javascript"></script><link type="text/css" rel="stylesheet" href="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/usercard.css"><script src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/widgets.js" type="text/javascript"></script></head>
+<body class="FF pl-pl Samples " dir="ltr"><div style="display: block;" id="ux-banner" xmlns="http://www.w3.org/1999/xhtml">
+        <div class="banner">
+            <div class="row">
+                <div class="left">Ta strona używa plików cookie. Istnieje możliwość zablokowania ich instalowania.</div>
+                <div class="middle"><a href="http://www.microsoft.com/privacystatement/pl-PL/core/default.aspx">Więcej tutaj</a></div>
+                <div class="right" tabindex="0" title="Zamknij"></div>
+            </div>
+        </div>
+    </div>
+    
+
+<div data-chameleon-template="epxheader"></div>
+<div data-chameleon-template="header">        
+
+    
+    
+    
+    
+    <div id="ux-header" xmlns="http://www.w3.org/1999/xhtml">
+        <header>
+            <div class="row">
+                <div class="top mobile"></div>
+                <div class="left">
+                    <div data-fragmentname="SiteLogo" id="Fragment_SiteLogo" xmlns="http://www.w3.org/1999/xhtml">
+  <a href="http://msdn.microsoft.com/pl-pl" id="27762_1" xmlns="http://www.w3.org/1999/xhtml">Developer Network</a>
+</div>     
+                </div>
+                <div id="grip"></div>  
+                <div class="right desktop">
+                    <div class="auxNav">
+                        <div data-fragmentname="Subscriptions" id="Fragment_Subscriptions" xmlns="http://www.w3.org/1999/xhtml">
+  <a href="http://msdn.microsoft.com/dn369243" id="27762_5" xmlns="http://www.w3.org/1999/xhtml">Subskrypcje MSDN</a>
+</div>   
+                        <div data-fragmentname="GetTools" id="Fragment_GetTools" xmlns="http://www.w3.org/1999/xhtml">
+  <a href="http://go.microsoft.com/fwlink/?LinkId=309297&amp;clcid=0x0415&amp;slcid=0x0415" id="27762_3" xmlns="http://www.w3.org/1999/xhtml">Pobierz narzędzia</a>
+</div>   
+                        
+
+        <div class="SignedOutProfileElement profileName"><a class="createProfileLink" href="" title=""></a></div>
+    <div class="signIn"><a class="scarabLink" href="https://login.live.com/login.srf?wa=wsignin1.0&amp;wtrealm=code.msdn.microsoft.com&amp;wreply=https%3a%2f%2fcode.msdn.microsoft.com%2fWebcam-Capture-50295c7f%3fstoAI%3d10&amp;wp=MBI_FED_SSL&amp;wlcxt=microsoft%24microsoft%24microsoft" title="Zaloguj">Zaloguj</a></div>
+
+                    </div>
+                    <div data-fragmentname="SearchBox" id="Fragment_SearchBox" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="SearchBox">
+    <form id="HeaderSearchForm" name="HeaderSearchForm" method="get" action="http://social.msdn.microsoft.com/Search" onsubmit="return Epx.Controls.SearchBox.searchBoxOnSubmit(this, this.title);">
+      <input autocomplete="off" id="HeaderSearchTextBox" name="query" maxlength="200" onfocus="Epx.Controls.SearchBox.watermarkFocus(this, this.title, 'SearchBoxOnFocus')" onblur="Epx.Controls.SearchBox.watermarkBlur(this, this.title, 'SearchBoxOnFocus')" type="text">
+      <input id="RefinementId" name="refinement" value="" type="hidden">
+      <button title="Search MSDN" id="HeaderSearchButton" value="" type="submit" class="header-search-button"></button>
+    <div style="display: none; text-align: left; border: 1px solid buttonshadow; position: absolute; z-index: 1000; padding: 2px; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); font-family: 'Segoe UI',Tahoma,Helvetica,Sans-Serif; font-size: 13.3333px;" id="SearchFlyoutContainer"><div id="SuggestionContainer"><ul style="list-style: none outside none; padding: 4px 2px 0px 1px; cursor: pointer; margin: 1px; white-space: nowrap;"></ul></div></div></form>
+    
+  </div>
+</div> 
+                </div>
+            </div>
+       
+            <div class="row" id="droor">
+                <div class="left">
+                            <nav>
+            <ul>
+                     <li class="inactive">
+
+                         <a href="http://msdn.microsoft.com/dn308572" title="Strona domowa">Strona domowa</a>
+
+                     </li>
+                     <li class="inactive">
+
+                         <a href="http://msdn.microsoft.com/dn271881" title="Możliwości">Możliwości</a>
+                                 <div class="area">
+                                     <div class="arrow"></div>
+                                 </div>
+                                 <div class="subNav">
+                                     <ul>
+                                                 <li><a href="http://msdn.microsoft.com/dn338450" title=".Net">.Net</a></li>
+                                                 <li><a href="http://msdn.microsoft.com/dn338159" title="Chmura">Chmura</a></li>
+                                                 <li><a href="http://msdn.microsoft.com/dn469160" title="Desktop">Desktop</a></li>
+                                                 <li><a href="http://msdn.microsoft.com/dn338268" title="Telefon">Telefon</a></li>
+                                                 <li><a href="http://msdn.microsoft.com/dn308583" title="Tablet i komputer">Tablet i komputer</a></li>
+                                                 <li><a href="http://msdn.microsoft.com/dn338449" title="Sieć Web">Sieć Web</a></li>
+                                     </ul>
+                                 </div>
+
+                     </li>
+                     <li class="inactive">
+
+                         <a href="http://msdn.microsoft.com/dn271880" title="Platforma">Platforma</a>
+
+                     </li>
+                     <li class="inactive">
+
+                         <a href="http://msdn.microsoft.com/dn338064" title="Witryna Connect">Witryna Connect</a>
+                                 <div class="area">
+                                     <div class="arrow"></div>
+                                 </div>
+                                 <div class="subNav">
+                                     <ul>
+                                                 <li><a href="http://social.msdn.microsoft.com/forums/" title="Forum">Forum</a></li>
+                                                 <li><a href="http://msdn.microsoft.com/dn338452" title="Perspektywy">Perspektywy</a></li>
+                                                 <li><a href="http://events.msdn.microsoft.com/pl-pl" title="Wydarzenia">Wydarzenia</a></li>
+                                     </ul>
+                                 </div>
+
+                     </li>
+                     <li class="inactive">
+
+                         <a href="http://msdn.microsoft.com/dn292944" title="Materiały do pobrania">Materiały do pobrania</a>
+                                 <div class="area">
+                                     <div class="arrow"></div>
+                                 </div>
+                                 <div class="subNav">
+                                     <ul>
+                                                 <li><a href="http://msdn.microsoft.com/dn369242" title="Narzędzia programistyczne">Narzędzia programistyczne</a></li>
+                                                 <li><a href="http://msdn.microsoft.com/dn369240" title="Zestawy SDK">Zestawy SDK</a></li>
+                                                 <li><a href="http://msdn.microsoft.com/dn369243" title="Subskrypcje MSDN">Subskrypcje MSDN</a></li>
+                                     </ul>
+                                 </div>
+
+                     </li>
+                     <li class="inactive">
+
+                         <a href="http://msdn.microsoft.com/library" title="Baza Wiedzy">Baza Wiedzy</a>
+
+                     </li>
+                     <li class="active current">
+
+                         <a href="http://code.msdn.microsoft.com/" title="Przykłady">Przykłady</a>
+
+                     </li>
+            </ul>
+          
+        </nav>        
+       
+                </div>
+                <div class="right mobile"></div>
+                <div class="right">
+                    <div data-fragmentname="SocialLinks" id="Fragment_SocialLinks" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="LinkList">
+    <div class="LinkListTitle">Dołącz do nas</div>
+    <div class="Links">
+      <ul class="LinkColumn horizontal">
+        <li>
+          <a href="http://www.facebook.com/microsoftdeveloper" target="_blank" id="SocialLinks_430_7" class="facebook" xmlns="http://www.w3.org/1999/xhtml">http://www.facebook.com/microsoftdeveloper</a>
+        </li>
+        <li>
+          <a href="https://twitter.com/msdev" target="_blank" id="SocialLinks_430_8" class="twitter" xmlns="http://www.w3.org/1999/xhtml">https://twitter.com/msdev</a>
+        </li>
+        <li>
+          <a href="http://plus.google.com/111221966647232053570/" target="_blank" id="SocialLinks_430_9" class="googlePlus" xmlns="http://www.w3.org/1999/xhtml">http://plus.google.com/111221966647232053570/</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div> 
+                </div>
+                <span id="singleCol"></span>
+                <span id="doubleCol"></span>
+            </div>
+        </header>
+    </div>
+    
+    
+<script type="text/javascript" xmlns="http://www.w3.org/1999/xhtml">
+/*<![CDATA[*/
+/**/
+(window.MTPS || (window.MTPS = {})).cdnDomains || (window.MTPS.cdnDomains = { 
+	"image": "http://i.msdn.microsoft.com", 
+	"js": "http://i2.msdn.microsoft.com", 
+	"css": "http://i3.msdn.microsoft.com"
+});
+/**/
+/*]]>*/
+</script><script src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/d4186970605e1dc13b02d415b2eea93a-c17f7e5422cd9506301b700b9ba8.js" type="text/javascript"></script><script type="text/javascript" src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/SearchBox.js" xmlns="http://www.w3.org/1999/xhtml"></script><script src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/df0e6d5b2538cc9e8a08cb1e82ff3407-1c6ee837f4fff042550b0d6202e8.js" type="text/javascript"></script></div>
+    <div id="BodyBackground" class="ltr">
+        <div id="JelloSizer">    
+            <div id="JelloExpander">
+                <div id="JelloWrapper">
+                    <div class="Clear"> </div>
+                    
+                   
+                    
+                    
+                    <div class="Clear"> </div>
+                          
+                    <div class="topleftcorner"></div>           
+                    <div class="toprightcorner"></div>                                
+                    <div class="alley"> <!-- Left Side -->
+                        <div class="wrapper"> <!-- Right Side -->
+                            <div class="inner">  
+                            
+                                                 
+                                <div class="Clear"></div>   
+
+
+                                
+                                
+                                
+                                
+                                <div id="MainContent" class="Msdn">
+                                    
+    
+    
+
+    <script language="javascript" type="text/javascript">
+        $(function () { Galleries.cookie.setTimezoneOffsetCookie(); })
+    </script>
+
+    <div id="container">
+        
+            <div id="GalleriesNavigation">
+                
+            </div>            
+        
+        
+            <div id="subHeader">
+                <div id="eyebrow" class="left">
+                    
+
+
+
+
+
+
+
+
+
+
+
+<div class="EyebrowContainer">
+    
+    
+
+    
+<div itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb" class="EyebrowElement">
+    <a href="http://msdn.microsoft.com/pl-PL/" itemprop="url">
+        <span itemprop="title">Microsoft Developer Network</span>
+    </a>
+</div>
+<text>&gt;</text>
+
+    
+    
+    
+    <div itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb" class="EyebrowElement">
+             <a href="http://code.msdn.microsoft.com/" itemprop="url">
+                <span itemprop="title">Przykłady</span>
+            </a> 
+    </div>
+
+
+
+
+    &gt;
+    <div itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb" class="EyebrowElement">
+             <a href="http://code.msdn.microsoft.com/Webcam-Capture-50295c7f" itemprop="url" class="EyebrowLeafLink">
+                <span itemprop="title">Webcam Capture</span>
+            </a> 
+    </div>
+</div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        
+        
+            <div id="siteMessage">
+                
+
+
+
+
+
+
+            </div>
+            <div class="clear"></div>
+        
+        
+
+<div class="subMenu">
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function () {
+            $('.internav > a').each(function (index, elem) {
+                if ($(elem).attr('href').toUpperCase().indexOf('CODE') != -1) {
+                    $(elem).addClass('active');
+                }
+                if ($(elem).attr('href').toUpperCase().indexOf('SMPGDB') != -1) {
+                    $(elem).addClass('active');
+                }
+
+            });
+        });
+    </script>
+</div>      
+        <div class="clear"></div>
+
+        <div id="bodyContainer">
+            
+    
+    <div id="projectPage">
+        <div class="sidebar">
+            <div data-chameleon-template="actionbox"></div>
+            
+
+
+<div class="section" id="contributeSection">
+<div class="contributeAction">
+    <a href="http://www.microsoft.com/visualstudio/en-us"><img src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/download.png">Pobierz Visual Studio</a>
+</div>
+    <h3>Szybki dostęp</h3>
+
+<div id="myContributionsAction">
+    <div>
+        <a id="myContributionsLink" href="http://code.msdn.microsoft.com/site/mydashboard">
+            Moje Przykłady
+        </a>
+    </div>
+</div>
+
+<div id="uploadAction">
+    <a id="uploadLink" href="http://code.msdn.microsoft.com/site/upload">Przekaż przykład</a>
+</div>
+
+    <div id="requestAction">
+        <a id="exclamationLink" href="http://code.msdn.microsoft.com/site/requests">Przeglądaj prośby o przykłady</a>
+    </div>
+</div>
+
+
+
+<div id="userCard" class="section">
+    <div data-profile-rendered="true" class="profile-usercard-inline" data-profile-usercard-customlink="{&quot;href&quot;:&quot;/site/search?f%5B0%5D.Type=User&amp;f%5B0%5D.Value=Samuel%20dos%20Anjos&quot;,&quot;text&quot;:&quot;Zobacz przykłady&quot;}" data-profile-userid="50a3f7f2db9a4809b4d94ef20133e122"><div class="profile-usercard profile-inline">            <div class="profile-inline-header">                <span class="profile-userimage-large">                    <img style="width: 131px; display: inline-block;" src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/avatar.jpg" alt="Awatar użytkownika Samuel dos Anjos">                </span>                <div class="profile-inline-header-details">                    <div title="Samuel dos Anjos" class="profile-inline-display-name">Samuel dos Anjos</div>                                <div class="profile-company profile-inline-secondary">Insper Instituto de Pesq...</div>                                <div class="profile-affiliations profile-inline-secondary"></div>                            </div>            </div>            <div class="profile-statline">                <span class="profile-points">4&nbsp;808<span class="points-label"> Punkty</span></span>                <span class="profile-count profile-bronze-points"><span class="profile-bronze-img" title="Zdobyte osiągnięcia"></span><span>11</span></span>                <span class="profile-count profile-silver-points"><span class="profile-silver-img" title="Zdobyte osiągnięcia"></span><span>4</span></span>                <span class="profile-count profile-gold-points"><span class="profile-gold-img" title="Zdobyte osiągnięcia"></span><span>1</span></span>            </div>                        <div class="profile-biography">Curso
+ superior em Analise e Desenvolvimento de Sistemas pela Universidade 
+Paulista, curso técnico de programação e banco de dados. Amplo 
+conhecimento em desenvolvimento web.
+SQL, Asp .Net, C#, JQuery, JavaScript.</div>                        <div class="profile-footer">                                <a href="http://code.msdn.microsoft.com/site/search?f%5B0%5D.Type=User&amp;f%5B0%5D.Value=Samuel%20dos%20Anjos" title="Zobacz przykłady" target="_blank" class="profile-usercard-custom-link">Zobacz przykłady</a>                                <a href="http://social.msdn.microsoft.com/profile/samuel%20dos%20anjos/?ws=usercard-inline" class="profile-usercard-profileLink" target="_blank">Wyświetl profil</a>            </div>        </div></div>
+</div>
+<script language="javascript" type="text/javascript">
+    if (false)
+        Galleries.utility.waitFor(
+            function() { $('#userCard .profile-statline, #userCard .profile-usercard-profileLink').hide(); });
+</script>
+            <div id="moreFromAuthor" class="collapsableSidebar">
+                <div data-url="/Webcam-Capture-50295c7f/AuthorProjects" id="authorProjectContainer"></div>
+            </div>
+        </div>
+
+        <div id="projectDetails">
+            <div>
+                
+
+
+<h1 class="projectTitle">Webcam Capture</h1>
+<h2 class="projectSummary">For a long time, I have been looking for a 
+good way to capture images without too much trouble. All you need to do 
+is call one method to get the image.I have used Windows Image 
+Acquisition (WIA) to capture images. WIA provides a great deal of 
+compatibility with webcams already ru</h2>
+<div class="clear"></div>
+
+    <div id="Downloads">
+        <div>
+            <label for="Downloads">Pobierz</label>
+        </div>
+        
+                    <a href="http://code.msdn.microsoft.com/Webcam-Capture-50295c7f/file/79390/2/Webcam%20Capture.zip" data-url="/Webcam-Capture-50295c7f/file/79390/2/Webcam%20Capture.zip" class="button">C# (230,8 kB)</a>
+        
+    </div>
+
+<div class="clear"></div>
+
+<div class="clear"></div>
+<div id="projectInfo">
+    <div id="sectionLeft" class="section">
+        <div class="itemBar">
+            <label for="ReviewValue">Klasyfikacje</label>                   
+            
+    <div id="yourRating" "="">
+        <form action="/Webcam-Capture-50295c7f/createreview" id="reviewForm" method="post" name="reviewForm"><input id="Rating" name="Rating" value="" type="hidden">
+            <input id="Text" name="Text" value="" type="hidden">
+        <div class="Rating stackLeft EditStarMode" id="Star_Span" onmouseout="onStarsMouseOut()">
+        
+            <div id="Star_0" class="RatingStar EmptyRatingStar" data-initialstarclass="EmptyRatingStar" onmouseover="onStarMouseOver('Star_0')" onclick="onStarClick(0)" title="1">
+                &nbsp;</div>
+        
+            <div id="Star_1" class="RatingStar EmptyRatingStar" data-initialstarclass="EmptyRatingStar" onmouseover="onStarMouseOver('Star_1')" onclick="onStarClick(1)" title="2">
+                &nbsp;</div>
+        
+            <div id="Star_2" class="RatingStar EmptyRatingStar" data-initialstarclass="EmptyRatingStar" onmouseover="onStarMouseOver('Star_2')" onclick="onStarClick(2)" title="3">
+                &nbsp;</div>
+        
+            <div id="Star_3" class="RatingStar EmptyRatingStar" data-initialstarclass="EmptyRatingStar" onmouseover="onStarMouseOver('Star_3')" onclick="onStarClick(3)" title="4">
+                &nbsp;</div>
+        
+            <div id="Star_4" class="RatingStar EmptyRatingStar" data-initialstarclass="EmptyRatingStar" onmouseover="onStarMouseOver('Star_4')" onclick="onStarClick(4)" title="5">
+                &nbsp;</div>
+        
+        </div>
+        <div style="clear:both;"></div> 
+        </form>
+    </div>
+    
+    <div id="RatingCount">(0)</div>
+    
+
+<script language="javascript">
+    function onStarMouseOver(id) {
+        var id_prefix = id.substring(0, id.lastIndexOf('_') + 1);
+        var index = parseInt(id.substring(id.lastIndexOf('_') + 1, id.length));
+
+        for (i = 0; i < 5; i++) {
+            var star = $('#' + id_prefix + i);
+            var initialRatingClass = star.data('initialstarclass');
+            if (i <= index)
+                star.removeClass(initialRatingClass).removeClass('EmptyRatingStar').addClass('FilledRatingStarHover');
+            else
+                star.removeClass(initialRatingClass).removeClass('FilledRatingStarHover').addClass('EmptyRatingStar');
+        }
+        
+    }
+    function onStarsMouseOut() {
+        var stars = $("#RatingStar");
+        var id_prefix = "Star_";
+        var currentRating = 0;
+        
+        for (i = 0; i < 5; i++) {
+            var star = $('#' + id_prefix + i.toString());
+            var initialRatingClass = star.data('initialstarclass');
+            star.removeClass('EmptyRatingStar').removeClass('FilledRatingStarHover').addClass(initialRatingClass);
+        }
+    }
+    
+    function onStarClick(index) {
+        $('#Rating').val(index + 1);
+        document.getElementById("reviewForm").submit();
+    }
+</script>
+                                   
+        </div>
+        
+            <div class="itemBar">
+                <label for="DownloadCount">Pobrane</label>
+                <span id="DownloadCount">4&nbsp;489 razy</span>
+            </div>
+        
+            <div class="itemBar">
+                <label for="Favorites">Ulubione</label>
+                
+<script language="javascript">
+    $(function () { $('a#addFavoriteLink').click(function () { $('form#favoriteform').submit(); }); });
+</script>
+<span id="Collections">
+
+        <a href="https://login.live.com/login.srf?wa=wsignin1.0&amp;wtrealm=code.msdn.microsoft.com&amp;wreply=https%3a%2f%2fcode.msdn.microsoft.com%2fWebcam-Capture-50295c7f%3fstoAI%3d10&amp;wp=MBI_FED_SSL&amp;wlcxt=microsoft%24microsoft%24microsoft">Dodaj do ulubionych</a>
+
+</span>
+
+            </div>
+        
+
+
+    <div class="itemBarLong">
+        <label for="Requires">Wymaga</label>
+        <div id="Requires">
+                <a href="http://code.msdn.microsoft.com/site/search?f%5B0%5D.Type=VisualStudioVersion&amp;f%5B0%5D.Value=10.0&amp;f%5B0%5D.Text=Visual%20Studio%202010">Visual Studio 2010</a>
+
+        </div>
+    </div>
+        
+        
+    </div>
+
+    <div id="sectionRight" class="section">
+        <div class="itemBar">
+            <label for="LastUpdated">
+                Ostatnia aktualizacja</label>
+            <span id="LastUpdated">
+                2013-04-05</span>
+        </div>
+        
+            <div class="itemBarLong">
+                <label for="License">
+                    Licencja</label>
+                <div id="License"><a href="javascript:showEula()">Licencja Apache, wersja 2.0</a></div>
+            </div>
+        
+        <div class="itemBar">
+            <label for="LastUpdated">
+                Podziel się</label>
+            <span>
+                
+<script language="javascript" type="text/javascript">
+    $(function () {
+        $('.shareThisItem > a').WireTrackerForEvent('click', 'http://code.msdn.microsoft.com/Content/Common/tracker.gif', 'ShareItClick', 'Webcam-Capture-50295c7f', true);
+    });
+</script>
+
+<div class="shareThisItem">
+ 
+<a href="mailto:?subject=Webcam%20Capture&amp;Body=http://code.msdn.microsoft.com/Webcam-Capture-50295c7f" target="_blank"><img alt="E-mail" src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/email.gif"></a>
+
+ 
+<a href="http://twitter.com/home?status=Webcam%20Capture%20:%20http%3a%2f%2fcode.msdn.microsoft.com%2fWebcam-Capture-50295c7f" target="_blank"><img alt="Twitter" src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/twitter.gif"></a>
+
+ 
+<a href="http://del.icio.us/post?url=http%3a%2f%2fcode.msdn.microsoft.com%2fWebcam-Capture-50295c7f&amp;title=Webcam%20Capture" target="_blank"><img alt="del.icio.us" src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/delicious.gif"></a>
+
+ 
+<a href="http://digg.com/submit?url=http%3a%2f%2fcode.msdn.microsoft.com%2fWebcam-Capture-50295c7f&amp;title=Webcam%20Capture" target="_blank"><img alt="Digg" src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/digg.gif"></a>
+
+ 
+<a href="http://www.facebook.com/sharer.php?u=http%3a%2f%2fcode.msdn.microsoft.com%2fWebcam-Capture-50295c7f&amp;t=Webcam%20Capture" target="_blank"><img alt="Facebook" src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/facebook.gif"></a>
+
+
+</div></span>
+        </div>
+        
+        
+    </div>
+    <div class="clear"></div>
+    <div class="section">
+    
+    <div class="itemBarLong">
+        <label for="TranslatedIn">Przetłumaczone w</label>
+        <div id="TranslatedIn">
+             <a href="http://code.msdn.microsoft.com/Webcam-Capture-50295c7f?localeName=en-US">English</a>
+        </div>
+    </div>
+
+
+
+
+    <div class="itemBarLong tagsContainer">
+        <label for="Technologie">Technologie</label>
+        <div id="Technologie">
+            <a href="http://code.msdn.microsoft.com/site/search?f%5B0%5D.Type=Technology&amp;f%5B0%5D.Value=C%23&amp;f%5B0%5D.Text=C%23">C#</a>, <a href="http://code.msdn.microsoft.com/site/search?f%5B0%5D.Type=Technology&amp;f%5B0%5D.Value=Windows%20Forms&amp;f%5B0%5D.Text=Windows%20Forms">Windows Forms</a>, <a href="http://code.msdn.microsoft.com/site/search?f%5B0%5D.Type=Technology&amp;f%5B0%5D.Value=.NET%20Framework%204&amp;f%5B0%5D.Text=.NET%20Framework%204">.NET Framework 4</a>, <a href="http://code.msdn.microsoft.com/site/search?f%5B0%5D.Type=Technology&amp;f%5B0%5D.Value=.NET%20Framework&amp;f%5B0%5D.Text=.NET%20Framework">.NET Framework</a>
+        </div>
+    </div>
+    <div class="itemBarLong tagsContainer">
+        <label for="Tematy">Tematy</label>
+        <div id="Tematy">
+            <a href="http://code.msdn.microsoft.com/site/search?f%5B0%5D.Type=Topic&amp;f%5B0%5D.Value=using%20webcam&amp;f%5B0%5D.Text=using%20webcam">using webcam</a>
+        </div>
+    </div>
+
+
+    <a name="content"></a>
+    <div class="itemBar">
+            <span id="reportAbuse">
+                <a href="https://login.live.com/login.srf?wa=wsignin1.0&amp;wtrealm=code.msdn.microsoft.com&amp;wreply=https%3a%2f%2fcode.msdn.microsoft.com%2fWebcam-Capture-50295c7f%2fview%2fReportAbuse%3fstoAI%3d10&amp;wp=MBI_FED_SSL&amp;wlcxt=microsoft%24microsoft%24microsoft">Zgłoś nadużycie firmie Microsoft</a>
+            </span>
+        </div>
+    </div>
+</div>
+
+<script src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/07276395fc64606ca14b8a36563967ea-7af9a874efbc1f5aa0062aba1a48.js" type="text/javascript"></script><script type="text/javascript">
+
+    $(function () {
+        $('#Downloads input').click(function () {
+            window.location.href = $(this).data('url');
+         });
+    });
+
+    function rateItReviewIt() {
+        displayCreateReview();
+        $('#Reviews_Tab').click();
+    }
+
+    function showEula() {
+        $.get('\x2fsite\x2fWebcam-Capture-50295c7f\x2feulapartial\x3flicenseType\x3dApache', function(data){
+            $.prompt(data, {
+                prefix: 'eulaPage',
+                top: '15%',
+                buttons: { 'Zamknij': true }   
+            });
+        });
+    };
+
+</script>
+
+
+            </div>
+        </div>
+        
+
+
+
+
+
+<div id="projectBody">
+    <div id="projectContent">
+        <div class="tabHeaders">
+            <div id="Details_Tab" class="current"><a href="http://code.msdn.microsoft.com/Webcam-Capture-50295c7f#content">Opis</a></div>
+            
+        <div id="SourceCode_Tab" class=""><a href="http://code.msdn.microsoft.com/Webcam-Capture-50295c7f/view/SourceCode#content">Przeglądaj kod</a></div>
+
+                <div id="Discussions_Tab" class=""><a href="http://code.msdn.microsoft.com/Webcam-Capture-50295c7f/view/Discussions#content">Pytania i odpowiedzi </a></div>
+        </div>
+        <div class="tabContents">
+                <div id="Details_Content">
+                            <iframe style="height: 2899px;" id="longdescIframe" marginwidth="0" marginheight="0" src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/description.htm" frameborder="0" scrolling="no" width="100%"></iframe>
+                    
+                </div>
+            
+            
+    
+
+
+        </div>
+    </div>
+</div>    
+    </div>
+    <script language="javascript" type="text/javascript">
+
+        $(document).ready(function() {
+	    if (StreamEvents) {
+                window.gTracker = StreamEvents.tracker.create(null, {
+                    beaconUrl: 'setrack.gif',
+                    pageEventType: 'GalleriesPage',
+                    pageActionEventType: 'GalleriesPageAction',
+                    pageEventArg: {
+                        Brand: 'Samples',
+                        Page: 'ProjectDetails',
+                        Section: null,
+                        PageContent: 'Webcam-Capture-50295c7f',
+                        PageContentType: 'Project'
+                    }
+                });
+             }
+
+
+             registerPageView();
+            
+             Galleries.project.getAuthorProjects();
+            
+             loadTabData('Details');
+
+             var reportAbuseFormUrl = '\x2fWebcam-Capture-50295c7f\x2freportabuse';
+             $("#reportAbuse a[href='']").click(function() {
+                    $('#projectContent').load(reportAbuseFormUrl);
+                    return false;
+                });
+            
+             
+        });
+        
+         function loadTabData(tabId) {
+                if ((tabId == 'SourceCode')) {
+                    $('div.collapsableSidebar').addClass('hiddenSidebar');
+                    $('#projectBody .tabContents').addClass('fullProjectBody');
+                    Galleries.utility.waitFor(
+                        function(){ return $("#userCard .profile-statline").length > 0;},
+                        function(){$("#userCard .profile-biography, #userCard .profile-statline, #userCard .profile-footer, #userCard .profile-inline-secondary").addClass('hiddenSidebar'); });
+                    
+                }
+                else {
+                    $('div.collapsableSidebar, #userCard .profile-biography, #userCard .profile-statline, #userCard .profile-footer, #userCard .profile-inline-secondary').removeClass('hiddenSidebar');
+                    $('#projectBody .tabContents').removeClass('fullProjectBody');
+                }
+
+                Galleries.project.resizeDesc();
+        }
+
+        function registerPageView() {
+            $.post('\x2fWebcam-Capture-50295c7f\x2fstats\x2fRegisterPageView');
+        }
+    </script>
+
+
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="advertisment">
+        
+    </div>
+
+                                    <div class="Clear"></div>
+                                </div>
+    
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="Clearbottom"></div>          
+                    <div class="bottomleftcorner"></div>            
+                    <div class="bottomrightcorner"></div> 
+                    
+                     
+                    
+
+                           
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+<div data-chameleon-template="epxfooter"></div>
+<div data-chameleon-template="footer">        
+<div id="ux-footer" class="" style="" xmlns="http://www.w3.org/1999/xhtml">
+    <footer class="top">
+        <div data-fragmentname="LeftLinks" id="Fragment_LeftLinks" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="LinkList">
+    <div class="LinkListTitle">Centra deweloperów</div>
+    <div class="Links">
+      <ul class="LinkColumn" style="width: 100%">
+        <li>
+          <a href="http://msdn.microsoft.com/windows" id="27861_1" class="windowsBlue" xmlns="http://www.w3.org/1999/xhtml">Windows</a>
+        </li>
+        <li>
+          <a href="http://dev.windowsphone.com/" id="27861_2" class="windowsPurple" xmlns="http://www.w3.org/1999/xhtml">Windows Phone</a>
+        </li>
+        <li>
+          <a href="http://msdn.microsoft.com/office" id="27861_3" class="office" xmlns="http://www.w3.org/1999/xhtml">Office</a>
+        </li>
+        <li>
+          <a href="http://www.windowsazure.com/en-us/documentation/" id="27861_4" class="windowsBlue" xmlns="http://www.w3.org/1999/xhtml">Windows Azure</a>
+        </li>
+        <li>
+          <a href="http://msdn.microsoft.com/vstudio" id="27861_5" class="visualStudio" xmlns="http://www.w3.org/1999/xhtml">Visual Studio</a>
+        </li>
+        <li>
+          <a href="http://msdn.microsoft.com/aa937802" id="27861_6" xmlns="http://www.w3.org/1999/xhtml">Więcej...</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>    
+        <div id="rightLinks">
+            <div data-fragmentname="CenterLinks1" id="Fragment_CenterLinks1" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="LinkList">
+    <div class="LinkListTitle">Zasoby szkoleniowe</div>
+    <div class="LinkListDescription"></div>
+    <div class="Links">
+      <ul class="LinkColumn" style="width: 100%">
+        <li>
+          <a href="http://www.microsoftvirtualacademy.com/" id="27861_14" xmlns="http://www.w3.org/1999/xhtml">Microsoft Virtual Academy</a>
+        </li>
+        <li>
+          <a href="http://channel9.msdn.com/" id="27861_16" xmlns="http://www.w3.org/1999/xhtml">Channel 9</a>
+        </li>
+        <li>
+          <a href="http://www.interoperabilitybridges.com/" id="27861_17" xmlns="http://www.w3.org/1999/xhtml">Interoperacyjność</a>
+        </li>
+        <li>
+          <a href="http://msdn.microsoft.com/magazine/" id="CenterLinks1_427_33" xmlns="http://www.w3.org/1999/xhtml">MSDN Magazine</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+            <div data-fragmentname="CenterLinks2" id="Fragment_CenterLinks2" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="LinkList">
+    <div class="LinkListTitle">Społeczność</div>
+    <div class="LinkListDescription"></div>
+    <div class="Links">
+      <ul class="LinkColumn" style="width: 100%">
+        <li>
+          <a href="http://social.msdn.microsoft.com/forums" id="27861_19" xmlns="http://www.w3.org/1999/xhtml">Forum</a>
+        </li>
+        <li>
+          <a href="http://blogs.msdn.com/b/developer-tools/" id="27861_20" xmlns="http://www.w3.org/1999/xhtml">Blogi</a>
+        </li>
+        <li>
+          <a href="http://www.codeplex.com/" id="27861_22" xmlns="http://www.w3.org/1999/xhtml">Codeplex</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+            <div data-fragmentname="CenterLinks3" id="Fragment_CenterLinks3" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="LinkList">
+    <div class="LinkListTitle">Do pobrania</div>
+    <div class="LinkListDescription"></div>
+    <div class="Links">
+      <ul class="LinkColumn" style="width: 100%">
+        <li>
+          <a href="http://msdn.microsoft.com/hh361695" id="CenterLinks3_427_34" xmlns="http://www.w3.org/1999/xhtml">Samodzielna pomoc techniczna</a>
+        </li>
+        <li>
+          <a href="http://support.microsoft.com/" id="27861_24" xmlns="http://www.w3.org/1999/xhtml">Inne opcje pomocy technicznej</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+            <div class="nth-child-4n" data-fragmentname="CenterLinks4" id="Fragment_CenterLinks4" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="LinkList">
+    <div class="LinkListTitle">Programy</div>
+    <div class="LinkListDescription"></div>
+    <div class="Links">
+      <ul class="LinkColumn" style="width: 100%">
+        <li>
+          <a href="http://www.microsoft.com/bizspark/" id="27861_27" xmlns="http://www.w3.org/1999/xhtml">BizSpark (dla startup’ów)</a>
+        </li>
+        <li>
+          <a href="https://www.dreamspark.com/" id="27861_28" xmlns="http://www.w3.org/1999/xhtml">DreamSpark</a>
+        </li>
+        <li>
+          <a href="https://www.microsoft.com/faculty" id="27861_29" xmlns="http://www.w3.org/1999/xhtml">Faculty Connection</a>
+        </li>
+        <li>
+          <a href="http://www.microsoft.com/student/" id="CenterLinks4_427_32" xmlns="http://www.w3.org/1999/xhtml">Microsoft Student</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+        </div>
+    </footer>
+    
+    <footer class="bottom">
+        <span class="localeContainer">
+                <form class="selectLocale" id="selectLocaleForm" action="http://msdn.microsoft.com/pl-PL/selectlocale-dmc">
+        <input name="fromPage" value="http%3a%2f%2fcode.msdn.microsoft.com%2fWebcam-Capture-50295c7f" type="hidden">
+        <a href="#" onclick="$('#selectLocaleForm').submit();return false;" title="Zmień język">Polska (Polski)</a>
+    </form>    
+
+
+        </span>
+        
+        <div data-fragmentname="BottomLinks" id="Fragment_BottomLinks" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="LinkList">
+    <div class="LinkListDescription"></div>
+    <div class="Links">
+      <ul class="LinkColumn horizontal">
+        <li>
+          <a href="http://msdn.microsoft.com/pl-pl/msdn-flash" id="27861_8" xmlns="http://www.w3.org/1999/xhtml">Newsletter</a>
+        </li>
+        <li>
+          <a href="http://msdn.microsoft.com/dn529288" id="27861_10" xmlns="http://www.w3.org/1999/xhtml">Ochrona prywatności i pliki cookies</a>
+        </li>
+        <li>
+          <a href="http://msdn.microsoft.com/cc300389.aspx" id="27861_11" xmlns="http://www.w3.org/1999/xhtml">Zasady użytkowania</a>
+        </li>
+        <li>
+          <a href="http://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/EN-US.aspx" id="27861_12" xmlns="http://www.w3.org/1999/xhtml">Znaki towarowe</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>    
+        <span class="logoLegal">
+            <span class="logo"></span>
+            <span class="copyright">© 2014 Microsoft</span>
+        </span>
+    </footer>
+</div>
+    
+<script type="text/javascript" xmlns="http://www.w3.org/1999/xhtml">
+/*<![CDATA[*/
+/**/
+(window.MTPS || (window.MTPS = {})).cdnDomains || (window.MTPS.cdnDomains = { 
+	"image": "http://i.msdn.microsoft.com", 
+	"js": "http://i2.msdn.microsoft.com", 
+	"css": "http://i3.msdn.microsoft.com"
+});
+/**/
+/*]]>*/
+</script><script type="text/javascript" src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/Footer.js" xmlns="http://www.w3.org/1999/xhtml"></script></div>  
+    <div data-chameleon-template="megablade"></div>
+    
+    <script type="text/javascript">
+        Galleries.utility.loadJavaScript("http://widgets.membership.s-msft.com/v1/loader.js?brand=Msdn&lang=pl-PL", true);
+        Galleries.utility.loadJavaScript('http://js.microsoft.com/library/svy/sto/broker.js', true);
+    </script>    
+
+    
+    <script src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/c8e880a08198192649f9b47b92426cc1-6143d45df2ee01b890d545446a5f.js" type="text/javascript"></script>        
+                        <noscript><a href="http://www.omniture.com" title="Web Analytics">
+        <img src="http://msstonojssocial.112.2O7.net/b/ss/msstonojssocial/1/H.20.2--NS/0" height="1" width="1" alt="" />
+        </a></noscript>
+    
+
+
+<div id="_WEDCSInsertedData" style="display: none;"><iframe id="_msnFrame" src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/c_002.gif" style="z-index:-1;height:1px;width:1px;display:none;visibility:hidden;" onload="javascript:MscomBeacon();"></iframe></div><script src="Webcam%20Capture%20w%20C%23%20dla%20Visual%20Studio%202010_pliki/broker-config.js"></script></body></html>

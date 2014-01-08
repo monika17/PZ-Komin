@@ -944,6 +944,11 @@ namespace Komin
             return ret;
         }
 
+        public bool HasContent(uint type)
+        {
+            return ((content & type) == type);
+        }
+
         public void DeleteContent()
         {
             content = 0;
@@ -1024,6 +1029,10 @@ namespace Komin
                 }
         }
 
+        ///<summary>
+        ///Copy content from specified packet
+        ///<param name="packet">Source packet</param>
+        ///</summary>
         public void CopyContent(KominNetworkPacket packet)
         {
             List<KominProtocolContentTypes> types = new List<KominProtocolContentTypes>();

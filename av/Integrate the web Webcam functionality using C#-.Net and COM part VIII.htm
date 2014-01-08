@@ -1,0 +1,1096 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#"><head><title>
+Integrate the web Webcam functionality using C#-.Net and COM part VIII
+</title> <title>Integrate the web Webcam functionality using C# : Part VIII</title> <meta name="Keywords" content="COM,Web Camera C# COM .Net avicap32.dll"> <meta name="DESCRIPTION" content="In this article, I will demonstrate a totally different technique to integrate the web cam functionality. "> <meta name="Search.TopicType" content="kbArticle"> <meta name="Search.PublishDate" content="08 Nov 2008 12:00:00 GMT"> <meta name="Search.RevisedDate" content="10 Nov 2008 11:54:22 GMT"> <meta name="Search.UserRating" content="20%"> <meta name="CODE_LANGUAGE" content="C#"> <meta name="MS.LOCALE" content="en-US"> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta name="Author" content="Bechir Bejaoui"> <link rel="stylesheet" type="text/css" href="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/csharp_21122013.css"><link href="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/SyntaxHighlighter.css" rel="stylesheet" type="text/css"><link rel="Shortcut Icon" href="http://www.c-sharpcorner.com/Images/McnIcon.ico"><meta http-equiv="Page-Exit" content="progid:DXImageTransform.Microsoft.Fade(duration=.3)"><meta property="fb:app_id" content="440531902678919"> <script async="" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/cbgapi.loaded_1"></script><script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/all.js" id="facebook-jssdk"></script><script async="" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/cbgapi.loaded_0"></script><script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/jquery.js" type="text/javascript"></script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/jquery_004.js" type="text/javascript"></script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/jquery_002.js" type="text/javascript"></script> <script gapi_processed="true" type="text/javascript" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/plusone.js" async="true"></script> <script type="text/javascript" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/in.js" async="true"></script> <script type="text/javascript" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/widgets.js" async="true"></script> <script type="text/javascript">
+var $j = jQuery.noConflict();
+$j(document).ready(function() {
+$j('a.show-dropdown').mouseover(function() {
+//get the height position of the current object
+var elementHeight = $j(this).height();
+var offsetWidth = 10;
+var offsetHeight = 10;
+//Get the tool tip container width adn height
+var toolTipWidth = $j("#dropDown").width();
+var toolTipHeight = $j("#dropDown").height();
+//Get the HTML document width and height
+var documentWidth = $j(document).width();
+var documentHeight = $j(document).height();
+//Set top and bottom position of the tool tip
+var top = $j(this).offset().top;
+if (top + toolTipHeight > documentHeight) {
+top = documentHeight - toolTipHeight - offsetHeight - (2 * elementHeight);
+}
+var left = $j(this).offset().left + offsetWidth;
+if (left + toolTipWidth > documentWidth) {
+left = documentWidth - toolTipWidth - (2 * offsetWidth);
+}
+$j('#dropDown').show();
+});
+$j('a.show-dropdown').mouseout(function() {
+$j("#dropDown").hide();
+});
+$j('#dropDown').mouseover(function() {
+$j('#dropDown').show();
+});
+$j('#dropDown').mouseout(function() {
+$j('#dropDown').hide();
+});
+});
+</script> <link href="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/WebResource.css" type="text/css" rel="stylesheet"><script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/nonSecureAnonymousFramework"></script><style type="text/css">.fb_hidden{position:absolute;top:-10000px;z-index:10001}
+.fb_invisible{display:none}
+.fb_reset{background:none;border:0;border-spacing:0;color:#000;cursor:auto;direction:ltr;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}
+.fb_reset > div{overflow:hidden}
+.fb_link img{border:none}
+.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}
+.fb_dialog_advanced{padding:10px;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px}
+.fb_dialog_content{background:#fff;color:#333}
+.fb_dialog_close_icon{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/yL/r/s816eWC-2sl.gif);cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px;top:8px\9;right:7px\9}
+.fb_dialog_mobile .fb_dialog_close_icon{top:5px;left:5px;right:auto}
+.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}
+.fb_dialog_close_icon:hover{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/yL/r/s816eWC-2sl.gif)}
+.fb_dialog_close_icon:active{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/yL/r/s816eWC-2sl.gif)}
+.fb_dialog_loader{background-color:#f2f2f2;border:1px solid #606060;font-size:24px;padding:20px}
+.fb_dialog_top_left,
+.fb_dialog_top_right,
+.fb_dialog_bottom_left,
+.fb_dialog_bottom_right{height:10px;width:10px;overflow:hidden;position:absolute}
+.fb_dialog_top_left{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 0;left:-10px;top:-10px}
+.fb_dialog_top_right{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 -10px;right:-10px;top:-10px}
+.fb_dialog_bottom_left{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 -20px;bottom:-10px;left:-10px}
+.fb_dialog_bottom_right{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 -30px;right:-10px;bottom:-10px}
+.fb_dialog_vert_left,
+.fb_dialog_vert_right,
+.fb_dialog_horiz_top,
+.fb_dialog_horiz_bottom{position:absolute;background:#525252;filter:alpha(opacity=70);opacity:.7}
+.fb_dialog_vert_left,
+.fb_dialog_vert_right{width:10px;height:100%}
+.fb_dialog_vert_left{margin-left:-10px}
+.fb_dialog_vert_right{right:0;margin-right:-10px}
+.fb_dialog_horiz_top,
+.fb_dialog_horiz_bottom{width:100%;height:10px}
+.fb_dialog_horiz_top{margin-top:-10px}
+.fb_dialog_horiz_bottom{bottom:0;margin-bottom:-10px}
+.fb_dialog_iframe{line-height:0}
+.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #3b5998;color:#fff;font-size:14px;font-weight:bold;margin:0}
+.fb_dialog_content .dialog_title > span{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yd/r/Cou7n-nqK52.gif)
+no-repeat 5px 50%;float:left;padding:5px 0 7px 26px}
+body.fb_hidden{-webkit-transform:none;height:100%;margin:0;overflow:visible;position:absolute;top:-10000px;left:0;width:100%}
+.fb_dialog.fb_dialog_mobile.loading{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ya/r/3rhSv5V8j3o.gif)
+white no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}
+.fb_dialog.fb_dialog_mobile.loading.centered{max-height:590px;min-height:590px;max-width:500px;min-width:500px}
+#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .45);position:absolute;left:0;top:0;width:100%;min-height:100%;z-index:10000}
+#fb-root #fb_dialog_ipad_overlay.hidden{display:none}
+.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}
+.fb_dialog_content .dialog_header{-webkit-box-shadow:white 0 1px 1px -1px inset;background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#738ABA), to(#2C4987));border-bottom:1px solid;border-color:#1d4088;color:#fff;font:14px Helvetica, sans-serif;font-weight:bold;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}
+.fb_dialog_content .dialog_header table{-webkit-font-smoothing:subpixel-antialiased;height:43px;width:100%
+}
+.fb_dialog_content .dialog_header td.header_left{font-size:12px;padding-left:5px;vertical-align:middle;width:60px
+}
+.fb_dialog_content .dialog_header td.header_right{font-size:12px;padding-right:5px;vertical-align:middle;width:60px
+}
+.fb_dialog_content .touchable_button{background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#4966A6),
+color-stop(0.5, #355492), to(#2A4887));border:1px solid #29447e;-webkit-background-clip:padding-box;-webkit-border-radius:3px;-webkit-box-shadow:rgba(0, 0, 0, .117188) 0 1px 1px inset,
+rgba(255, 255, 255, .167969) 0 1px 0;display:inline-block;margin-top:3px;max-width:85px;line-height:18px;padding:4px 12px;position:relative}
+.fb_dialog_content .dialog_header .touchable_button input{border:none;background:none;color:#fff;font:12px Helvetica, sans-serif;font-weight:bold;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}
+.fb_dialog_content .dialog_header .header_center{color:#fff;font-size:16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}
+.fb_dialog_content .dialog_content{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/y9/r/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #555;border-bottom:0;border-top:0;height:150px}
+.fb_dialog_content .dialog_footer{background:#f2f2f2;border:1px solid #555;border-top-color:#ccc;height:40px}
+#fb_dialog_loader_close{float:left}
+.fb_dialog.fb_dialog_mobile .fb_dialog_close_button{text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}
+.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}
+.fb_iframe_widget{display:inline-block;position:relative}
+.fb_iframe_widget span{display:inline-block;position:relative;text-align:justify}
+.fb_iframe_widget iframe{position:absolute}
+.fb_iframe_widget_lift{z-index:1}
+.fb_hide_iframes iframe{position:relative;left:-10000px}
+.fb_iframe_widget_loader{position:relative;display:inline-block}
+.fb_iframe_widget_fluid{display:inline}
+.fb_iframe_widget_fluid span{width:100%}
+.fb_iframe_widget_loader iframe{min-height:32px;z-index:2;zoom:1}
+.fb_iframe_widget_loader .FB_Loader{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/y9/r/jKEcVPZFk-2.gif) no-repeat;height:32px;width:32px;margin-left:-16px;position:absolute;left:50%;z-index:4}
+.fb_connect_bar_container div,
+.fb_connect_bar_container span,
+.fb_connect_bar_container a,
+.fb_connect_bar_container img,
+.fb_connect_bar_container strong{background:none;border-spacing:0;border:0;direction:ltr;font-style:normal;font-variant:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal;vertical-align:baseline}
+.fb_connect_bar_container{position:fixed;left:0 !important;right:0 !important;height:42px !important;padding:0 25px !important;margin:0 !important;vertical-align:middle !important;border-bottom:1px solid #333 !important;background:#3b5998 !important;z-index:99999999 !important;overflow:hidden !important}
+.fb_connect_bar_container_ie6{position:absolute;top:expression(document.compatMode=="CSS1Compat"? document.documentElement.scrollTop+"px":body.scrollTop+"px")}
+.fb_connect_bar{position:relative;margin:auto;height:100%;width:100%;padding:6px 0 0 0 !important;background:none;color:#fff !important;font-family:"lucida grande", tahoma, verdana, arial, sans-serif !important;font-size:13px !important;font-style:normal !important;font-variant:normal !important;font-weight:normal !important;letter-spacing:normal !important;line-height:1 !important;text-decoration:none !important;text-indent:0 !important;text-shadow:none !important;text-transform:none !important;white-space:normal !important;word-spacing:normal !important}
+.fb_connect_bar a:hover{color:#fff}
+.fb_connect_bar .fb_profile img{height:30px;width:30px;vertical-align:middle;margin:0 6px 5px 0}
+.fb_connect_bar div a,
+.fb_connect_bar span,
+.fb_connect_bar span a{color:#bac6da;font-size:11px;text-decoration:none}
+.fb_connect_bar .fb_buttons{float:right;margin-top:7px}
+.fb_edge_widget_with_comment{position:relative;*z-index:1000}
+.fb_edge_widget_with_comment span.fb_edge_comment_widget{position:absolute}
+.fb_edge_widget_with_comment span.fb_send_button_form_widget{z-index:1}
+.fb_edge_widget_with_comment span.fb_send_button_form_widget .FB_Loader{left:0;top:1px;margin-top:6px;margin-left:0;background-position:50% 50%;background-color:#fff;height:150px;width:394px;border:1px #666 solid;border-bottom:2px solid #283e6c;z-index:1}
+.fb_edge_widget_with_comment span.fb_send_button_form_widget.dark .FB_Loader{background-color:#000;border-bottom:2px solid #ccc}
+.fb_edge_widget_with_comment span.fb_send_button_form_widget.siderender
+.FB_Loader{margin-top:0}
+.fbpluginrecommendationsbarleft,
+.fbpluginrecommendationsbarright{position:fixed !important;bottom:0;z-index:999}
+.fbpluginrecommendationsbarleft{left:10px}
+.fbpluginrecommendationsbarright{right:10px}</style><style type="text/css">* html #li_ui_li_gen_1388758436810_0 a#li_ui_li_gen_1388758436810_0-link{height:1% !important;}#li_ui_li_gen_1388758436810_0{position:relative !important;overflow:visible !important;display:block !important;}#li_ui_li_gen_1388758436810_0 a#li_ui_li_gen_1388758436810_0-link{border:0 !important;height:20px !important;text-decoration:none !important;padding:0 !important;margin:0 !important;display:inline-block !important;}#li_ui_li_gen_1388758436810_0 a#li_ui_li_gen_1388758436810_0-link:link, #li_ui_li_gen_1388758436810_0 a#li_ui_li_gen_1388758436810_0-link:visited, #li_ui_li_gen_1388758436810_0 a#li_ui_li_gen_1388758436810_0-link:hover, #li_ui_li_gen_1388758436810_0 a#li_ui_li_gen_1388758436810_0-link:active{border:0 !important;text-decoration:none !important;}#li_ui_li_gen_1388758436810_0 a#li_ui_li_gen_1388758436810_0-link:after{content:"." !important;display:block !important;clear:both !important;visibility:hidden !important;line-height:0 !important;height:0 !important;}#li_ui_li_gen_1388758436810_0 #li_ui_li_gen_1388758436810_0-logo{background:url(http://s.c.lnkd.licdn.com/scds/common/u/img/sprite/sprite_connect_v13.png) 0px -276px no-repeat !important;cursor:pointer !important;border:0 !important;text-indent:-9999em !important;overflow:hidden !important;padding:0 !important;margin:0 !important;position:absolute !important;left:0px !important;top:0px !important;display:block !important;width:20px !important;height:20px !important;float:right !important;}#li_ui_li_gen_1388758436810_0.hovered #li_ui_li_gen_1388758436810_0-logo{background-position:-20px -276px !important;}#li_ui_li_gen_1388758436810_0.clicked #li_ui_li_gen_1388758436810_0-logo, #li_ui_li_gen_1388758436810_0.down #li_ui_li_gen_1388758436810_0-logo{background-position:-40px -276px !important;}.IN-shadowed #li_ui_li_gen_1388758436810_0 #li_ui_li_gen_1388758436810_0-logo{}#li_ui_li_gen_1388758436810_0 #li_ui_li_gen_1388758436810_0-title{color:#333 !important;cursor:pointer !important;display:block !important;white-space:nowrap !important;float:left !important;margin-left:1px !important;vertical-align:top !important;overflow:hidden !important;text-align:center !important;height:18px !important;padding:0 4px 0 23px !important;border:1px solid #000 !important;border-top-color:#E2E2E2 !important;border-right-color:#BFBFBF !important;border-bottom-color:#B9B9B9 !important;border-left-color:#E2E2E2 !important;border-left:0 !important;text-shadow:#FFFFFF -1px 1px 0 !important;line-height:20px !important;border-radius:0 !important;-moz-border-radius:0 !important;border-top-right-radius:2px !important;border-bottom-right-radius:2px !important;-moz-border-radius-topright:2px !important;-moz-border-radius-bottomright:2px !important;background-color:#ECECEC !important;background-image:-moz-linear-gradient(top, #FEFEFE 0%, #ECECEC 100%) !important;}#li_ui_li_gen_1388758436810_0.hovered #li_ui_li_gen_1388758436810_0-title{border:1px solid #000 !important;border-top-color:#ABABAB !important;border-right-color:#9A9A9A !important;border-bottom-color:#787878 !important;border-left-color:#04568B !important;border-left:0 !important;background-color:#EDEDED !important;background-image:-moz-linear-gradient(top, #EDEDED 0%, #DEDEDE 100%) !important;}#li_ui_li_gen_1388758436810_0.clicked #li_ui_li_gen_1388758436810_0-title, #li_ui_li_gen_1388758436810_0.down #li_ui_li_gen_1388758436810_0-title{color:#666 !important;border:1px solid #000 !important;border-top-color:#B6B6B6 !important;border-right-color:#B3B3B3 !important;border-bottom-color:#9D9D9D !important;border-left-color:#49627B !important;border-left:0 !important;background-color:#DEDEDE !important;background-image:-moz-linear-gradient(top, #E3E3E3 0%, #EDEDED 100%) !important;}.IN-shadowed #li_ui_li_gen_1388758436810_0 #li_ui_li_gen_1388758436810_0-title{}.IN-shadowed #li_ui_li_gen_1388758436810_0.hovered #li_ui_li_gen_1388758436810_0-title{}.IN-shadowed #li_ui_li_gen_1388758436810_0.clicked #li_ui_li_gen_1388758436810_0-title, .IN-shadowed #li_ui_li_gen_1388758436810_0.down #li_ui_li_gen_1388758436810_0-title{}#li_ui_li_gen_1388758436810_0 #li_ui_li_gen_1388758436810_0-title-text, #li_ui_li_gen_1388758436810_0 #li_ui_li_gen_1388758436810_0-title-text *{color:#333 !important;font-size:11px !important;font-family:Arial, sans-serif !important;font-weight:bold !important;font-style:normal !important;display:inline-block !important;background:transparent none !important;vertical-align:top !important;height:18px !important;line-height:20px !important;float:none !important;}#li_ui_li_gen_1388758436810_0 #li_ui_li_gen_1388758436810_0-title-text strong{font-weight:bold !important;}#li_ui_li_gen_1388758436810_0 #li_ui_li_gen_1388758436810_0-title-text em{font-style:italic !important;}#li_ui_li_gen_1388758436810_0.hovered #li_ui_li_gen_1388758436810_0-title-text, #li_ui_li_gen_1388758436810_0.hovered #li_ui_li_gen_1388758436810_0-title-text *{color:#000 !important;}#li_ui_li_gen_1388758436810_0.clicked #li_ui_li_gen_1388758436810_0-title-text, #li_ui_li_gen_1388758436810_0.down #li_ui_li_gen_1388758436810_0-title-text, #li_ui_li_gen_1388758436810_0.clicked #li_ui_li_gen_1388758436810_0-title-text *, #li_ui_li_gen_1388758436810_0.down #li_ui_li_gen_1388758436810_0-title-text *{color:#666 !important;}#li_ui_li_gen_1388758436810_0 #li_ui_li_gen_1388758436810_0-title #li_ui_li_gen_1388758436810_0-mark{display:inline-block !important;width:0px !important;overflow:hidden !important;}.success #li_ui_li_gen_1388758436810_0 #li_ui_li_gen_1388758436810_0-title{color:#333 !important;border-top-color:#E2E2E2 !important;border-right-color:#BFBFBF !important;border-bottom-color:#B9B9B9 !important;border-left-color:#E2E2E2 !important;background-color:#ECECEC !important;background-image:-moz-linear-gradient(top, #FEFEFE 0%, #ECECEC 100%) !important;}.success #li_ui_li_gen_1388758436810_0 #li_ui_li_gen_1388758436810_0-title-text, .success #li_ui_li_gen_1388758436810_0 #li_ui_li_gen_1388758436810_0-title-text *{color:#333 !important;}.IN-shadowed .success #li_ui_li_gen_1388758436810_0 #li_ui_li_gen_1388758436810_0-title{}.success #li_ui_li_gen_1388758436810_0.hovered #li_ui_li_gen_1388758436810_0-title{color:#000 !important;border-top-color:#ABABAB !important;border-right-color:#9A9A9A !important;border-bottom-color:#787878 !important;border-left-color:#04568B !important;background-color:#EDEDED !important;background-image:-moz-linear-gradient(top, #EDEDED 0%, #DEDEDE 100%) !important;}.success #li_ui_li_gen_1388758436810_0.hovered #li_ui_li_gen_1388758436810_0-title-text, .success #li_ui_li_gen_1388758436810_0.hovered #li_ui_li_gen_1388758436810_0-title-text *{color:#000 !important;}.success #li_ui_li_gen_1388758436810_0.clicked #li_ui_li_gen_1388758436810_0-title, .success #li_ui_li_gen_1388758436810_0.down #li_ui_li_gen_1388758436810_0-title{color:#666 !important;border-top-color:#B6B6B6 !important;border-right-color:#B3B3B3 !important;border-bottom-color:#9D9D9D !important;border-left-color:#49627B !important;background-color:#DEDEDE !important;background-image:-moz-linear-gradient(top, #E3E3E3 0%, #EDEDED 100%) !important;}.success #li_ui_li_gen_1388758436810_0.clicked #li_ui_li_gen_1388758436810_0-title-text, .success #li_ui_li_gen_1388758436810_0.down #li_ui_li_gen_1388758436810_0-title-text, .success #li_ui_li_gen_1388758436810_0.clicked #li_ui_li_gen_1388758436810_0-title-text *, .success #li_ui_li_gen_1388758436810_0.down #li_ui_li_gen_1388758436810_0-title-text *{color:#666 !important;}.IN-shadowed .success #li_ui_li_gen_1388758436810_0.clicked #li_ui_li_gen_1388758436810_0-title, .IN-shadowed .success #li_ui_li_gen_1388758436810_0.down #li_ui_li_gen_1388758436810_0-title{}#li_ui_li_gen_1388758436823_1-container.IN-right {display:inline-block !important;float:left !important;overflow:visible !important;position:relative !important;height:18px !important;padding-left:2px !important;line-height:1px !important;cursor:pointer !important;}#li_ui_li_gen_1388758436823_1.IN-right {display:block !important;float:left !important;height:18px !important;margin-right:4px !important;padding-right:4px !important;background:url(http://s.c.lnkd.licdn.com/scds/common/u/img/sprite/sprite_connect_v13.png) right -100px no-repeat !important;}#li_ui_li_gen_1388758436823_1-inner.IN-right {display:block !important;float:left !important;padding-left:8px !important;text-align:center !important;background:url(http://s.c.lnkd.licdn.com/scds/common/u/img/sprite/sprite_connect_v13.png) 0px -60px no-repeat !important;}#li_ui_li_gen_1388758436823_1-content.IN-right {display:inline !important;font-size:11px !important;color:#04558B !important;font-weight:bold !important;font-family:Arial, sans-serif !important;line-height:18px !important;padding:0 5px 0 5px !important;}#li_ui_li_gen_1388758436823_1-container.IN-hovered #li_ui_li_gen_1388758436823_1.IN-right, #li_ui_li_gen_1388758436823_1-container.IN-clicked #li_ui_li_gen_1388758436823_1.IN-right, #li_ui_li_gen_1388758436823_1-container.IN-down #li_ui_li_gen_1388758436823_1.IN-right {background-position-y:-120px !important;}#li_ui_li_gen_1388758436823_1-container.IN-hovered #li_ui_li_gen_1388758436823_1-inner.IN-right, #li_ui_li_gen_1388758436823_1-container.IN-clicked #li_ui_li_gen_1388758436823_1-inner.IN-right, #li_ui_li_gen_1388758436823_1-container.IN-down #li_ui_li_gen_1388758436823_1-inner.IN-right {background-position-y:-80px !important;}#li_ui_li_gen_1388758436823_1-container.IN-empty {display:none !important;}#li_ui_li_gen_1388758436823_1-container.IN-hidden #li_ui_li_gen_1388758436823_1 {display:none !important;}</style></head> <body data-twttr-rendered="true" id="MasterBody"> <div class=" fb_reset" id="fb-root"> <div style="position: absolute; top: -10000px; height: 0px; width: 0px;"><div><iframe src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/xd_arbiter.htm" style="border: medium none;" tab-index="-1" title="Facebook Cross Domain Communication Frame" aria-hidden="true" id="fb_xdm_frame_http" allowtransparency="true" name="fb_xdm_frame_http" frameborder="0" scrolling="no"></iframe><iframe src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/xd_arbiter_002.htm" style="border: medium none;" tab-index="-1" title="Facebook Cross Domain Communication Frame" aria-hidden="true" id="fb_xdm_frame_https" allowtransparency="true" name="fb_xdm_frame_https" frameborder="0" scrolling="no"></iframe></div></div><div style="position: absolute; top: -10000px; height: 0px; width: 0px;"><div></div></div></div> <script>
+(function(d, s, id) {
+var js, fjs = d.getElementsByTagName(s)[0];
+if (d.getElementById(id)) return;
+js = d.createElement(s); js.id = id;
+js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=440531902678919";
+fjs.parentNode.insertBefore(js, fjs);
+} (document, 'script', 'facebook-jssdk'));
+</script> <form name="aspnetForm" method="post" action="Default.aspx" onsubmit="javascript:return WebForm_OnSubmit();" id="aspnetForm"> <div> <input name="__LASTFOCUS" id="__LASTFOCUS" value="" type="hidden"> <input name="__EVENTTARGET" id="__EVENTTARGET" value="" type="hidden"> <input name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" type="hidden"> <input name="ctl00_PollForHome1_TabContainerSection_ClientState" id="ctl00_PollForHome1_TabContainerSection_ClientState" value="{&quot;ActiveTabIndex&quot;:0,&quot;TabState&quot;:[true,true,true]}" type="hidden"> <input name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTY1NDU2MTA1Mg9kFgJmDw8WDB4IQXV0aG9ySUQFCnlvdWdlcnRoZW4eDUN1cnJlbnRSYXRpbmcFBDMuMzMeBlN0YXR1cwUBMh4LSGFzRmVlZGJhY2toHglBcnRpY2xlSUQFJGZmNGZjYmVjLWJlMTctNDVlZS05YTg0LTU1NmM1YTIxMDdhNx4PTWlub3JDYXRlZ29yeUlkBQI1OGQWAgIBD2QWLAIBD2QWBgICD2QWAgIBDxYCHgtfIUl0ZW1Db3VudAIEFghmD2QWAmYPFQJRaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS9uZXdzLzMzODMvQy1TaGFycC1jb3JuZXItcTQtMjAxMy1tdnBzLWFubm91bmNlZC5hc3B4H0FOTk9VTkNFTUVOVDogQyMgQ29ybmVyIFE0IE1WUHNkAgEPZBYCZg8VAj9odHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tL25ld3MvMzM4Mi9oYXBweS1uZXcteWVhci0yMDE0LmFzcHg5QyMgQ29ybmVyIFdpc2hlcyB5b3UgYSBWZXJ5IEhhcHB5IGFuZCBQcm9zcGVyb3VzIE5ldyBZZWFyZAICD2QWAmYPFQJPaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS9uZXdzLzMzODEvQy1TaGFycC1jb3JuZXIteWVhci0yMDEzLWEtbG9va2JhY2suYXNweB5DIyBDb3JuZXIgWWVhciAyMDEzIGEgTG9va2JhY2tkAgMPZBYCZg8VAmFodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tL05ld3MvMzM1Ni9DLVNoYXJwLWNvcm5lci1hbm51YWwtY29uZmVyZW5jZS0yMDE0LWRhdGVzLWFubm91bmNlZC5hc3B4MUMjIENvcm5lciBBbm51YWwgQ29uZmVyZW5jZSAyMDE0OiBEYXRlcyBBbm5vdW5jZWRkAgQPZBYKAgEPFgIeB1Zpc2libGVnZAIDDw8WBB4LTmF2aWdhdGVVcmwFS2h0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vVXNlclJlZ2lzdHJhdGlvbi9Vc2VyUmVnaXN0cmF0aW9uLmFzcHg/Y2hlY2s9ch8HZ2RkAgwPDxYCHwdoZGQCDQ8WAh4EaHJlZgUcaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbWQCDg9kFgICAQ8PFgIfB2hkZAIGD2QWAmYPZBYCAgEPPCsACQEADxYEHghEYXRhS2V5cxYAHwYCRGQWiAFmD2QWAmYPFQIvaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzIzNy9uZXQtNC01LmFzcHgILk5FVCA0LjVkAgEPZBYCZg8VAi9odHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMTMxL2Fkby1uZXQuYXNweAdBRE8uTkVUZAICD2QWAmYPFQIsaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzE3Ni9hamF4LmFzcHgEQUpBWGQCAw9kFgJmDxUCO2h0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8yNDcvYW5kcm9pZC1wcm9ncmFtbWluZy5hc3B4E0FuZHJvaWQgUHJvZ3JhbW1pbmdkAgQPZBYCZg8VAjFodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMzAyL2FuZ3VsYXJqcy5hc3B4CUFuZ3VsYXJKU2QCBQ9kFgJmDxUCOGh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8xNzIvYXJ0aWNsZXMtQy1TaGFycC5hc3B4C0FydGljbGVzIEMjZAIGD2QWAmYPFQI3aHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzc1L0FzcC1OZXQtY29udHJvbHMuYXNweBBBU1AuTkVUIENvbnRyb2xzZAIHD2QWAmYPFQIzaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzIyNi9Bc3AtTmV0LW12Yy5hc3B4C0FTUC5ORVQgTVZDZAIID2QWAmYPFQI7aHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzIyNC9Bc3AtTmV0LXByb2dyYW1taW5nLmFzcHgTQVNQLk5FVCBQcm9ncmFtbWluZ2QCCQ9kFgJmDxUCMmh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8zMDMvYmFja2JvbmVqcy5hc3B4CkJhY2tib25lanNkAgoPZBYCZg8VAjhodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMTQ0L0MtU2hhcnAtbGFuZ3VhZ2UuYXNweAtDIyBMYW5ndWFnZWQCCw9kFgJmDxUCNWh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8yMzgvY2FyZWVyLWFkdmljZS5hc3B4DUNhcmVlciBBZHZpY2VkAgwPZBYCZg8VAjBodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMjgwL2NoYXB0ZXJzLmFzcHgIQ2hhcHRlcnNkAg0PZBYCZg8VAjtodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvNjAvY3J5cHRvZ3JhcGh5LUMtU2hhcnAuYXNweA9DcnlwdG9ncmFwaHkgQyNkAg4PZBYCZg8VAj5odHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvNjEvY3J5c3RhbC1yZXBvcnRzLUMtU2hhcnAuYXNweBJDcnlzdGFsIFJlcG9ydHMgQyNkAg8PZBYCZg8VAjdodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMTcwL2N1cnJlbnQtYWZmYWlycy5hc3B4D0N1cnJlbnQgQWZmYWlyc2QCEA9kFgJmDxUCNWh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8yMjAvZGF0YWJhc2VzLWRiYS5hc3B4D0RhdGFiYXNlcyAmIERCQWQCEQ9kFgJmDxUCMmh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8xNDUvZGVwbG95bWVudC5hc3B4CkRlcGxveW1lbnRkAhIPZBYCZg8VAjpodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvNjIvZGVzaWduLWFyY2hpdGVjdHVyZS5hc3B4FURlc2lnbiAmIEFyY2hpdGVjdHVyZWQCEw9kFgJmDxUCNGh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8yOTMvZHluYW1pY3MtY3JtLmFzcHgMRHluYW1pY3MgQ1JNZAIUD2QWAmYPFQIuaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzIwNi9mc2hhcnAuYXNweAJGI2QCFQ9kFgJmDxUCOmh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8yMjgvZmlsZXMtZGlyZWN0b3J5LWlvLmFzcHgURmlsZXMsIERpcmVjdG9yeSwgSU9kAhYPZBYCZg8VAj5odHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMjA3L2ZpbmFuY2lhbC1hcHBsaWNhdGlvbnMuYXNweBZGaW5hbmNpYWwgQXBwbGljYXRpb25zZAIXD2QWAmYPFQIyaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzQvZ2RpLWdyYXBoaWNzLmFzcHgPR0RJKyAmIEdyYXBoaWNzZAIYD2QWAmYPFQIwaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzE0My9ob3ctZG8taS5hc3B4CUhvdyBkbyBJIGQCGQ9kFgJmDxUCLmh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8yNDQvaHRtbC01LmFzcHgGSFRNTCA1ZAIaD2QWAmYPFQIzaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzY2L2ludGVybmV0LXdlYi5hc3B4DkludGVybmV0ICYgV2ViZAIbD2QWAmYPFQIsaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzI1OC9qYXZhLmFzcHgESmF2YWQCHA9kFgJmDxUCMmh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8yMzMvamF2YXNjcmlwdC5hc3B4CkphdmFTY3JpcHRkAh0PZBYCZg8VAi5odHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMjM2L2pxdWVyeS5hc3B4BkpRdWVyeWQCHg9kFgJmDxUCK2h0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8yNjAvanNwLmFzcHgDSlNQZAIfD2QWAmYPFQIwaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzMwMC9rbm9ja291dC5hc3B4CEtub2Nrb3V0ZAIgD2QWAmYPFQIyaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzI3OC9sZWFkZXJzaGlwLmFzcHgKTGVhZGVyc2hpcGQCIQ9kFgJmDxUCMWh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8xODYvbGVhcm4tbmV0LmFzcHgKTGVhcm4gLk5FVGQCIg9kFgJmDxUCOGh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8yNzQvbGlnaHRzd2l0Y2gtMjAxMi5hc3B4EExpZ2h0U3dpdGNoIDIwMTJkAiMPZBYCZg8VAixodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMTgwL2xpbnEuYXNweARMSU5RZAIkD2QWAmYPFQI2aHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzY3L21vYmlsZS1lbWJlZGRlZC5hc3B4EU1vYmlsZSAmIEVtYmVkZGVkZAIlD2QWAmYPFQIwaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzI5NS9uZXRiZWFucy5hc3B4CE5ldEJlYW5zZAImD2QWAmYPFQIuaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzIwOC9vb3Bvb2QuYXNweAdPT1AvT09EZAInD2QWAmYPFQIuaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzI5OS9vcmFjbGUuYXNweAZPcmFjbGVkAigPZBYCZg8VAitodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMjc5L3BocC5hc3B4A1BIUGQCKQ9kFgJmDxUCMGh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8yODMvcHJvZHVjdHMuYXNweAhQcm9kdWN0c2QCKg9kFgJmDxUCOmh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8xOTgvcHJvamVjdC1tYW5hZ2VtZW50LmFzcHgSUHJvamVjdCBNYW5hZ2VtZW50ZAIrD2QWAmYPFQI3aHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzE4My9zaGFyZXBvaW50LTIwMTAuYXNweA9TaGFyZVBvaW50IDIwMTBkAiwPZBYCZg8VAjdodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMjg5L3NoYXJlcG9pbnQtMjAxMy5hc3B4D1NoYXJlUG9pbnQgMjAxM2QCLQ9kFgJmDxUCL2h0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8zMDEvc2lnbmFsci5hc3B4B1NpZ25hbFJkAi4PZBYCZg8VAkBodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMjEwL3NpbHZlcmxpZ2h0LXdpdGgtQy1TaGFycC5hc3B4E1NpbHZlcmxpZ2h0IHdpdGggQyNkAi8PZBYCZg8VAjVodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMTU4L3NtYXJ0LWRldmljZXMuYXNweA1TbWFydCBEZXZpY2VzZAIwD2QWAmYPFQIraHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzIxNi9zcWwuYXNweANTUUxkAjEPZBYCZg8VAjJodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMTg3L3NxbC1zZXJ2ZXIuYXNweApTUUwgU2VydmVyZAIyD2QWAmYPFQIvaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzE3NC90ZXN0aW5nLmFzcHgHVGVzdGluZ2QCMw9kFgJmDxUCOWh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8xMzkvdmlzdWFsLXN0dWRpby1uZXQuYXNweBJWaXN1YWwgU3R1ZGlvIC5ORVRkAjQPZBYCZg8VAjpodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMjgxL3Zpc3VhbC1zdHVkaW8tMjAxMi5hc3B4ElZpc3VhbCBTdHVkaW8gMjAxMmQCNQ9kFgJmDxUCOmh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8yOTYvdmlzdWFsLXN0dWRpby0yMDEzLmFzcHgSVmlzdWFsIFN0dWRpbyAyMDEzZAI2D2QWAmYPFQI4aHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzE5Mi93Y2Ytd2l0aC1DLVNoYXJwLmFzcHgLV0NGIHdpdGggQyNkAjcPZBYCZg8VAjdodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMTU0L3dlYi1kZXZlbG9wbWVudC5hc3B4D1dlYiBEZXZlbG9wbWVudGQCOA9kFgJmDxUCP2h0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8xMzMvd2ViLXNlcnZpY2VzLWluLUMtU2hhcnAuYXNweBJXZWIgU2VydmljZXMgaW4gQyNkAjkPZBYCZg8VAjFodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMjc1L3dpbmRvd3MtOC5hc3B4CVdpbmRvd3MgOGQCOg9kFgJmDxUCNWh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8yMzIvd2luZG93cy1henVyZS5hc3B4DVdpbmRvd3MgQXp1cmVkAjsPZBYCZg8VAj9odHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvNzcvd2luZG93cy1jb250cm9scy1DLVNoYXJwLmFzcHgTV2luZG93cyBDb250cm9scyBDI2QCPA9kFgJmDxUCPGh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS83Ni93aW5kb3dzLWZvcm1zLUMtU2hhcnAuYXNweBFXaW5kb3dzIEZvcm1zIEMjIGQCPQ9kFgJmDxUCNWh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8yNDUvd2luZG93cy1waG9uZS5hc3B4DVdpbmRvd3MgUGhvbmVkAj4PZBYCZg8VAjtodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMjkyL3dpbmRvd3Mtc2VydmVyLTIwMTIuYXNweBNXaW5kb3dzIFNlcnZlciAyMDEyZAI/D2QWAmYPFQI6aHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS8xLzEzOC93aW5kb3dzLXN0b3JlLWFwcHMuYXNweBJXaW5kb3dzIFN0b3JlIEFwcHNkAkAPZBYCZg8VAkZodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMTkzL3dvcmtmbG93LWZvdW5kYXRpb24taW4tQy1TaGFycC5hc3B4GVdvcmtmbG93IEZvdW5kYXRpb24gaW4gQyNkAkEPZBYCZg8VAitodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvMTkxL3dwZi5hc3B4A1dQRmQCQg9kFgJmDxUCLGh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vMS8xOTAveGFtbC5hc3B4BFhBTUxkAkMPZBYCZg8VAipodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvNzkveG1sLmFzcHgDWE1MZAICD2QWAgIBDxYCHwYCChYUZg9kFgJmDxUCT2h0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vVXBsb2FkRmlsZS9hbmt1cm1hbGlrMTIzL0MtU2hhcnAtY29kaW5nLXN0YW5kYXJkcy8TQyMgQ29kaW5nIFN0YW5kYXJkc2QCAQ9kFgJmDxUCXmh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vVXBsb2FkRmlsZS84NGM4NWIvbXVzdC1rbm93LXNxbC1mdW5jdGlvbnMtZm9yLWFsbC1uZXQtZGV2ZWxvcGVycy8vTXVzdC1Lbm93IFNRTCBGdW5jdGlvbnMgRm9yIEFsbCAuTkVUIERldmVsb3BlcnNkAgIPZBYCZg8VAkpodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tL1VwbG9hZEZpbGUvNGNjYWFiL2EtYmVnaW5uZXJzLWd1aWRlLXRvLXNjcnVtLxtBIEJlZ2lubmVyJ3MgR3VpZGUgdG8gU2NydW1kAgMPZBYCZg8VAmRodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tL1VwbG9hZEZpbGUvNGFhYzE1L3VzaW5nLWZsaWNrci1kYXRhLXNvdXJjZS1pbi13aW5kb3dzLXBob25lLWFwcC1zdHVkaW8vMFVzaW5nIEZsaWNrciBEYXRhIFNvdXJjZSBpbiBXaW5kb3dzIFBob25lIEFwIC4uLmQCBA9kFgJmDxUCWGh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vVXBsb2FkRmlsZS80YWFjMTUvaW50cm9kdWN0aW9uLXRvLXdpbmRvd3MtcGhvbmUtYXBwLXN0dWRpby8oSW50cm9kdWN0aW9uIHRvIFdpbmRvd3MgUGhvbmUgQXBwIFN0dWRpb2QCBQ9kFgJmDxUCaWh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vVXBsb2FkRmlsZS80YWFjMTUvd29ya2luZy13aXRoLWh0bWwtZGF0YS1zb3VyY2UtaW4td2luZG93cy1waG9uZS1hcHAtc3R1ZGlvLzBXb3JraW5nIFdpdGggSFRNTCBEYXRhIFNvdXJjZSBpbiBXaW5kb3dzIFBobyAuLi5kAgYPZBYCZg8VAlFodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tL1VwbG9hZEZpbGUvbWFoZXNoL21vc3QtcG9wdWxhci1wcm9ncmFtbWluZy1sYW5ndWFnZS8hTW9zdCBQb3B1bGFyIFByb2dyYW1taW5nIExhbmd1YWdlZAIHD2QWAmYPFQJsaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS9VcGxvYWRGaWxlLzRhYWMxNS9jcmVhdGluZy15b3V0dWJlLWJhc2VkLWFwcGxpY2F0aW9uLXVzaW5nLXdpbmRvd3MtcGhvbmUtYXBwLXMvMENyZWF0aW5nIFlvdVR1YmUgQmFzZWQgQXBwbGljYXRpb24gVXNpbmcgV2luIC4uLmQCCA9kFgJmDxUCbGh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vVXBsb2FkRmlsZS8xNDkyYjEvY29tcGxldGUtY3J1ZC1vcGVyYXRpb25zLWluLW12Yy00LXVzaW5nLWVudGl0eS1mcmFtZXdvcmstNS13LzBDb21wbGV0ZSBDUlVEIE9wZXJhdGlvbnMgaW4gTVZDIDQgVXNpbmcgRW50aSAuLi5kAgkPZBYCZg8VAmtodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tL1VwbG9hZEZpbGUvMTQ5MmIxL2xlYXJuaW5nLWtub2Nrb3V0LXBhcnQtMS1pbnRyb2R1Y3Rpb24tdG8ta25vY2tvdXQtanMtYW5kLWNyLzBJbnRyb2R1Y3Rpb24gdG8gS25vY2tvdXQuanMgYW5kIENSVUQgT3BlcmF0aSAuLi5kAgQPFgIfCQVDaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS9hdXRob3JzL3lvdWdlcnRoZW4vYmVjaGlyLWJlamFvdWkuYXNweBYCAgEPDxYEHghJbWFnZVVybAVCaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS9VcGxvYWRGaWxlL0F1dGhvckltYWdlL3lvdWdlcnRoZW4uanBnHgdUb29sVGlwBQ5CZWNoaXIgQmVqYW91aWRkAgUPFgIfB2cWBAIBD2QWAgIBDw8WAh4EVGV4dAUCMjVkZAIDDxYCHglpbm5lcmh0bWwFfTxhIGNsYXNzPSJMaW5rTm9ybWFsU3R5bGVPcmFuZ2UiIGhyZWY9aHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS9BdXRob3JzL0F1dGhvclJhbmtpbmcuYXNweD9BdXRob3JJZD15b3VnZXJ0aGVuID4gNCwyMTM8L2E+ZAIGDxYCHw4FRkludGVncmF0ZSB0aGUgd2ViIFdlYmNhbSBmdW5jdGlvbmFsaXR5IHVzaW5nIEMjLS5OZXQgYW5kIENPTSBwYXJ0IFZJSUlkAgcPFgQfCQVDaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS9hdXRob3JzL3lvdWdlcnRoZW4vYmVjaGlyLWJlamFvdWkuYXNweB8OBQ5CZWNoaXIgQmVqYW91aWQCCQ8WBB8JBTJodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tLzEvNTgvY29tLWludGVyb3AuYXNweB8OBQtDT00gSW50ZXJvcGQCCg8PFgIfDQURTm92ZW1iZXIgMDgsIDIwMDhkZAILDxYCHw4F7AE8YSBjbGFzcz0nTGlua05vcm1hbEdyYXlMaWdodCcgaHJlZj0naHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS90YWdzL0NPTSc+Q09NPC9hPiwgPGEgY2xhc3M9J0xpbmtOb3JtYWxHcmF5TGlnaHQnIGhyZWY9J2h0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vdGFncy9XZWItQ2FtZXJhLUNzaGFycC1DT00tLk5ldC1hdmljYXAzMi5kbGwnPldlYiBDYW1lcmEgQyMgQ09NIC5OZXQgYXZpY2FwMzIuZGxsPC9hPmQCDA8WAh8OBWpJbiB0aGlzIGFydGljbGUsIEkgd2lsbCBkZW1vbnN0cmF0ZSBhIHRvdGFsbHkgZGlmZmVyZW50IHRlY2huaXF1ZSB0byBpbnRlZ3JhdGUgdGhlIHdlYiBjYW0gZnVuY3Rpb25hbGl0eS4gZAINDxYCHw4FBjE4MDI1NGQCDg9kFgJmD2QWAgIDDw8WAh8NBQExZGQCGg8PFgIfDAUNUHJhdmVlbiBLdW1hcmRkAhwPZBYCAgEPDxYEHwsFGi9pbWFnZXMvY3NoYXJwL3NpZ25hbDMucG5nHwwFCEFkdmFuY2VkZGQCHQ9kFgICAQ9kFgICAQ8WAh8GAgEWAmYPZBYCAgEPDxYGHg9Db21tYW5kQXJndW1lbnQFBDMzNzgeC0NvbW1hbmROYW1lBXouLi9VcGxvYWRGaWxlL3lvdWdlcnRoZW4vaW50ZWdyYXRlLXRoZS13ZWItd2ViY2FtLWZ1bmN0aW9uYWxpdHktdXNpbmctQy1TaGFycC1uZXQtYW5kLWNvbS1wYXJ0LXZpaWkvZG93bmxvYWQvV2ViQ2FtZXJhLnppcB8NBQ1XZWJDYW1lcmEuemlwZGQCHw9kFgICAw9kFgICAQ8WAh8GAgIWBGYPZBYKAgEPFgIfB2gWBAIBDw8WBB8PBQMzMDQfEAUkZmY0ZmNiZWMtYmUxNy00NWVlLTlhODQtNTU2YzVhMjEwN2E3ZGQCAw8PFgIfDwUDMzA0FgIeB29uY2xpY2sFOmlmKCAhIGNvbmZpcm0oICdBcmUgeW91IHN1cmUgdG8gZGVsZXRlPyAnKSkgcmV0dXJuIGZhbHNlOyBkAgMPDxYEHw0FC0FobWV0IEFza2FyHwgFPGh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vYXV0aG9ycy9jYWMzZWUvYWhtZXQtYXNrYXIuYXNweGRkAgUPDxYCHw0FDERlYyAwMSwgMjAxMGRkAgcPFgIfB2gWAgIDDw8WBB8PZR8HaGRkAggPFQEMVGhhbmtzcyBCYWJ5ZAICD2QWCgIBDxYCHwdoFgQCAQ8PFgQfDwUCNjgfEAUkZmY0ZmNiZWMtYmUxNy00NWVlLTlhODQtNTU2YzVhMjEwN2E3ZGQCAw8PFgIfDwUCNjgWAh8RBTppZiggISBjb25maXJtKCAnQXJlIHlvdSBzdXJlIHRvIGRlbGV0ZT8gJykpIHJldHVybiBmYWxzZTsgZAIDDw8WBB8NBQxIaXRlc2ggUGF0ZWwfCAVAaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS9hdXRob3JzL3VtYXNhbmtldC9oaXRlc2gtcGF0ZWwuYXNweGRkAgUPDxYCHw0FDEF1ZyAxOSwgMjAwOWRkAgcPFgIfB2gWAgIDDw8WBB8PZR8HaGRkAggPFQEAZAIgD2QWAgIBDxYEHwkFmQFodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tL0FkUmVkaXJlY3Rvci5hc3B4P0FkSWQ9NzgmdGFyZ2V0PWh0dHA6Ly93d3cubmV2cm9uLmNvbS9DYW1wYWlnbj9rZXk9Q1NoYXJwQ29ybmVyXzEzXzZfQ2hhcnRfNzV4OTAmdXJsPWh0dHA6Ly93d3cubmV2cm9uLmNvbS8fDgVBLk5FVCBDaGFydGluZyBjb21wb25lbnQgd2l0aCBmdWxsIHNldCBvZiBjaGFydGluZyBhbmQgZ2F1Z2UgdHlwZXNkAiEPZBYCZg9kFgQCAQ9kFgYCAQ8WAh8JBUNodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tL2F1dGhvcnMveW91Z2VydGhlbi9iZWNoaXItYmVqYW91aS5hc3B4FgICAQ8PFgQfCwVCaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS9VcGxvYWRGaWxlL0F1dGhvckltYWdlL3lvdWdlcnRoZW4uanBnHwwFDkJlY2hpciBCZWphb3VpZGQCBQ8PFgQfCAV6aHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS91cGxvYWRmaWxlL3lvdWdlcnRoZW4vY3JlYXRlLWRjb20tYXBwbGljYXRpb24tZnJvbS13aXRoaW4tbmV0LWVudmlyb25tZW50LXBhcnQtdi9kZWZhdWx0LmFzcHgfDQU8Q3JlYXRlIERDT00gYXBwbGljYXRpb24gZnJvbSB3aXRoaW4gLk5ldCBlbnZpcm9ubWVudDogUGFydCBWZGQCBw8WAh8OBbkEPHNwYW4gc3R5bGU9Y29sb3I6QmxhY2s7IGZvbnQtd2VpZ2h0OmJvbGQ7PlRhZ3M6IDwvc3Bhbj48YSBjbGFzcz0nTGlua05vcm1hbEdyYXlMaWdodCcgaHJlZj0naHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS90YWdzLy5OZXQnPi5OZXQ8L2E+LCA8YSBjbGFzcz0nTGlua05vcm1hbEdyYXlMaWdodCcgaHJlZj0naHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS90YWdzL0NPTS0uTmV0Jz5DT00tLk5ldDwvYT4sIDxhIGNsYXNzPSdMaW5rTm9ybWFsR3JheUxpZ2h0JyBocmVmPSdodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tL3RhZ3MvRENPTS0uTmV0LWludGVyb3AnPkRDT00gLk5ldCBpbnRlcm9wPC9hPiwgPGEgY2xhc3M9J0xpbmtOb3JtYWxHcmF5TGlnaHQnIGhyZWY9J2h0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vdGFncy9EaXN0cmlidXRlZC1Db21wb25lbnQtTW9kZWwnPkRpc3RyaWJ1dGVkIENvbXBvbmVudCBNb2RlbDwvYT4sIDxhIGNsYXNzPSdMaW5rTm9ybWFsR3JheUxpZ2h0JyBocmVmPSdodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tL3RhZ3MvR1VJRCc+R1VJRDwvYT5kAgMPZBYGAgEPDxYEHwgFd2h0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vdXBsb2FkZmlsZS95b3VnZXJ0aGVuL2NhdGNoLWEtc25hcHNob3QtdmlhLXlvdXItd2ViY2FtLXVzaW5nLUMtU2hhcnAtcGFydC12aWkvZGVmYXVsdC5hc3B4Hw0FM0NhdGNoIGEgU25hcHNob3QgdmlhIHlvdXIgd2ViY2FtIHVzaW5nIEMjOiBQYXJ0IFZJSWRkAgMPFgIfDgXWBDxzcGFuIHN0eWxlPWNvbG9yOkJsYWNrOyBmb250LXdlaWdodDpib2xkOz5UYWdzOiA8L3NwYW4+PGEgY2xhc3M9J0xpbmtOb3JtYWxHcmF5TGlnaHQnIGhyZWY9J2h0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vdGFncy9BUEknPkFQSTwvYT4sIDxhIGNsYXNzPSdMaW5rTm9ybWFsR3JheUxpZ2h0JyBocmVmPSdodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tL3RhZ3MvQ3NoYXJwJz5DIzwvYT4sIDxhIGNsYXNzPSdMaW5rTm9ybWFsR3JheUxpZ2h0JyBocmVmPSdodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tL3RhZ3Mvc25hcHNob3QnPnNuYXBzaG90PC9hPiwgPGEgY2xhc3M9J0xpbmtOb3JtYWxHcmF5TGlnaHQnIGhyZWY9J2h0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vdGFncy9XZWItQ2FtZXJhJz5XZWIgQ2FtZXJhPC9hPiwgPGEgY2xhc3M9J0xpbmtOb3JtYWxHcmF5TGlnaHQnIGhyZWY9J2h0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vdGFncy9XSUEnPldJQTwvYT4sIDxhIGNsYXNzPSdMaW5rTm9ybWFsR3JheUxpZ2h0JyBocmVmPSdodHRwOi8vd3d3LmMtc2hhcnBjb3JuZXIuY29tL3RhZ3MvV0lBLUNPTSc+V0lBIENPTTwvYT5kAgUPFgIfCQVDaHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS9hdXRob3JzL3lvdWdlcnRoZW4vYmVjaGlyLWJlamFvdWkuYXNweBYCAgEPDxYEHwsFQmh0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vVXBsb2FkRmlsZS9BdXRob3JJbWFnZS95b3VnZXJ0aGVuLmpwZx8MBQ5CZWNoaXIgQmVqYW91aWRkAiMPDxYGHglDb250ZW50SWQFJGZmNGZjYmVjLWJlMTctNDVlZS05YTg0LTU1NmM1YTIxMDdhNx4NQ29udGVudFVzZXJJZAUKeW91Z2VydGhlbh4MQ29udGVudFRpdGxlBUZJbnRlZ3JhdGUgdGhlIHdlYiBXZWJjYW0gZnVuY3Rpb25hbGl0eSB1c2luZyBDIy0uTmV0IGFuZCBDT00gcGFydCBWSUlJZBYEZg9kFgICAQ8WAh8HaGQCAQ8WAh8HZ2QCJA9kFgYCAQ8PFgIfCAVbaHR0cDovL3d3dy5uZXZyb24uY29tL0NhbXBhaWduP2tleT1DU2hhcnBDb3JuZXJfMTNfNl9DaGFydF83NXg5MCZ1cmw9aHR0cDovL3d3dy5uZXZyb24uY29tL2QWAmYPDxYCHwsFQ2h0dHA6Ly93d3cuYy1zaGFycGNvcm5lci5jb20vVXBsb2FkRmlsZS9TcG9uc2Vyc0ltYWdlcy8wNzIxNTBBTS5qcGdkZAIDDw8WBB8NBQZOZXZyb24fCAVbaHR0cDovL3d3dy5uZXZyb24uY29tL0NhbXBhaWduP2tleT1DU2hhcnBDb3JuZXJfMTNfNl9DaGFydF83NXg5MCZ1cmw9aHR0cDovL3d3dy5uZXZyb24uY29tL2RkAgUPFgIfDgWDAk5ldnJvbiBTb2Z0d2FyZSBpcyBhIGdsb2JhbCBsZWFkZXIgaW4gY29tcG9uZW50IGJhc2VkIGRhdGEgdmlzdWFsaXphdGlvbiB0ZWNobm9sb2d5IGZvciBhIGRpdmVyc2UgcmFuZ2Ugb2YgTWljcm9zb2Z0IGNlbnRyaWMgcGxhdGZvcm1zLiBOZXZyb24gRGF0YSBWaXN1YWxpemF0aW9uIGNvbXBvbmVudHMgYXJlIHVzZWQgYnkgbWFueSBjb21wYW5pZXMsIGVkdWNhdGlvbmFsIGFuZCBnb3Zlcm5tZW50IG9yZ2FuaXphdGlvbnMgYXJvdW5kIHRoZSB3b3JsZC5kAiUPZBYCAgEPZBYGZg9kFgQCAQ8PFgQeC18hRGF0YUJvdW5kZx8HaGRkAgMPDxYEHw0F1wc8U0NSSVBUIExBTkdVQUdFPSJKYXZhU2NyaXB0Ij4NCjwhLS0gaGlkZSBmcm9tIG5vbi1KYXZhU2NyaXB0IGJyb3dzZXJzDQp2YXIgYXhlbCA9IE1hdGgucmFuZG9tKCkgKyAiIjsNCnZhciBudW0gPSBheGVsICogMTAwMDAwMDAwMDAwMDAwMDAwMDsNCmRvY3VtZW50LndyaXRlKCc8SUZSQU1FIFNSQz0iaHR0cDovL2FkLmRvdWJsZWNsaWNrLm5ldC9hZGkvTjU2MjEuMTI0NjYyLjcxNjM2NjMzODI0MjEvQjc5Nzg0MTcuMTA1ODA5Njc1O3N6PTMwMHgyNTA7Y2xpY2s9O29yZD0nKyBudW0gKyc/IiBXSURUSD0zMDAgSEVJR0hUPTI1MCBNQVJHSU5XSURUSD0wIE1BUkdJTkhFSUdIVD0wIEhTUEFDRT0wIFZTUEFDRT0wIEZSQU1FQk9SREVSPTAgU0NST0xMSU5HPW5vIEJPUkRFUkNPTE9SPSIjMDAwMDAwIj4nKTsNCmRvY3VtZW50LndyaXRlKCc8U0NSJysnSVBUIGxhbmd1YWdlPSJKYXZhU2NyaXB0MS4xIiBTUkM9Imh0dHA6Ly9hZC5kb3VibGVjbGljay5uZXQvYWRqL041NjIxLjEyNDY2Mi43MTYzNjYzMzgyNDIxL0I3MjQ3MTk2O2Ficj0haWU7c3o9MzAweDI1MDtjbGljaz07b3JkPScrIG51bSArJz8iPjwvU0NSJysnSVBUPjwvSUZSQU1FPicpOw0KLy8gZW5kIGhpZGUgZnJvbSBicm93c2VycyAtLT4NCjwvc2NyaXB0Pg0KPG5vc2NyaXB0Pg0KPEEgSFJFRj0iaHR0cDovL2FkLmRvdWJsZWNsaWNrLm5ldC9qdW1wL041NjIxLjEyNDY2Mi43MTYzNjYzMzgyNDIxL0I3OTc4NDE3LjEwNTgwOTY3NTthYnI9IWllNDthYnI9IWllNTtzej0zMDB4MjUwO29yZD1bdGltZXN0YW1wXT8iPg0KPElNRyBTUkM9Imh0dHA6Ly9hZC5kb3VibGVjbGljay5uZXQvYWQvTjU2MjEuMTI0NjYyLjcxNjM2NjMzODI0MjEvQjc5Nzg0MTcuMTA1ODA5Njc1O2Ficj0haWU0O2Ficj0haWU1O3N6PTMwMHgyNTA7b3JkPVt0aW1lc3RhbXBdPyIgQk9SREVSPTAgV0lEVEg9MzAwIEhFSUdIVD0yNTAgQUxUPSJBZHZlcnRpc2VtZW50Ij48L0E+DQo8L05PU0NSSVBUPh8HZ2RkAggPZBYCAgEPFgIfDQWbEDxhIGhyZWY9Ii90YWdzLy5ORVQtQ09NLUludGVyb3BlcmFiaWxpdHkiIGNsYXNzPSJIZWFkZXJUYWdDbG91ZCI+Lk5FVCBDT00gSW50ZXJvcGVyYWJpbGl0eTwvYT4gPGEgaHJlZj0iL3RhZ3MvLk5FVC1jb21wb25lbnQiIGNsYXNzPSJIZWFkZXJUYWdDbG91ZEJsdWUiPi5ORVQgY29tcG9uZW50PC9hPiA8YSBocmVmPSIvdGFncy9BY3RpdmVYLURMTCIgY2xhc3M9IkhlYWRlclRhZ0Nsb3VkIj5BY3RpdmVYIERMTDwvYT4gPGEgaHJlZj0iL3RhZ3MvQWRvYmUtLUFjdGl2ZVgtQ09NLS5zaG93LXBkZiIgY2xhc3M9IkhlYWRlclRhZ0Nsb3VkIj5BZG9iZSAgQWN0aXZlWCBDT00gLnNob3cgcGRmPC9hPiA8YSBocmVmPSIvdGFncy9BdXRvQ0FEIiBjbGFzcz0iSGVhZGVyVGFnQ2xvdWQiPkF1dG9DQUQ8L2E+IDxhIGhyZWY9Ii90YWdzL0NPTS1jb21wb25lbnRzIiBjbGFzcz0iSGVhZGVyVGFnQ2xvdWRCbHVlIj5DT00gY29tcG9uZW50czwvYT4gPGEgaHJlZj0iL3RhZ3MvQ09NLURMTCIgY2xhc3M9IkhlYWRlclRhZ0Nsb3VkIj5DT00gRExMPC9hPiA8YSBocmVmPSIvdGFncy9DT00tSW50ZXJvcGVyYWJpbGl0eSIgY2xhc3M9IkhlYWRlclRhZ0Nsb3VkIj5DT00gSW50ZXJvcGVyYWJpbGl0eTwvYT4gPGEgaHJlZj0iL3RhZ3MvQ29tcG9uZW50LU9iamVjdC1Nb2RlbCIgY2xhc3M9IkhlYWRlclRhZ0Nsb3VkIj5Db21wb25lbnQgT2JqZWN0IE1vZGVsPC9hPiA8YSBocmVmPSIvdGFncy9DdXN0b20tV3JhcHBlcnMiIGNsYXNzPSJIZWFkZXJUYWdDbG91ZCI+Q3VzdG9tIFdyYXBwZXJzPC9hPiA8YSBocmVmPSIvdGFncy9Eb3ROZXQiIGNsYXNzPSJIZWFkZXJUYWdDbG91ZCI+RG90TmV0PC9hPiA8YSBocmVmPSIvdGFncy9FYXJseS1CaW5kaW5nIiBjbGFzcz0iSGVhZGVyVGFnQ2xvdWQiPkVhcmx5IEJpbmRpbmc8L2E+IDxhIGhyZWY9Ii90YWdzL0ltcG9ydC1kYXRhLWZyb20tRXhjZWwtdG8tQWNjZXNzLXVzaW5nLUFETy5uZXQiIGNsYXNzPSJIZWFkZXJUYWdDbG91ZCI+SW1wb3J0IGRhdGEgZnJvbSBFeGNlbCB0byBBY2Nlc3MgdXNpbmcgQURPLm5ldDwvYT4gPGEgaHJlZj0iL3RhZ3MvSW1wb3J0cy1TeXN0ZW0uRGF0YS5PbGVEYiIgY2xhc3M9IkhlYWRlclRhZ0Nsb3VkIj5JbXBvcnRzIFN5c3RlbS5EYXRhLk9sZURiPC9hPiA8YSBocmVmPSIvdGFncy9pbnRlcm9wZXJhYmlsaXR5IiBjbGFzcz0iSGVhZGVyVGFnQ2xvdWRPcmFuZ2UiPmludGVyb3BlcmFiaWxpdHk8L2E+IDxhIGhyZWY9Ii90YWdzL0xhbmd1YWdlLUludGVyb3BlcmFiaWxpdHkiIGNsYXNzPSJIZWFkZXJUYWdDbG91ZCI+TGFuZ3VhZ2UgSW50ZXJvcGVyYWJpbGl0eTwvYT4gPGEgaHJlZj0iL3RhZ3MvTGF0ZS1CaW5kaW5nIiBjbGFzcz0iSGVhZGVyVGFnQ2xvdWRCbHVlIj5MYXRlIEJpbmRpbmc8L2E+IDxhIGhyZWY9Ii90YWdzL3Byb2dyYW1taW5nLWxhbmd1YWdlcyIgY2xhc3M9IkhlYWRlclRhZ0Nsb3VkIj5wcm9ncmFtbWluZyBsYW5ndWFnZXM8L2E+IDxhIGhyZWY9Ii90YWdzL3J1bnRpbWUtY2FsbGFibGUtd3JhcHBlci0oUkNXKSIgY2xhc3M9IkhlYWRlclRhZ0Nsb3VkIj5ydW50aW1lIGNhbGxhYmxlIHdyYXBwZXIgKFJDVyk8L2E+IDxhIGhyZWY9Ii90YWdzL1N5c3RlbS5Db2RlRG9tIiBjbGFzcz0iSGVhZGVyVGFnQ2xvdWRCbHVlIj5TeXN0ZW0uQ29kZURvbTwvYT4gPGEgaHJlZj0iL3RhZ3MvU3lzdGVtLlJlZmxlY3Rpb24uRW1pdCIgY2xhc3M9IkhlYWRlclRhZ0Nsb3VkIj5TeXN0ZW0uUmVmbGVjdGlvbi5FbWl0PC9hPiA8YSBocmVmPSIvdGFncy9UeXBlLUxpYnJhcnkiIGNsYXNzPSJIZWFkZXJUYWdDbG91ZCI+VHlwZSBMaWJyYXJ5PC9hPiA8YSBocmVmPSIvdGFncy9UeXBlLUxpYnJhcnktSW1wb3J0ZXIiIGNsYXNzPSJIZWFkZXJUYWdDbG91ZCI+VHlwZSBMaWJyYXJ5IEltcG9ydGVyPC9hPiA8YSBocmVmPSIvdGFncy9UeXBlTGliQ29udmVydGVyLUNsYXNzIiBjbGFzcz0iSGVhZGVyVGFnQ2xvdWQiPlR5cGVMaWJDb252ZXJ0ZXIgQ2xhc3M8L2E+IDxhIGhyZWY9Ii90YWdzL1Zpc3VhbC1CYXNpYy02LjAiIGNsYXNzPSJIZWFkZXJUYWdDbG91ZCI+VmlzdWFsIEJhc2ljIDYuMDwvYT4gZAIMD2QWBAIBDw8WBB8VZx8HaGRkAgMPDxYEHw0F1wc8U0NSSVBUIExBTkdVQUdFPSJKYXZhU2NyaXB0Ij4NCjwhLS0gaGlkZSBmcm9tIG5vbi1KYXZhU2NyaXB0IGJyb3dzZXJzDQp2YXIgYXhlbCA9IE1hdGgucmFuZG9tKCkgKyAiIjsNCnZhciBudW0gPSBheGVsICogMTAwMDAwMDAwMDAwMDAwMDAwMDsNCmRvY3VtZW50LndyaXRlKCc8SUZSQU1FIFNSQz0iaHR0cDovL2FkLmRvdWJsZWNsaWNrLm5ldC9hZGkvTjU2MjEuMTI0NjYyLjcxNjM2NjMzODI0MjEvQjc5Nzg0MTcuMTA1ODA5Njc1O3N6PTMwMHgyNTA7Y2xpY2s9O29yZD0nKyBudW0gKyc/IiBXSURUSD0zMDAgSEVJR0hUPTI1MCBNQVJHSU5XSURUSD0wIE1BUkdJTkhFSUdIVD0wIEhTUEFDRT0wIFZTUEFDRT0wIEZSQU1FQk9SREVSPTAgU0NST0xMSU5HPW5vIEJPUkRFUkNPTE9SPSIjMDAwMDAwIj4nKTsNCmRvY3VtZW50LndyaXRlKCc8U0NSJysnSVBUIGxhbmd1YWdlPSJKYXZhU2NyaXB0MS4xIiBTUkM9Imh0dHA6Ly9hZC5kb3VibGVjbGljay5uZXQvYWRqL041NjIxLjEyNDY2Mi43MTYzNjYzMzgyNDIxL0I3MjQ3MTk2O2Ficj0haWU7c3o9MzAweDI1MDtjbGljaz07b3JkPScrIG51bSArJz8iPjwvU0NSJysnSVBUPjwvSUZSQU1FPicpOw0KLy8gZW5kIGhpZGUgZnJvbSBicm93c2VycyAtLT4NCjwvc2NyaXB0Pg0KPG5vc2NyaXB0Pg0KPEEgSFJFRj0iaHR0cDovL2FkLmRvdWJsZWNsaWNrLm5ldC9qdW1wL041NjIxLjEyNDY2Mi43MTYzNjYzMzgyNDIxL0I3OTc4NDE3LjEwNTgwOTY3NTthYnI9IWllNDthYnI9IWllNTtzej0zMDB4MjUwO29yZD1bdGltZXN0YW1wXT8iPg0KPElNRyBTUkM9Imh0dHA6Ly9hZC5kb3VibGVjbGljay5uZXQvYWQvTjU2MjEuMTI0NjYyLjcxNjM2NjMzODI0MjEvQjc5Nzg0MTcuMTA1ODA5Njc1O2Ficj0haWU0O2Ficj0haWU1O3N6PTMwMHgyNTA7b3JkPVt0aW1lc3RhbXBdPyIgQk9SREVSPTAgV0lEVEg9MzAwIEhFSUdIVD0yNTAgQUxUPSJBZHZlcnRpc2VtZW50Ij48L0E+DQo8L05PU0NSSVBUPh8HZ2RkAiYPDxYEHgZQb2xsSWQFAzM4MB4EZFNldDKbGwABAAAA/////wEAAAAAAAAADAIAAABOU3lzdGVtLkRhdGEsIFZlcnNpb249Mi4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5BQEAAAATU3lzdGVtLkRhdGEuRGF0YVNldAMAAAAXRGF0YVNldC5SZW1vdGluZ1ZlcnNpb24JWG1sU2NoZW1hC1htbERpZmZHcmFtAwEBDlN5c3RlbS5WZXJzaW9uAgAAAAkDAAAABgQAAACaDDw/eG1sIHZlcnNpb249IjEuMCIgZW5jb2Rpbmc9InV0Zi0xNiI/Pg0KPHhzOnNjaGVtYSBpZD0iTmV3RGF0YVNldCIgeG1sbnM9IiIgeG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczptc2RhdGE9InVybjpzY2hlbWFzLW1pY3Jvc29mdC1jb206eG1sLW1zZGF0YSI+DQogIDx4czplbGVtZW50IG5hbWU9Ik5ld0RhdGFTZXQiIG1zZGF0YTpJc0RhdGFTZXQ9InRydWUiIG1zZGF0YTpVc2VDdXJyZW50TG9jYWxlPSJ0cnVlIj4NCiAgICA8eHM6Y29tcGxleFR5cGU+DQogICAgICA8eHM6Y2hvaWNlIG1pbk9jY3Vycz0iMCIgbWF4T2NjdXJzPSJ1bmJvdW5kZWQiPg0KICAgICAgICA8eHM6ZWxlbWVudCBuYW1lPSJUYWJsZSI+DQogICAgICAgICAgPHhzOmNvbXBsZXhUeXBlPg0KICAgICAgICAgICAgPHhzOnNlcXVlbmNlPg0KICAgICAgICAgICAgICA8eHM6ZWxlbWVudCBuYW1lPSJQb2xsUXVlc3Rpb24iIHR5cGU9InhzOnN0cmluZyIgbXNkYXRhOnRhcmdldE5hbWVzcGFjZT0iIiBtaW5PY2N1cnM9IjAiIC8+DQogICAgICAgICAgICA8L3hzOnNlcXVlbmNlPg0KICAgICAgICAgIDwveHM6Y29tcGxleFR5cGU+DQogICAgICAgIDwveHM6ZWxlbWVudD4NCiAgICAgICAgPHhzOmVsZW1lbnQgbmFtZT0iVGFibGUxIj4NCiAgICAgICAgICA8eHM6Y29tcGxleFR5cGU+DQogICAgICAgICAgICA8eHM6c2VxdWVuY2U+DQogICAgICAgICAgICAgIDx4czplbGVtZW50IG5hbWU9IlBvbGxPcHRpb25JZCIgdHlwZT0ieHM6aW50IiBtc2RhdGE6dGFyZ2V0TmFtZXNwYWNlPSIiIG1pbk9jY3Vycz0iMCIgLz4NCiAgICAgICAgICAgICAgPHhzOmVsZW1lbnQgbmFtZT0ib3B0aW9udGV4dCIgdHlwZT0ieHM6c3RyaW5nIiBtc2RhdGE6dGFyZ2V0TmFtZXNwYWNlPSIiIG1pbk9jY3Vycz0iMCIgLz4NCiAgICAgICAgICAgICAgPHhzOmVsZW1lbnQgbmFtZT0idG90YWxvcHRpb252b3RlcyIgdHlwZT0ieHM6bG9uZyIgbXNkYXRhOnRhcmdldE5hbWVzcGFjZT0iIiBtaW5PY2N1cnM9IjAiIC8+DQogICAgICAgICAgICAgIDx4czplbGVtZW50IG5hbWU9InBlcmNlbnRvcHRpb24iIHR5cGU9InhzOmRlY2ltYWwiIG1zZGF0YTp0YXJnZXROYW1lc3BhY2U9IiIgbWluT2NjdXJzPSIwIiAvPg0KICAgICAgICAgICAgPC94czpzZXF1ZW5jZT4NCiAgICAgICAgICA8L3hzOmNvbXBsZXhUeXBlPg0KICAgICAgICA8L3hzOmVsZW1lbnQ+DQogICAgICAgIDx4czplbGVtZW50IG5hbWU9IlRhYmxlMiI+DQogICAgICAgICAgPHhzOmNvbXBsZXhUeXBlPg0KICAgICAgICAgICAgPHhzOnNlcXVlbmNlPg0KICAgICAgICAgICAgICA8eHM6ZWxlbWVudCBuYW1lPSJ0b3RhbHZvdGVzIiB0eXBlPSJ4czpsb25nIiBtc2RhdGE6dGFyZ2V0TmFtZXNwYWNlPSIiIG1pbk9jY3Vycz0iMCIgLz4NCiAgICAgICAgICAgIDwveHM6c2VxdWVuY2U+DQogICAgICAgICAgPC94czpjb21wbGV4VHlwZT4NCiAgICAgICAgPC94czplbGVtZW50Pg0KICAgICAgPC94czpjaG9pY2U+DQogICAgPC94czpjb21wbGV4VHlwZT4NCiAgPC94czplbGVtZW50Pg0KPC94czpzY2hlbWE+BgUAAADYDDxkaWZmZ3I6ZGlmZmdyYW0geG1sbnM6bXNkYXRhPSJ1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOnhtbC1tc2RhdGEiIHhtbG5zOmRpZmZncj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp4bWwtZGlmZmdyYW0tdjEiPjxOZXdEYXRhU2V0PjxUYWJsZSBkaWZmZ3I6aWQ9IlRhYmxlMSIgbXNkYXRhOnJvd09yZGVyPSIwIj48UG9sbFF1ZXN0aW9uPldoYXQgaXMgeW91ciBuZXcgeWVhcidzIHdpc2ggbGlzdD88L1BvbGxRdWVzdGlvbj48L1RhYmxlPjxUYWJsZTEgZGlmZmdyOmlkPSJUYWJsZTExIiBtc2RhdGE6cm93T3JkZXI9IjAiPjxQb2xsT3B0aW9uSWQ+MTYwMzwvUG9sbE9wdGlvbklkPjxvcHRpb250ZXh0PlVwZ3JhZGUgbXkgbW9iaWxlIHBob25lPC9vcHRpb250ZXh0Pjx0b3RhbG9wdGlvbnZvdGVzPjA8L3RvdGFsb3B0aW9udm90ZXM+PHBlcmNlbnRvcHRpb24+MC4wMDwvcGVyY2VudG9wdGlvbj48L1RhYmxlMT48VGFibGUxIGRpZmZncjppZD0iVGFibGUxMiIgbXNkYXRhOnJvd09yZGVyPSIxIj48UG9sbE9wdGlvbklkPjE2MDQ8L1BvbGxPcHRpb25JZD48b3B0aW9udGV4dD5CdXkgYSBuZXcgbGFwdG9wIG9yIGNvbXB1dGVyPC9vcHRpb250ZXh0Pjx0b3RhbG9wdGlvbnZvdGVzPjM8L3RvdGFsb3B0aW9udm90ZXM+PHBlcmNlbnRvcHRpb24+MTMuNjQ8L3BlcmNlbnRvcHRpb24+PC9UYWJsZTE+PFRhYmxlMSBkaWZmZ3I6aWQ9IlRhYmxlMTMiIG1zZGF0YTpyb3dPcmRlcj0iMiI+PFBvbGxPcHRpb25JZD4xNjA1PC9Qb2xsT3B0aW9uSWQ+PG9wdGlvbnRleHQ+R2V0IGEgYmV0dGVyIGpvYjwvb3B0aW9udGV4dD48dG90YWxvcHRpb252b3Rlcz4xMTwvdG90YWxvcHRpb252b3Rlcz48cGVyY2VudG9wdGlvbj41MC4wMDwvcGVyY2VudG9wdGlvbj48L1RhYmxlMT48VGFibGUxIGRpZmZncjppZD0iVGFibGUxNCIgbXNkYXRhOnJvd09yZGVyPSIzIj48UG9sbE9wdGlvbklkPjE2MDY8L1BvbGxPcHRpb25JZD48b3B0aW9udGV4dD5IZWxwIG15IGZhbWlseTwvb3B0aW9udGV4dD48dG90YWxvcHRpb252b3Rlcz4zPC90b3RhbG9wdGlvbnZvdGVzPjxwZXJjZW50b3B0aW9uPjEzLjY0PC9wZXJjZW50b3B0aW9uPjwvVGFibGUxPjxUYWJsZTEgZGlmZmdyOmlkPSJUYWJsZTE1IiBtc2RhdGE6cm93T3JkZXI9IjQiPjxQb2xsT3B0aW9uSWQ+MTYwNzwvUG9sbE9wdGlvbklkPjxvcHRpb250ZXh0Pk1vcmUgY29tbXVuaXR5IGludm9sdmVtZW50PC9vcHRpb250ZXh0Pjx0b3RhbG9wdGlvbnZvdGVzPjA8L3RvdGFsb3B0aW9udm90ZXM+PHBlcmNlbnRvcHRpb24+MC4wMDwvcGVyY2VudG9wdGlvbj48L1RhYmxlMT48VGFibGUxIGRpZmZncjppZD0iVGFibGUxNiIgbXNkYXRhOnJvd09yZGVyPSI1Ij48UG9sbE9wdGlvbklkPjE2MDg8L1BvbGxPcHRpb25JZD48b3B0aW9udGV4dD5Tb21ldGhpbmcgZWxzZTwvb3B0aW9udGV4dD48dG90YWxvcHRpb252b3Rlcz41PC90b3RhbG9wdGlvbnZvdGVzPjxwZXJjZW50b3B0aW9uPjIyLjczPC9wZXJjZW50b3B0aW9uPjwvVGFibGUxPjxUYWJsZTIgZGlmZmdyOmlkPSJUYWJsZTIxIiBtc2RhdGE6cm93T3JkZXI9IjAiPjx0b3RhbHZvdGVzPjIyPC90b3RhbHZvdGVzPjwvVGFibGUyPjwvTmV3RGF0YVNldD48L2RpZmZncjpkaWZmZ3JhbT4EAwAAAA5TeXN0ZW0uVmVyc2lvbgQAAAAGX01ham9yBl9NaW5vcgZfQnVpbGQJX1JldmlzaW9uAAAAAAgICAgCAAAAAAAAAP//////////C2QWAmYPZBYCZg9kFgICAQ9kFgRmD2QWAmYPZBYCAgEPZBYKAgEPZBYCZg9kFgICAQ8PFgQfDQUIWW91ciBKb2IfCAU6aHR0cDovL3d3dy5jLXNoYXJwY29ybmVyLmNvbS9Qb2xscy9EZWZhdWx0LmFzcHg/cG9sbGlkPTM4MGRkAgMPZBYCZg9kFgICAQ8PFgIfDQUiV2hhdCBpcyB5b3VyIG5ldyB5ZWFyJ3Mgd2lzaCBsaXN0P2RkAgUPZBYCZg9kFgICAQ8QDxYGHg1EYXRhVGV4dEZpZWxkBQpPcHRpb25UZXh0Hg5EYXRhVmFsdWVGaWVsZAUMUG9sbE9wdGlvbklkHxVnZBAVBhdVcGdyYWRlIG15IG1vYmlsZSBwaG9uZRxCdXkgYSBuZXcgbGFwdG9wIG9yIGNvbXB1dGVyEEdldCBhIGJldHRlciBqb2IOSGVscCBteSBmYW1pbHkaTW9yZSBjb21tdW5pdHkgaW52b2x2ZW1lbnQOU29tZXRoaW5nIGVsc2UVBgQxNjAzBDE2MDQEMTYwNQQxNjA2BDE2MDcEMTYwOBQrAwZnZ2dnZ2dkZAIGD2QWAgIBD2QWAgIDDw8WAh8PBQMzODBkZAIID2QWAmYPZBYCAgEPDxYCHgdFbmFibGVkaGRkAgEPZBYCZg9kFgJmDw8WAh8NBSJXaGF0IGlzIHlvdXIgbmV3IHllYXIncyB3aXNoIGxpc3Q/ZGQYAgUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgoFJGN0bDAwJFRyZW5kaW5nTm93MSRzZWFyY2hJbWFnZUJ1dHRvbgUVY3RsMDAkSW1hZ2VCdXR0b25MaWtlBRZjdGwwMCRJbWFnZUJ1dHRvbkVtYWlsBSFjdGwwMCRJbWFnZUJ1dHRvbkFkZFRvTXlCb29rbWFya3MFGmN0bDAwJEltYWdlQnV0dG9uTW9kZXJhdG9yBRljdGwwMCRJbWFnZUJ1dHRvblByZXZpb3VzBRVjdGwwMCRJbWFnZUJ1dHRvbk5leHQFJmN0bDAwJFBvbGxGb3JIb21lMSRUYWJDb250YWluZXJTZWN0aW9uBU1jdGwwMCRQb2xsRm9ySG9tZTEkVGFiQ29udGFpbmVyU2VjdGlvbiRUYWJQYW5lbEluUHJvZ3Jlc3MkaW1hZ2VCdXR0b25QcmV2aW91cwVJY3RsMDAkUG9sbEZvckhvbWUxJFRhYkNvbnRhaW5lclNlY3Rpb24kVGFiUGFuZWxJblByb2dyZXNzJGltYWdlQnV0dG9uTmV4dAUmY3RsMDAkUG9sbEZvckhvbWUxJFRhYkNvbnRhaW5lclNlY3Rpb24PD2RmZKCTEqYoDJd8120djKxwAyUlpyM9" type="hidden"> </div> <script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+theForm.__EVENTTARGET.value = eventTarget;
+theForm.__EVENTARGUMENT.value = eventArgument;
+theForm.submit();
+}
+}
+//]]> </script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/WebResource.js" type="text/javascript"></script> <script>
+$j(function() {
+$j('#js-news').ticker();
+});
+</script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ScriptResource_003.js" type="text/javascript"></script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ScriptResource.js" type="text/javascript"></script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ScriptResource_004.js" type="text/javascript"></script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/MindcrackerJScript.js" type="text/javascript"></script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ScriptResource_007.axd" type="text/javascript"></script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ScriptResource_002.axd" type="text/javascript"></script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ScriptResource_002.js" type="text/javascript"></script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ScriptResource_006.axd" type="text/javascript"></script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ScriptResource_005.axd" type="text/javascript"></script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ScriptResource_004.axd" type="text/javascript"></script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ScriptResource_003.axd" type="text/javascript"></script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ScriptResource.axd" type="text/javascript"></script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/WebResource_002.js" type="text/javascript"></script> <script type="text/javascript">
+//<![CDATA[
+function WebForm_OnSubmit() {
+null;if (typeof(ValidatorOnSubmit) == "function" && ValidatorOnSubmit() == false) return false;
+return true;
+}
+//]]> </script> <div class="master"> <div id="floatdiv" style="position: absolute; right: 0px; top: 165px;"> </div> <a name="Top"></a> <div class="header"> <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$HeaderNewDesign1$ScriptManager1', document.getElementById('aspnetForm'));
+Sys.WebForms.PageRequestManager.getInstance()._updateControls(['tctl00$UpdatePanelLike','tctl00$UpdatePanelMessage','tctl00$updatePanelArticleSlider','tctl00$Comments1$UpdatePanelEmail','tctl00$RightBar$ArticleDetailRightBar1$PremiumSponsorsTextAd1$UpdatePanelSponsorWithImage','tctl00$PollForHome1$Updatepanel1'], ['ctl00$ImageButtonAddToMyBookmarks'], [], 90);
+//]]> </script> <script type="text/javascript" language="javascript">
+//This script is used to hide error(s) when a postback occurs during partial postback.
+Sys.WebForms.PageRequestManager.getInstance().add_endRequest(EndRequestHandler);
+function EndRequestHandler(sender, args) {
+if (args.get_error() != undefined) {
+args.set_errorHandled(true);
+}
+}
+</script> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ticker_21122013.js" type="text/javascript"></script> <style>
+.ticker
+{
+width: 710px;
+height: 30px;
+display: block;
+position: relative;
+overflow: hidden;
+}
+.ticker-title
+{
+padding-top: 9px;
+color: #900;
+font-weight: bold;
+text-transform: uppercase;
+}
+.ticker-content
+{
+margin: 0;
+padding-top: 9px;
+position: absolute;
+color: #1f527b;
+overflow: hidden;
+white-space: nowrap;
+line-height: 1.2em;
+}
+.ticker-content a:hover
+{
+text-decoration: none;
+color: #0d3059;
+}
+.ticker-swipe
+{
+padding-top: 9px;
+position: absolute;
+top: 0;
+background-color: #f60;
+display: block;
+width: 800px;
+height: 23px;
+}
+.ticker-swipe span
+{
+margin-left: 1px;
+border-bottom: 1px solid #fff;
+height: 14px;
+width: 7px;
+display: block;
+}
+.js-hidden
+{
+display: none;
+}
+.ticker-controls
+{
+padding: 8px 0 0 0;
+list-style-type: none;
+float: left;
+}
+.left .ticker-controls, .left .ticker-content, .left .ticker-title, .left .ticker
+{
+float: left;
+}
+</style> <div class="InFocusNews" id="InFocus"> <div class="page" style="position: relative;"> <h2>
+In Focus</h2> <div class="rightNew" style="display: inline;"> <div class="ticker-wrapper has-js left" id="ticker-wrapper-1388758436619"><div id="ticker-1388758436619" class="ticker"><div style="" id="ticker-title-1388758436619" class="ticker-title"><span></span></div><p style="display: block; opacity: 1; left: 20px;" id="ticker-content-1388758436619" class="ticker-content"><a href="http://www.c-sharpcorner.com/News/3356/C-Sharp-corner-annual-conference-2014-dates-announced.aspx" style="color: White;" rel="nofollow">
+C# Corner Annual Conference 2014: Dates Announced</a></p><div style="left: 20px; margin-left: 164.1px;" id="ticker-swipe-1388758436619" class="ticker-swipe"><span style="display: block;"><!-- --></span></div></div><ul id="ticker-controls-1388758436619" class="ticker-controls"><li id="play-pause-1388758436619" class="jnt-play-pause controls"><a href=""><!-- --></a></li><li id="prev-1388758436619" class="jnt-prev controls"><a href=""><!-- --></a></li><li id="next-1388758436619" class="jnt-next controls"><a href=""><!-- --></a></li></ul></div> </div> </div> </div> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/urchin.js" type="text/javascript"> </script> <script type="text/javascript">
+_uacct = "UA-535360-1";
+urchinTracker();
+$j(document).ready(function() {
+var flag;
+var textBoxClientId = '#ctl00_HeaderNewDesign1_Login1_TextBoxUserId';
+var value = $j(textBoxClientId).val();
+$j(textBoxClientId).click(function() {
+if (value == "Invalid ID / Password")
+$j(textBoxClientId).val('');
+});
+//login popup js start here//
+$j('#ctl00_HeaderNewDesign1_Login1_loginBtn').click(function() {
+flag = 1;
+$j('#ctl00_HeaderNewDesign1_Login1_LoginSpan').slideToggle("slow");
+$j('#ctl00_HeaderNewDesign1_Login1_TextBoxUserId').focus();
+});
+$j('#ctl00_HeaderNewDesign1_Login1_UserDetailContainer').mouseover(function() {
+$j('#ctl00_HeaderNewDesign1_Login1_LogoutSpan').show();
+});
+$j('.loginPopup.loggedIn').mouseover(function() {
+$j('#ctl00_HeaderNewDesign1_Login1_LogoutSpan').show();
+$j('.userdetailCntr').addClass('hover');
+});
+$j('#ctl00_HeaderNewDesign1_Login1_UserDetailContainer').mouseout(function() {
+$j('#ctl00_HeaderNewDesign1_Login1_LogoutSpan').hide();
+});
+$j('.loginPopup.loggedIn').mouseout(function() {
+$j('#ctl00_HeaderNewDesign1_Login1_LogoutSpan').hide();
+$j('.userdetailCntr').removeClass('hover');
+});
+$j('.loginPopup').click(function() {
+flag = 1;
+});
+$j('#ctl00_HeaderNewDesign1_Login1_UserDetailContainer').click(function() {
+flag = 1;
+});
+$j(document).click(function() {
+if (flag != 1) {
+$j('#ctl00_HeaderNewDesign1_Login1_LoginSpan').hide();
+$j('#ctl00_HeaderNewDesign1_Login1_LogoutSpan').hide();
+}
+flag = 0;
+});
+//login popup js end here//
+});
+</script> <script>
+$j(document).ready(function() {
+var flag = true;
+var close = true;
+$j('#userMsgIconCntr').click(function() {
+flag = false;
+close = false;
+$j('#userMsgIconCntr .arrow').show();
+$j('#userMsgBox').show();
+});
+$j('#userMsgBox').click(function() {
+close = false;
+});
+$j(document).click(function() {
+if (close) {
+$j('#userMsgIconCntr .arrow').hide();
+$j('#userMsgBox').hide();
+flag = true;
+}
+close = true;
+});
+});
+</script> <div class="page" style="position: relative; z-index: 9999999;"> <div class="loginControl"> <a href="http://www.c-sharpcorner.com/Controls/#" id="ctl00_HeaderNewDesign1_Login1_loginBtn" class="icons login" onclick="return false;" title="Login">&nbsp;</a> <a id="ctl00_HeaderNewDesign1_Login1_HyperLinkRegister" title="Sign Up" class="icons signUp" href="http://www.c-sharpcorner.com/UserRegistration/UserRegistration.aspx?check=r"></a> <div id="userMsgIconCntr" style="float: left; padding: 6px 0px; margin-bottom: -1px;
+position: relative; margin-right: 10px; cursor: pointer;"> <span class="arrow" style="top: 31px; left: 6px;display:none;">&nbsp;</span> </div> <div id="userMsgBox" class="msg_container" style="display: none;"> <ul> </ul> <a id="ctl00_HeaderNewDesign1_Login1_LinkButtonAllMessages" class="LinkNormalBlue" href="javascript:__doPostBack('ctl00$HeaderNewDesign1$Login1$LinkButtonAllMessages','')" style="margin-right: 10px;
+float: right; margin-top: 10px;">Go to all messages &gt;&gt;</a> </div> </div> <div id="ctl00_HeaderNewDesign1_Login1_LoginSpan" class="loginPopup" onkeypress="javascript:return WebForm_FireDefaultButton(event, 'ctl00_HeaderNewDesign1_Login1_ImageButtonLogin')" style="display: none;"> <center> <span id="ctl00_HeaderNewDesign1_Login1_LabelErrorMessage" style="color:Red;padding-bottom: 5px;"></span></center> <span class="arrow">&nbsp;</span> <div class="row"> <label class="lableText">
+Email :</label> <input value="Enter User ID or Email" name="ctl00$HeaderNewDesign1$Login1$TextBoxUserId" id="ctl00_HeaderNewDesign1_Login1_TextBoxUserId" class="inputBox" style="width: 150px;" type="text"> <span id="ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorUserId" style="color:Red;display:none;">*</span> <input name="ctl00$HeaderNewDesign1$Login1$TBWEUserID_ClientState" id="ctl00_HeaderNewDesign1_Login1_TBWEUserID_ClientState" type="hidden"> </div> <div class="row"> <label class="lableText">
+Password :
+</label> <input name="ctl00$HeaderNewDesign1$Login1$TextBoxPassword" id="ctl00_HeaderNewDesign1_Login1_TextBoxPassword" class="inputBox" autocomplete="off" style="width: 150px;" type="password"> <span id="ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorPassword" style="color:Red;display:none;">*</span> <input name="ctl00$HeaderNewDesign1$Login1$TBWEPassword_ClientState" id="ctl00_HeaderNewDesign1_Login1_TBWEPassword_ClientState" type="hidden"> </div> <div class="row"> <label class="lableText">
+&nbsp;</label> <label class="lableText" style="width: auto"> <input checked="checked" name="a" type="checkbox">Remember me?</label> </div> <div class="row"> <label class="lableText">
+&nbsp;</label> <input name="ctl00$HeaderNewDesign1$Login1$ImageButtonLogin" value="Login" onclick='javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions("ctl00$HeaderNewDesign1$Login1$ImageButtonLogin", "", true, "LeftLogin", "", false, false))' id="ctl00_HeaderNewDesign1_Login1_ImageButtonLogin" title="Login" type="submit"> <a href="http://www.c-sharpcorner.com/UserRegistration/UserRegistration.aspx?check=f" class="LinkRed">Forgot password</a> </div> </div> </div> <div class="logoHeader"> <div class="page"> <a href="http://www.c-sharpcorner.com/" id="ctl00_HeaderNewDesign1_Login1_LogoLink"> <span id="ctl00_HeaderNewDesign1_Login1_LogoImage" class="logo"></span> </a> <div style="width: 450px; height: 60px; margin: 7px 0px 0px 40px; float: left;"> </div> <div id="ctl00_HeaderNewDesign1_Login1_ContributionLinks"> <div class="contributeList"> <a href="#" class="contributeOnHeader">Contribute</a> <ul> <li> <a id="ctl00_HeaderNewDesign1_Login1_PostArticle" href="javascript:__doPostBack('ctl00$HeaderNewDesign1$Login1$PostArticle','')">An Article</a></li> <li> <a id="ctl00_HeaderNewDesign1_Login1_PostBlog" href="javascript:__doPostBack('ctl00$HeaderNewDesign1$Login1$PostBlog','')">A Blog</a></li> <li> <a id="ctl00_HeaderNewDesign1_Login1_PostNews" href="javascript:__doPostBack('ctl00$HeaderNewDesign1$Login1$PostNews','')">A News</a></li> <li> <a id="ctl00_HeaderNewDesign1_Login1_PostVideo" href="javascript:__doPostBack('ctl00$HeaderNewDesign1$Login1$PostVideo','')">A Video</a></li> <li> <a id="ctl00_HeaderNewDesign1_Login1_PostResource" href="javascript:__doPostBack('ctl00$HeaderNewDesign1$Login1$PostResource','')">A Link</a></li> <li> <a id="ctl00_HeaderNewDesign1_Login1_PostInterview" href="javascript:__doPostBack('ctl00$HeaderNewDesign1$Login1$PostInterview','')">An Interview Question</a></li> </ul> </div> <a id="ctl00_HeaderNewDesign1_Login1_PostForum" class="askQuestionOnHeader" href="javascript:__doPostBack('ctl00$HeaderNewDesign1$Login1$PostForum','')">Ask a Question</a> </div> </div> </div> <div id="ctl00_HeaderNewDesign1_HeaderMenu" class="menuStripBlue"> <div class="page" style="position: relative;"> <div class="menu"> <ul> <li style="background: none;"><a href="http://www.c-sharpcorner.com/" class="csharpHome" title="C# Corner Home">&nbsp;</a></li> <li><a href="javascript:void(0);" class="show-dropdown menuLinkBlue">TECHNOLOGIES </a> <div class="dropDownMenu" id="dropDown"> <div id="ctl00_HeaderNewDesign1_divTechnology" style="overflow:hidden; margin-bottom:10px;"> <span id="ctl00_HeaderNewDesign1_DataListTechnologyTop"><span> <a href="http://www.c-sharpcorner.com/1/237/net-4-5.aspx">
+.NET 4.5
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/61/crystal-reports-C-Sharp.aspx">
+Crystal Reports C#
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/233/javascript.aspx">
+JavaScript
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/198/project-management.aspx">
+Project Management
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/154/web-development.aspx">
+Web Development
+</a> </span><br><span> <a href="http://www.c-sharpcorner.com/1/131/ado-net.aspx">
+ADO.NET
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/170/current-affairs.aspx">
+Current Affairs
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/236/jquery.aspx">
+JQuery
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/183/sharepoint-2010.aspx">
+SharePoint 2010
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/133/web-services-in-C-Sharp.aspx">
+Web Services in C#
+</a> </span><br><span> <a href="http://www.c-sharpcorner.com/1/176/ajax.aspx">
+AJAX
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/220/databases-dba.aspx">
+Databases &amp; DBA
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/260/jsp.aspx">
+JSP
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/289/sharepoint-2013.aspx">
+SharePoint 2013
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/275/windows-8.aspx">
+Windows 8
+</a> </span><br><span> <a href="http://www.c-sharpcorner.com/1/247/android-programming.aspx">
+Android Programming
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/145/deployment.aspx">
+Deployment
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/300/knockout.aspx">
+Knockout
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/301/signalr.aspx">
+SignalR
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/232/windows-azure.aspx">
+Windows Azure
+</a> </span><br><span> <a href="http://www.c-sharpcorner.com/1/302/angularjs.aspx">
+AngularJS
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/62/design-architecture.aspx">
+Design &amp; Architecture
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/278/leadership.aspx">
+Leadership
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/210/silverlight-with-C-Sharp.aspx">
+Silverlight with C#
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/77/windows-controls-C-Sharp.aspx">
+Windows Controls C#
+</a> </span><br><span> <a href="http://www.c-sharpcorner.com/1/172/articles-C-Sharp.aspx">
+Articles C#
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/293/dynamics-crm.aspx">
+Dynamics CRM
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/186/learn-net.aspx">
+Learn .NET
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/158/smart-devices.aspx">
+Smart Devices
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/76/windows-forms-C-Sharp.aspx">
+Windows Forms C# 
+</a> </span><br><span> <a href="http://www.c-sharpcorner.com/1/75/Asp-Net-controls.aspx">
+ASP.NET Controls
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/206/fsharp.aspx">
+F#
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/274/lightswitch-2012.aspx">
+LightSwitch 2012
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/216/sql.aspx">
+SQL
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/245/windows-phone.aspx">
+Windows Phone
+</a> </span><br><span> <a href="http://www.c-sharpcorner.com/1/226/Asp-Net-mvc.aspx">
+ASP.NET MVC
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/228/files-directory-io.aspx">
+Files, Directory, IO
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/180/linq.aspx">
+LINQ
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/187/sql-server.aspx">
+SQL Server
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/292/windows-server-2012.aspx">
+Windows Server 2012
+</a> </span><br><span> <a href="http://www.c-sharpcorner.com/1/224/Asp-Net-programming.aspx">
+ASP.NET Programming
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/207/financial-applications.aspx">
+Financial Applications
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/67/mobile-embedded.aspx">
+Mobile &amp; Embedded
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/174/testing.aspx">
+Testing
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/138/windows-store-apps.aspx">
+Windows Store Apps
+</a> </span><br><span> <a href="http://www.c-sharpcorner.com/1/303/backbonejs.aspx">
+Backbonejs
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/4/gdi-graphics.aspx">
+GDI+ &amp; Graphics
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/295/netbeans.aspx">
+NetBeans
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/139/visual-studio-net.aspx">
+Visual Studio .NET
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/193/workflow-foundation-in-C-Sharp.aspx">
+Workflow Foundation in C#
+</a> </span><br><span> <a href="http://www.c-sharpcorner.com/1/144/C-Sharp-language.aspx">
+C# Language
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/143/how-do-i.aspx">
+How do I 
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/208/oopood.aspx">
+OOP/OOD
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/281/visual-studio-2012.aspx">
+Visual Studio 2012
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/191/wpf.aspx">
+WPF
+</a> </span><br><span> <a href="http://www.c-sharpcorner.com/1/238/career-advice.aspx">
+Career Advice
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/244/html-5.aspx">
+HTML 5
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/299/oracle.aspx">
+Oracle
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/296/visual-studio-2013.aspx">
+Visual Studio 2013
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/190/xaml.aspx">
+XAML
+</a> </span><br><span> <a href="http://www.c-sharpcorner.com/1/280/chapters.aspx">
+Chapters
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/66/internet-web.aspx">
+Internet &amp; Web
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/279/php.aspx">
+PHP
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/192/wcf-with-C-Sharp.aspx">
+WCF with C#
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/79/xml.aspx">
+XML
+</a> </span><br><span> <a href="http://www.c-sharpcorner.com/1/60/cryptography-C-Sharp.aspx">
+Cryptography C#
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/258/java.aspx">
+Java
+</a> </span><span> <a href="http://www.c-sharpcorner.com/1/283/products.aspx">
+Products
+</a> </span></span> </div> <div style="position: absolute; bottom: 0px; left: 0px;"> <a href="http://www.c-sharpcorner.com/ContactUs.aspx?type=7" class="LinkNormalBlue" style="color: #ff6600; background: none; text-transform: none; float: left;">Request
+a new Category</a><span style="float: left; padding-top: 8px;">|</span><a href="http://www.c-sharpcorner.com/Category/" class="LinkNormalBlue viewAll" style="color: #36c; background: none; text-transform: none;
+float: left;">View All</a> </div> </div> </li> <li><a href="http://www.c-sharpcorner.com/Forums/" class="menuLinkBlue" title="Ask a Question">ANSWERS</a></li> <li><a href="http://www.c-sharpcorner.com/Blogs/" class="menuLinkBlue" title="Share a Blog">
+BLOGS</a></li> <li><a href="http://www.c-sharpcorner.com/Videos/" title="Share a Video" class="menuLinkBlue">VIDEOS</a></li><li><a href="http://www.c-sharpcorner.com/interviews/" class="menuLinkBlue" title="Ask an Interview Question">INTERVIEWS</a></li><li><a href="http://www.c-sharpcorner.com/ebooks/" class="menuLinkBlue" title="Share a Book">
+BOOKS</a></li> <li><a href="http://www.c-sharpcorner.com/resources/" class="menuLinkBlue" title="Share a Link">LINKS</a></li> <li><a href="http://www.c-sharpcorner.com/news/" class="menuLinkBlue" title="Submit a News">
+NEWS</a></li> <li><a href="http://www.c-sharpcorner.com/Chapters/" class="menuLinkBlue" title="Attend an Event">CHAPTERS</a></li> <li><a href="http://www.c-sharpcorner.com/CareerAdvice/" class="menuLinkBlue" title="Get career advice">CAREER ADVICE</a></li> </ul> </div> </div> </div> <div id="ctl00_HeaderNewDesign1_UpdateProgress1" style="display: none; left: 1205px; top: 0px; position: fixed;"> <img id="ctl00_HeaderNewDesign1_ImageLoading" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/Loading.GIF" style="border-width:0px;"> </div> </div> <div class="page"> <div class="clear"> </div> <div class="main"> <div class="leftCntr"> <span style="position: relative; float: left; margin:0px; width: 450px;
+height: 30px; border: 1px solid #d5d5d5; display: inline-block;"><span style="background-image: url(/Images/csharp/TrendingNow.png);
+background-repeat: no-repeat; width: 138px; height: 30px; display: inline-block;"> <span> <div id="example1_wrap"> <div class="bx_wrap"><a href="" class="prev"><img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/leftArrow.png"></a><a href="" class="next"><img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/rightArrow.png"></a><div style="position: relative; width: 275px; overflow: hidden;" class="bx_container"><ul style="width: 999999px; position: relative; left: -275px;" id="example1"><li style="float: left; list-style: none outside none; margin-right: 0px;"><a href="http://www.c-sharpcorner.com/UploadFile/1492b1/learning-knockout-part-1-introduction-to-knockout-js-and-cr/" class="LinkNormalStyle" style="color: Gray;">
+Introduction to Knockout.js and CRUD Operati ...</a></li><li style="float: left; list-style: none outside none; margin-right: 0px;"><a href="http://www.c-sharpcorner.com/UploadFile/ankurmalik123/C-Sharp-coding-standards/" class="LinkNormalStyle" style="color: Gray;">
+C# Coding Standards</a></li><li style="float: left; list-style: none outside none; margin-right: 0px;"><a href="http://www.c-sharpcorner.com/UploadFile/84c85b/must-know-sql-functions-for-all-net-developers/" class="LinkNormalStyle" style="color: Gray;">
+Must-Know SQL Functions For All .NET Developers</a></li></ul></div></div> </div> </span></span></span> <div id="ctl00_TrendingNow1_Panal1" onkeypress="javascript:return WebForm_FireDefaultButton(event, 'ctl00_TrendingNow1_searchImageButton')"> <span style="width: 5px;"></span><span style="width: 215px;
+height: 30px; border: 1px solid #d5d5d5; display: inline-block; position: relative;
+float: right; margin:  0px;"> <span style="display: inline; position: relative;
+float: left;"> <input value="C# Corner Search" name="ctl00$TrendingNow1$searchTextBox" id="ctl00_TrendingNow1_searchTextBox" class="searchTextBox" style="font-family:Calibri;" type="text"></span> <span style="display: inline; position: relative; float: right;"> <input name="ctl00$TrendingNow1$searchImageButton" id="ctl00_TrendingNow1_searchImageButton" class="SearchButton" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/SearchButton.png" style="border-width:0px;" type="image"></span> </span> <input name="ctl00$TrendingNow1$TBWESearch_ClientState" id="ctl00_TrendingNow1_TBWESearch_ClientState" type="hidden"> </div> <div class="article"> <div class="HeadingAr" id="div1"> <span id="ctl00_spanArticle">ARTICLE</span></div> <div class="clear"> </div> <div class="image"> <a href="http://www.c-sharpcorner.com/authors/yougerthen/bechir-bejaoui.aspx" id="ctl00_AnchorAuthorImage"> <img id="ctl00_imgAuthor" title="Bechir Bejaoui" class="image90" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/yougerthen.jpg" style="border-width:0px;"></a> <div id="ctl00_divRankPoints" style="text-align: center;
+width: 91px;"> <span class="rankDotBlue"></span><span id="ctl00_spanRanks" title="Ranked"> <a id="ctl00_LabelRank" class="LinkNormalStyleOrange" href="http://www.c-sharpcorner.com/Members/rank/">25</a> </span><span class="rankDot"></span><span id="ctl00_AuthorPoints" title="Points"><a class="LinkNormalStyleOrange" href="http://www.c-sharpcorner.com/Authors/AuthorRanking.aspx?AuthorId=yougerthen"> 4,213</a></span> </div> </div> <div class="detail"> <div class="grayText"> <h1> <span id="ctl00_LabelArticleTitle" cssclass="BlogsWelcomeHeading">Integrate the web Webcam functionality using C#-.Net and COM part VIII</span> </h1> </div> <div class="LinkNormalGrayLight">
+Posted by <span><a href="http://www.c-sharpcorner.com/authors/yougerthen/bechir-bejaoui.aspx" id="ctl00_AuthorLink" class="LinkBlack">Bechir Bejaoui</a> </span> <label>
+in</label> <span class="LinkRed"><a href="http://www.c-sharpcorner.com/Articles/" id="ctl00_AnchorArticles" class="LinkRed">Articles</a> </span>| <span class="LinkNormalBlue"> <a href="http://www.c-sharpcorner.com/1/58/com-interop.aspx" id="ctl00_AnchorCategory" class="LinkNormalBlue">COM Interop</a> </span> <label>
+on</label> <span id="ctl00_LabelDate">November 08, 2008</span> </div> <div class="LinkNormalGrayLight" style="margin-bottom: 5px;"> <span style="color: Black;">Tags:</span> <span id="ctl00_spanTags"><a class="LinkNormalGrayLight" href="http://www.c-sharpcorner.com/tags/COM">COM</a>, <a class="LinkNormalGrayLight" href="http://www.c-sharpcorner.com/tags/Web-Camera-Csharp-COM-.Net-avicap32.dll">Web Camera C# COM .Net avicap32.dll</a></span> </div> <div style="position: relative; margin: 2px 0px 2px 0px; width: 100%; float: left;
+border-bottom: solid 1px #d7d7d7;"> </div> <div id="ctl00_DivDescription" class="normalGray" style="padding: 5px 0 0;">In this article, I will demonstrate a totally different technique to integrate the web cam functionality. </div> </div> <div class="tweetIcon" style="padding-bottom: 10px;"> <ul> <li><iframe style="width: 109px; height: 20px;" data-twttr-rendered="true" title="Twitter Tweet Button" class="twitter-share-button twitter-tweet-button twitter-count-horizontal" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/tweet_button.htm" allowtransparency="true" id="twitter-widget-0" frameborder="0" scrolling="no"></iframe></li> <li> <span class="IN-widget" style="line-height: 1; vertical-align: baseline; display: inline-block; text-align: center;"><span style="padding: 0px ! important; margin: 0px ! important; text-indent: 0px ! important; display: inline-block ! important; vertical-align: baseline ! important; font-size: 1px ! important;"><span id="li_ui_li_gen_1388758436810_0"><a id="li_ui_li_gen_1388758436810_0-link" href="javascript:void(0);"><span id="li_ui_li_gen_1388758436810_0-logo">in</span><span id="li_ui_li_gen_1388758436810_0-title"><span id="li_ui_li_gen_1388758436810_0-mark"></span><span id="li_ui_li_gen_1388758436810_0-title-text">Share</span></span></a></span></span><span style="padding: 0px ! important; margin: 0px ! important; text-indent: 0px ! important; display: inline-block ! important; vertical-align: baseline ! important; font-size: 1px ! important;"><span id="li_ui_li_gen_1388758436823_1-container" class="IN-right IN-hidden"><span id="li_ui_li_gen_1388758436823_1" class="IN-right"><span id="li_ui_li_gen_1388758436823_1-inner" class="IN-right"><span id="li_ui_li_gen_1388758436823_1-content" class="IN-right">0</span></span></span></span></span></span><script type="in/share+init" data-counter="right"></script> </li> <li> <div id="___plusone_0" style="text-indent: 0px; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; width: 90px; height: 20px;"><iframe title="+1" data-gapiattached="true" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/fastbutton.htm" name="I0_1388758436839" id="I0_1388758436839" vspace="0" tabindex="0" style="position: static; top: 0px; width: 90px; margin: 0px; border-style: none; left: 0px; visibility: visible; height: 20px;" marginwidth="0" marginheight="0" hspace="0" frameborder="0" scrolling="no" width="100%"></iframe></div> </li> <li> <div fb-xfbml-state="rendered" class="fb-like fb_edge_widget_with_comment fb_iframe_widget" data-send="false" data-layout="button_count" data-width="120" data-show-faces="false" data-font="tahoma" data-href="http://www.c-sharpcorner.com/uploadfile/yougerthen/integrate-the-web-webcam-functionality-using-C-Sharp-net-and-com-part-viii/Default.aspx"><span style="height: 20px; width: 77px;"><iframe src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/like.htm" class="fb_ltr" title="Like this content on Facebook." style="border: medium none; overflow: hidden; height: 20px; width: 77px;" name="f17edf5b2933618" id="f3a64b4855cf694" scrolling="no"></iframe></span></div> </li> <li> <img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/view.gif" alt="" title="views"><span class="ponit"><span id="ctl00_spanArticleViews">180254</span></span> </li> <li><a href="#ReadAndPostComment"> <img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/comment.gif" alt="" title="comments"><span class="ponit"> <span id="spanComments">61</span></span></a></li> <li> <span id="ctl00_UpdatePanelLike"> <input name="ctl00$ImageButtonLike" id="ctl00_ImageButtonLike" title="Like it" class="floatLeft" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/likeBtn.png" style="border-width:0px;" type="image"> <span class="ponit" style="float: left;"> <span id="ctl00_LabelLikeCount">1</span> </span> </span> </li> </ul> </div> </div> <div class="clear"> </div> <div> <div id="ctl00_UpdatePanelMessage"> <span id="ctl00_LabelMessageBox" style="color:Red;"></span> </div> </div> <div class="contentHeaderArticle"> <ul style="width: 78%"> <li> <input name="ctl00$ImageButtonEmail" id="ctl00_ImageButtonEmail" title="Email this article to friend" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/mailIcon.gif" style="border-width:0px;" type="image"> </li> <li> <input name="ctl00$ImageButtonAddToMyBookmarks" id="ctl00_ImageButtonAddToMyBookmarks" title="Bookmark this article" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/bookmark.png" style="border-width:0px;" type="image"> </li> <li><a href="javascript:void(GetPrintVersion())"> <img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/print.gif" alt="Printable Version" title="Printable Version"></a></li> <li><a href="http://www.c-sharpcorner.com/Articles/ArticleListing.aspx?AuthorID=yougerthen" id="ctl00_AuthorsOtherArticles"> <img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/userIcon.gif" alt="Author's other article" title="Author's other article"></a></li> <li><a href="http://www.c-sharpcorner.com/Articles/Default.aspx?ArticleId=ff4fcbec-be17-45ee-9a84-556c5a2107a7" id="ctl00_AnchorSimilarArticles"> <img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/copyIcon.gif" alt="View Similar Articles" title="View Similar Articles"></a> </li> <li> </li> <li> </li> <li> </li> <li> <input name="ctl00$ImageButtonModerator" id="ctl00_ImageButtonModerator" title="Article History" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/article_History.png" style="border-width:0px;" type="image"></li> <li> </li> <li> </li> <li> </li> <li> </li> </ul> <div id="ctl00_AuthorRank" class="AuthorRank" style="width: 135px; text-align: left;">
+Reader Level:
+<img id="ctl00_ImageReaderLevel" title="Advanced" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/signal3.png" style="border-width:0px;"> </div> </div> <div class="clear"> </div> <div id="ctl00_downloadFiles" class="ratingTilte" style="margin-top: 10px; margin-bottom: 0px;"> <div id="ctl00_DivDownload" style="float: left; line-height: 25px; width: 430px;"> <img style="float: left; margin-right: 5px;" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/download.gif" height="25px" width="25px"> <span style="font-weight: bold; font-size: 14px; color: #0D9C2A; float: left;">Download
+Files:</span> <ul style="float: left; padding-left: 10px;"> <li style="float: left;"> <a id="ctl00_RepeaterDownloadFiles_ctl00_LinkButtonDownloadFiles" class="LinkNormalBlue" href="javascript:__doPostBack('ctl00$RepeaterDownloadFiles$ctl00$LinkButtonDownloadFiles','')" style="font-size:14px;font-weight:bold;">WebCamera.zip</a></li> </ul> </div>
+&nbsp;
+</div> <div id="div2" class="PaddingLeft5"><br><font size="2"><p align="justify"><font face="Verdana" size="2">I invite you to follow this walkthrough.<br><br><b>Walkthrough<br></b><br>I. First let's explain what we should do exactly.<br> </font></p><ol><font face="Verdana" size="2"> <li>At
+ the contrast of the previous demonstrated article where the user is 
+invited to select the device via a dialog box, the device will be 
+selected only through code this once.<br><br> </li><li>After selecting 
+and connecting to the device, I'll try to invoke some external functions
+ using the PInvoke platform in order to integrate the web cam 
+functionalities in my application. To do that, I will wrap all the 
+unmanaged code in a class so that the user deals indirectly with the 
+unmanaged code via this one. </li></font></ol><font face="Verdana" size="2">II.
+ Second let's explain and indicates how to integrate the avicap32.dll in
+ the application and witches functions are invoked via the PInvoke 
+platform to integrate the web cam functionalities:<br><br>The avicap32.dll is normally located in the WINDOWS\System32, but if it is not found you can download it from this link:<br><br><span lang="FR"><a style="COLOR: blue; TEXT-DECORATION: underline; text-underline: single" href="http://www.dll-files.com/dllindex/dll-files.shtml?avicap32"><span style="LINE-HEIGHT: 115%" lang="EN-US">http://www.dll-files.com/dllindex/dll-files.shtml?avicap32</span></a></span> <p>After
+ downloading it and verifying whether there are potentials risks or not 
+when using the given assembly, a measure should be taken in this context
+ by the way. <br><br>The measure is to check the compatibility between 
+the downloaded component and your system in order to prevent troubles 
+caused by bugs, therefore it is recommended to download and use this 
+tool:<br><br><span lang="FR"><a style="COLOR: blue; TEXT-DECORATION: underline; text-underline: single" href="http://www.liutilities.com/products/campaigns/affiliate"><span style="LINE-HEIGHT: 115%" lang="EN-US"></span></a><a href="http://www.liutilities.com/products/campaigns/affiliate/cb/offer/dllfiles/rb/">http://www.liutilities.com/products/campaigns/affiliate</a></span><a href="http://www.liutilities.com/products/campaigns/affiliate/cb/offer/dllfiles/rb/"><span lang="FR"><span style="LINE-HEIGHT: 115%" lang="EN-US"><font color="#000000"><br></font>/cb/offer/dllfiles/rb/</span></span></a></p> <p>Copy and paste the given assembly in C:\WINDOWS\System32 and then you have to register it using the regsvr32.exe tool.<br><br><img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/image002.jpg" border="0" height="88" width="450"><br><br>Figure 1. </p> <p>But
+ all those steps might not be necessary because in almost cases 
+avicap32.dll is found in the System32. Now, let's see witches functions 
+should be used to integrate the web cam functionalities.<br><br><img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/functions.jpg" border="0" height="689" width="607"><br>Figure 2.</p> <p>This is how the class Wrapper should be :<br><br><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"><span style="COLOR: blue">using</span> System;<br></span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: Verdana">using</span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"> System.Collections;<br></span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: Verdana">using</span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"> System.ComponentModel;<br></span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: Verdana">using</span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"> System.Data;<br></span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: Verdana">using</span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"> System.Drawing;<br></span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: Verdana">using</span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"> System.Drawing.Drawing2D;<br></span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: Verdana">using</span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"> System.Linq;<br></span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: Verdana">using</span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"> System.Text;<br></span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: Verdana">using</span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"> System.Windows.Forms;<br></span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: Verdana">using</span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"> System.Runtime.InteropServices;</span></p> <p class="MsoNormal" style="MARGIN-BOTTOM: 0pt; LINE-HEIGHT: normal"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: Verdana">namespace</span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"> WebCamera<br>{<br></span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: Verdana">&nbsp;&nbsp; public</span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"> <span style="COLOR: blue">class</span> <span style="COLOR: teal">WebCam</span>: <span style="COLOR: teal">IDisposable<br></span>{<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: green">/* Those contants are used to overload the unmanaged code functions<br></span></span><span style="FONT-SIZE: 10pt; COLOR: green; FONT-FAMILY: Verdana">&nbsp;&nbsp;&nbsp;&nbsp; * each constant represent a state*/<br>&nbsp;<br></span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">const</span> <span style="COLOR: blue">short</span> WM_CAP = 0x400;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">const</span> <span style="COLOR: blue">int</span> WM_CAP_DRIVER_CONNECT = 0x40a;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">const</span> <span style="COLOR: blue">int</span> WM_CAP_DRIVER_DISCONNECT = 0x40b;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">const</span> <span style="COLOR: blue">int</span> WM_CAP_EDIT_COPY = 0x41e;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">const</span> <span style="COLOR: blue">int</span> WM_CAP_SET_PREVIEW = 0x432;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">const</span> <span style="COLOR: blue">int</span> WM_CAP_SET_OVERLAY = 0x433;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">const</span> <span style="COLOR: blue">int</span> WM_CAP_SET_PREVIEWRATE = 0x434;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">const</span> <span style="COLOR: blue">int</span> WM_CAP_SET_SCALE = 0x435;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">const</span> <span style="COLOR: blue">int</span> WS_CHILD = 0x40000000;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">const</span> <span style="COLOR: blue">int</span> WS_VISIBLE = 0x10000000;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">const</span> <span style="COLOR: blue">short</span> SWP_NOMOVE = 0x2;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">short</span> SWP_NOZORDER = 0x4;<br>&nbsp;&nbsp; &nbsp;<span style="COLOR: blue">private</span> <span style="COLOR: blue">short</span> HWND_BOTTOM = 1;<br>&nbsp;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: green">//This function enables enumerate the web cam devices<br></span>&nbsp;&nbsp;&nbsp; [DllImport(<span style="COLOR: maroon">"avicap32.dll"</span>)]<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">protected</span> <span style="COLOR: blue">static</span> <span style="COLOR: blue">extern</span> <span style="COLOR: blue">bool</span> capGetDriverDescriptionA(<span style="COLOR: blue">short</span> wDriverIndex,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [MarshalAs(UnmanagedType.VBByRefStr)]<span style="COLOR: blue">ref</span> <span style="COLOR: teal">String</span> lpszName,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">int</span> cbName, [MarshalAs(UnmanagedType.VBByRefStr)] <span style="COLOR: blue">ref</span> <span style="COLOR: teal">String</span> lpszVer, <span style="COLOR: blue">int</span> cbVer);<br><br>&nbsp;&nbsp;&nbsp; <span style="COLOR: green">//This function enables create a&nbsp; window child with so that you can display it in a picturebox for example<br></span>&nbsp;&nbsp;&nbsp; [DllImport(<span style="COLOR: maroon">"avicap32.dll"</span>)]<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">protected</span> <span style="COLOR: blue">static</span> <span style="COLOR: blue">extern</span> <span style="COLOR: blue">int</span> capCreateCaptureWindowA([MarshalAs(UnmanagedType.VBByRefStr)] <span style="COLOR: blue">ref</span> <span style="COLOR: blue">string<br></span>lpszWindowName,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">int</span> dwStyle, <span style="COLOR: blue">int</span> x, <span style="COLOR: blue">int</span> y, <span style="COLOR: blue">int</span> nWidth, <span style="COLOR: blue">int</span> nHeight, <span style="COLOR: blue">int</span> hWndParent, <span style="COLOR: blue">int</span> nID);<br><br>&nbsp;&nbsp;&nbsp; <span style="COLOR: green">//This function enables set changes to the size, position, and Z order of a child window<br></span>&nbsp;&nbsp;&nbsp; [DllImport(<span style="COLOR: maroon">"user32"</span>)]<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">protected</span> <span style="COLOR: blue">static</span> <span style="COLOR: blue">extern</span> <span style="COLOR: blue">int</span> SetWindowPos(<span style="COLOR: blue">int</span> hwnd, <span style="COLOR: blue">int</span> hWndInsertAfter, <span style="COLOR: blue">int</span> x, <span style="COLOR: blue">int</span> y, <span style="COLOR: blue">int</span> cx, <span style="COLOR: blue">int</span> cy, <span style="COLOR: blue">int</span> wFlags);<br><br>&nbsp;&nbsp;&nbsp; <span style="COLOR: green">//This function enables send the specified message to a window or windows<br></span>&nbsp;&nbsp;&nbsp; [DllImport(<span style="COLOR: maroon">"user32"</span>, EntryPoint = <span style="COLOR: maroon">"SendMessageA"</span>)]<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">protected</span> <span style="COLOR: blue">static</span> <span style="COLOR: blue">extern</span> <span style="COLOR: blue">int</span> SendMessage(<span style="COLOR: blue">int</span> hwnd, <span style="COLOR: blue">int</span> wMsg, <span style="COLOR: blue">int</span> wParam, [MarshalAs(UnmanagedType.AsAny)] <span style="COLOR: blue">object<br></span>lParam);<br><br>&nbsp;&nbsp;&nbsp; <span style="COLOR: green">//This function enable destroy the window child <br></span>&nbsp;&nbsp;&nbsp; [DllImport(<span style="COLOR: maroon">"user32"</span>)]<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">protected</span> <span style="COLOR: blue">static</span> <span style="COLOR: blue">extern</span> <span style="COLOR: blue">bool</span> DestroyWindow(<span style="COLOR: blue">int</span> hwnd);<br>&nbsp;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// Normal device ID<br></span>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">int</span> DeviceID = 0;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// Handle value to preview window<br></span>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">int</span> hHwnd = 0;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: green">//The devices list<br></span>&nbsp;&nbsp;&nbsp; ArrayList ListOfDevices = <span style="COLOR: blue">new</span> ArrayList();<br>&nbsp;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: green">//The picture to be displayed<br></span>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> PictureBox Container { <span style="COLOR: blue">get</span>; <span style="COLOR: blue">set</span>; }<br>&nbsp;<br>&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// Connect to the device.<br></span>&nbsp;&nbsp;&nbsp; <span style="COLOR: gray">///</span><span style="COLOR: green"> </span><span style="COLOR: gray">&lt;summary&gt;<br></span>&nbsp;&nbsp;&nbsp; <span style="COLOR: gray">///</span><span style="COLOR: green"> This function is used to load the list of the devices <br></span>&nbsp;&nbsp;&nbsp; <span style="COLOR: gray">///</span><span style="COLOR: green"> </span><span style="COLOR: gray">&lt;/summary&gt;<br></span>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> <span style="COLOR: blue">void</span> Load()<br>&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">string</span> Name = <span style="COLOR: teal">String</span>.Empty.PadRight(100);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">string</span> Version = <span style="COLOR: teal">String</span>.Empty.PadRight(100);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">bool</span> EndOfDeviceList = <span style="COLOR: blue">false</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">short</span> index = 0;<br>&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// Load name of all avialable devices into the lstDevices .<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">do<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// Get Driver name and version<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EndOfDeviceList = capGetDriverDescriptionA(index, <span style="COLOR: blue">ref</span> Name, 100, <span style="COLOR: blue">ref</span> Version, 100);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// If there was a device add device name to the list<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">if</span> (EndOfDeviceList) ListOfDevices.Add(Name.Trim());<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; index += 1;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">while</span> (!(EndOfDeviceList == <span style="COLOR: blue">false</span>));<br>&nbsp;&nbsp;&nbsp; }<br><br>&nbsp;&nbsp;&nbsp; <span style="COLOR: gray">///</span><span style="COLOR: green"> </span><span style="COLOR: gray">&lt;summary&gt;<br></span>&nbsp;&nbsp;&nbsp; <span style="COLOR: gray">///</span><span style="COLOR: green"> Function used to display the output from a video capture device, you need to create <br></span>&nbsp;&nbsp;&nbsp; <span style="COLOR: gray">///</span><span style="COLOR: green"> a capture window.<br></span>&nbsp;&nbsp;&nbsp; <span style="COLOR: gray">///</span><span style="COLOR: green"> </span><span style="COLOR: gray">&lt;/summary&gt;<br></span>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> <span style="COLOR: blue">void</span> OpenConnection()<br>&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">string</span> DeviceIndex = <span style="COLOR: teal">Convert</span>.ToString(DeviceID);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: teal">IntPtr</span> oHandle = Container.Handle;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MessageBox.Show(<span style="COLOR: maroon">"You should set the container property"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;<br>&nbsp; <span style="COLOR: green">// Open Preview window in picturebox .<br></span>&nbsp;<span style="COLOR: green">// Create a child window with capCreateCaptureWindowA so you can display it in a picturebox.<br></span></span><span style="FONT-SIZE: 10pt; COLOR: green; FONT-FAMILY: Verdana">&nbsp;<br></span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">&nbsp;&nbsp;&nbsp; hHwnd = capCreateCaptureWindowA(<span style="COLOR: blue">ref</span> DeviceIndex, WS_VISIBLE | WS_CHILD, 0, 0, 640, 480, oHandle.ToInt32(), 0);<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// Connect to device<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">if</span> (SendMessage(hHwnd, WM_CAP_DRIVER_CONNECT, DeviceID, 0) != 0)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// Set the preview scale<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SendMessage(hHwnd, WM_CAP_SET_SCALE, -1, 0);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// Set the preview rate in terms of milliseconds<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SendMessage(hHwnd, WM_CAP_SET_PREVIEWRATE, 66, 0);</span></p> <p class="MsoNormal" style="MARGIN-BOTTOM: 0pt; LINE-HEIGHT: normal"><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// Start previewing the image from the camera<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SendMessage(hHwnd, WM_CAP_SET_PREVIEW, -1, 0);</span></p> <p class="MsoNormal" style="MARGIN-BOTTOM: 0pt; LINE-HEIGHT: normal"><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// Resize window to fit in picturebox<br></span>&nbsp;&nbsp;&nbsp;&nbsp; SetWindowPos(hHwnd, HWND_BOTTOM, 0, 0, Container.Height, Container.Width, SWP_NOMOVE | SWP_NOZORDER<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">else<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// Error connecting to device close window<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DestroyWindow(hHwnd);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp; }</span></p> <p class="MsoNormal" style="MARGIN-BOTTOM: 0pt; LINE-HEIGHT: normal"><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">//Close windows<br></span>&nbsp;&nbsp; <span style="COLOR: blue">void</span> CloseConnection()<br><br>&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SendMessage(hHwnd, WM_CAP_DRIVER_DISCONNECT, DeviceID, 0);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// close window<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DestroyWindow(hHwnd);<br>&nbsp;&nbsp;&nbsp; }<br><br>&nbsp;&nbsp;&nbsp; <span style="COLOR: green">//Save image<br><br></span>&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> <span style="COLOR: blue">void</span> SaveImage()<br>&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IDataObject data;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: teal">Image</span> oImage;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SaveFileDialog sfdImage = <span style="COLOR: blue">new</span> SaveFileDialog();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sfdImage.Filter = <span style="COLOR: maroon">"(*.bmp)|*.bmp"</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// Copy image to clipboard<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SendMessage(hHwnd, WM_CAP_EDIT_COPY, 0, 0);<br>&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// Get image from clipboard and convert it to a bitmap<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data = Clipboard.GetDataObject();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">if</span> (data.GetDataPresent(<span style="COLOR: blue">typeof</span>(System.Drawing.<span style="COLOR: teal">Bitmap</span>)))<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; oImage = (<span style="COLOR: teal">Image</span>)data.GetData(<span style="COLOR: blue">typeof</span>(System.Drawing.<span style="COLOR: teal">Bitmap</span>));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Container.Image = oImage;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CloseConnection();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">if</span> (sfdImage.ShowDialog() == DialogResult.OK)<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; oImage.Save(sfdImage.FileName, System.Drawing.Imaging.<span style="COLOR: teal">ImageFormat</span>.Bmp);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp; }<br><br>&nbsp;&nbsp;&nbsp; <span style="COLOR: gray">///</span><span style="COLOR: green"> </span><span style="COLOR: gray">&lt;summary&gt;<br></span>&nbsp;&nbsp;&nbsp; <span style="COLOR: gray">///</span><span style="COLOR: green"> This function is used to dispose the connection to the device<br></span>&nbsp;&nbsp;&nbsp; <span style="COLOR: gray">///</span><span style="COLOR: green"> </span><span style="COLOR: gray">&lt;/summary&gt;<br></span></span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: Verdana">&nbsp;&nbsp;&nbsp; #region</span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"> IDisposable Members<br><br>&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> <span style="COLOR: blue">void</span> Dispose()<br><br>&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CloseConnection();<br>&nbsp;&nbsp;&nbsp; }<br></span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: Verdana">&nbsp;&nbsp;&nbsp; #endregion<br></span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">}<br>}<br><br></span>If I try to represent it using diagram, it will be represented as follow:</p><span style="FONT-SIZE: 12pt; LINE-HEIGHT: 115%; FONT-FAMILY: Calibri" lang="FR"><img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/image004.jpg" border="0" height="585" width="235"><br></span><span style="LINE-HEIGHT: 115%; FONT-FAMILY: Calibri" lang="FR"><br>Figure 3.</span><span style="FONT-SIZE: 12pt; LINE-HEIGHT: 115%; FONT-FAMILY: Calibri" lang="FR"><br><br></span>This class provides three functionalities through three functions<em> </em> <ol> <li><em>Open Connection :</em> This method opens the connection to the devise <br> </li><li><em>Save Image :</em> This method takes a snapshot view and save it in the hard disk<br> </li><li><em>Dispose :</em> This method releases the connection to the device</li></ol>And a property :<br> <ol> <li>The container is set to the picture box witch dedicated to display the image streaming.</li></ol>To
+ consume the services of this class, create a new windows application 
+project and then add a picture box and three buttons to the form so that
+ it appears as below : 
+<p><span style="FONT-SIZE: 11pt; LINE-HEIGHT: 115%; FONT-FAMILY: Calibri" lang="FR"><img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/image005.png" border="0" height="511" width="430"><br><br></span><span style="LINE-HEIGHT: 115%; FONT-FAMILY: Calibri" lang="FR">Figure 4.</span><span style="FONT-SIZE: 11pt; LINE-HEIGHT: 115%; FONT-FAMILY: Calibri" lang="FR"><br><br></span>Rename the three buttons respectively as bellow :<br> </p><ul> <li>btnStart<br><br> </li><li>btnSave<br><br> </li><li>btnStop</li></ul>Add implement the following code<br><br><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: Verdana">public</span><span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"> <span style="COLOR: blue">partial</span> <span style="COLOR: blue">class</span> <span style="COLOR: teal">Form1</span> : Form<br>&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> Form1()<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; InitializeComponent();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">void</span> Form1_Load(<span style="COLOR: blue">object</span> sender, <span style="COLOR: teal">EventArgs</span> e)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; oWebCam = <span style="COLOR: blue">new</span> WebCam();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; oWebCam.Container = pictureBox1;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WebCam oWebCam;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">void</span> btnStart_Click(<span style="COLOR: blue">object</span> sender, <span style="COLOR: teal">EventArgs</span> e)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; oWebCam.OpenConnection();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">void</span> btnSave_Click(<span style="COLOR: blue">object</span> sender, <span style="COLOR: teal">EventArgs</span> e)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; oWebCam.SaveImage();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span> <span style="COLOR: blue">void</span> btnStop_Click(<span style="COLOR: blue">object</span> sender, <span style="COLOR: teal">EventArgs</span> e)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; oWebCam.Dispose();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; }</span> <p>Now, build the application and run it<br>&nbsp;</p> <p></p><span style="FONT-SIZE: 11pt; LINE-HEIGHT: 115%; FONT-FAMILY: Calibri" lang="FR"><img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/image008.jpg" border="0" height="413" width="349"><br><br></span><span style="LINE-HEIGHT: 115%; FONT-FAMILY: Calibri" lang="FR">Figure 5.</span><span style="FONT-SIZE: 11pt; LINE-HEIGHT: 115%; FONT-FAMILY: Calibri" lang="FR"><br><br></span>Once again, Pacmedi and I in the picture, that's it<br><br>Good Dotneting !!!</font> <p></p></font></div> <div class="clear"> </div> <div id="ctl00_DisplayExtensions1_divArticleExtension"> <div class="HeadingBold" style="padding: 0px;">
+Article Extensions</div> <div style="width: 100%; float: left;">
+Contents added by
+<a id="ctl00_DisplayExtensions1_RepeaterArticleExtensions_ctl00_HyperlinkUserName" class="LinkBlack" href="http://www.c-sharpcorner.com/authors/cac3ee/ahmet-askar.aspx">Ahmet Askar</a>
+on
+<span id="ctl00_DisplayExtensions1_RepeaterArticleExtensions_ctl00_LabelCreatedDate">Dec 01, 2010</span> </div> <div style="color: #333333; text-align: justify;">
+Thankss Baby
+</div> <div class="clear"> </div> <div class="GraySeparator" style="height: 1px; margin-top: 5px; margin-bottom: 5px;"> </div> <div style="width: 100%; float: left;">
+Contents added by
+<a id="ctl00_DisplayExtensions1_RepeaterArticleExtensions_ctl02_HyperlinkUserName" class="LinkBlack" href="http://www.c-sharpcorner.com/authors/umasanket/hitesh-patel.aspx">Hitesh Patel</a>
+on
+<span id="ctl00_DisplayExtensions1_RepeaterArticleExtensions_ctl02_LabelCreatedDate">Aug 19, 2009</span> </div> <div style="color: #333333; text-align: justify;"> </div> </div> <div class="clear"> </div> <div class="postHeader" style="height: 38px; background-color:#ffffff; border-color:#d3d3d3;"> <table style="height: 33px;" cellpadding="0" cellspacing="0" width="100%"> <tbody> <tr> <td style="vertical-align: top; width: 174px;"> <span class="post_CFooter">This Feature is Sponsored By</span> </td> <td style="vertical-align: middle; text-align: left;"> <a href="http://www.c-sharpcorner.com/AdRedirector.aspx?AdId=78&amp;target=http://www.nevron.com/Campaign?key=CSharpCorner_13_6_Chart_75x90&amp;url=http://www.nevron.com/" id="ctl00_PremiumSponsorFooterAd1_anchorSponsor" rel="nofollow" class="LinkNormalGray" style="font-size:12px;">.NET Charting component with full set of charting and gauge types</a> </td> </tr> </tbody> </table> </div> <div class="clear"> </div> <div id="ctl00_updatePanelArticleSlider"> <div class="slideBox"> <ul> <li id="ctl00_liPrevious" class="left"> <div class="userPic"> <a href="http://www.c-sharpcorner.com/authors/yougerthen/bechir-bejaoui.aspx" id="ctl00_AnchorPreviousAuthor"> <img id="ctl00_imgPreviousAuthor" title="Bechir Bejaoui" class="image50" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/yougerthen.jpg" style="border-width:0px;"></a><br> <input name="ctl00$ImageButtonPrevious" id="ctl00_ImageButtonPrevious" class="prev" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/prevBtn.gif" style="border-width:0px;" type="image"> </div> <div class="userDetail" contenteditable="inherit"> <p> <a id="ctl00_HyperlinkPrevious" class="LinkNormalGray" href="http://www.c-sharpcorner.com/uploadfile/yougerthen/create-dcom-application-from-within-net-environment-part-v/default.aspx">Create DCOM application from within .Net environment: Part V</a><br> </p><div id="ctl00_divPreviousTagLink"><span style="color:Black;" font-weight:bold;="">Tags: </span><a class="LinkNormalGrayLight" href="http://www.c-sharpcorner.com/tags/.Net">.Net</a>, <a class="LinkNormalGrayLight" href="http://www.c-sharpcorner.com/tags/COM-.Net">COM-.Net</a>, <a class="LinkNormalGrayLight" href="http://www.c-sharpcorner.com/tags/DCOM-.Net-interop">DCOM .Net interop</a>, <a class="LinkNormalGrayLight" href="http://www.c-sharpcorner.com/tags/Distributed-Component-Model">Distributed Component Model</a>, <a class="LinkNormalGrayLight" href="http://www.c-sharpcorner.com/tags/GUID">GUID</a></div> </div> </li> <li id="ctl00_liNext" class="right"> <div class="userDetail" style="float: left"> <p> <a id="ctl00_HyperlinkNext" class="LinkNormalGray" href="http://www.c-sharpcorner.com/uploadfile/yougerthen/catch-a-snapshot-via-your-webcam-using-C-Sharp-part-vii/default.aspx">Catch a Snapshot via your webcam using C#: Part VII</a><br> </p><div id="ctl00_divNextTagLink"><span style="color:Black;" font-weight:bold;="">Tags: </span><a class="LinkNormalGrayLight" href="http://www.c-sharpcorner.com/tags/API">API</a>, <a class="LinkNormalGrayLight" href="http://www.c-sharpcorner.com/tags/Csharp">C#</a>, <a class="LinkNormalGrayLight" href="http://www.c-sharpcorner.com/tags/snapshot">snapshot</a>, <a class="LinkNormalGrayLight" href="http://www.c-sharpcorner.com/tags/Web-Camera">Web Camera</a>, <a class="LinkNormalGrayLight" href="http://www.c-sharpcorner.com/tags/WIA">WIA</a>, <a class="LinkNormalGrayLight" href="http://www.c-sharpcorner.com/tags/WIA-COM">WIA COM</a></div> </div> <div class="userPic" style="float: right"> <a href="http://www.c-sharpcorner.com/authors/yougerthen/bechir-bejaoui.aspx" id="ctl00_AnchorNextAuthor"> <img id="ctl00_imgNextAuthor" title="Bechir Bejaoui" class="image50" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/yougerthen.jpg" style="border-width:0px;"> </a> <br> <input name="ctl00$ImageButtonNext" id="ctl00_ImageButtonNext" class="next" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/nextBtn.gif" style="border-width:0px;" type="image"> </div> </li> </ul> </div> </div> <div id="ctl00_RelatedArticles" class="relatedArticle"> <h3>
+Related Articles</h3> <ul> <li> <a id="ctl00_RepeaterSimilarArticles_ctl00_HyperLinkTitle" href="http://www.c-sharpcorner.com/uploadfile/hec.ravi/programmatically-create-a-web-part-page-with-a-web-part-in-sharepoint-2010/default.aspx">Programmatically Create a Web Part Page with a Web Part in Sharepoint 2010</a> </li> <li> <a id="ctl00_RepeaterSimilarArticles_ctl01_HyperLinkTitle" href="http://www.c-sharpcorner.com/UploadFile/40e97e/sharepoint-2010-web-parts/">SharePoint 2010 Web Parts</a> </li> <li> <a id="ctl00_RepeaterSimilarArticles_ctl02_HyperLinkTitle" href="http://www.c-sharpcorner.com/UploadFile/40e97e/sharepoint-2010-connected-web-parts/">SharePoint 2010 - Connected Web Parts</a> </li> <li> <a id="ctl00_RepeaterSimilarArticles_ctl03_HyperLinkTitle" href="http://www.c-sharpcorner.com/UploadFile/40e97e/sharepoint-2010-more-on-web-parts/">SharePoint 2010 - More on Web Parts</a> </li> <li> <a id="ctl00_RepeaterSimilarArticles_ctl04_HyperLinkTitle" href="http://www.c-sharpcorner.com/UploadFile/ajaiman/com-components-from-net-clients-using-VB-Net/">COM Components from .NET Clients using VB.NET</a> </li> <li> <a id="ctl00_RepeaterSimilarArticles_ctl05_HyperLinkTitle" href="http://www.c-sharpcorner.com/UploadFile/dbeniwal321/using-gdi-print-functionality/">Using GDI to Print in C#</a> </li> <li> <a id="ctl00_RepeaterSimilarArticles_ctl06_HyperLinkTitle" href="http://www.c-sharpcorner.com/uploadfile/hrojasara/word-2007-spellchecker-functionality-in-C-Sharp/default.aspx">Word 2007 Spellchecker Functionality in C#</a> </li> <li> <a id="ctl00_RepeaterSimilarArticles_ctl07_HyperLinkTitle" href="http://www.c-sharpcorner.com/UploadFile/a_anajwala/Building_WebParts.mht08042005042119AM/Building_WebParts.mht.aspx">Building WebParts in ASP .Net 2.0</a> </li> <li> <a id="ctl00_RepeaterSimilarArticles_ctl08_HyperLinkTitle" href="http://www.c-sharpcorner.com/UploadFile/kKhambete/ExceptioninSPSWebParts11142005071035AM/ExceptioninSPSWebParts.aspx">Publishing Exception in SPS Web Parts</a> </li> <li> <a id="ctl00_RepeaterSimilarArticles_ctl09_HyperLinkTitle" href="http://www.c-sharpcorner.com/UploadFile/munnamax/WbParts07062007124326PM/WbParts.aspx">ASP.Net User Control as Web Parts</a> </li> </ul> </div> <script src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/jquery_003.js" type="text/javascript"></script> <script>
+var Comments_article = (function () {
+var pageSize = 10;
+var rootClass = '.article ';
+return {
+//Get Comments
+GetComments: function (parent_id) {
+var pageNumber = $j('#HiddenPageNumber_article').val();
+var rootComments = $j(rootClass + '#RootComments');
+var items = 0;
+$j.ajax({
+type: "POST",
+contentType: "application/json; charset=utf-8",
+url: "/WebServices/Comments.asmx/GetComments",
+data: "{'id':'ff4fcbec-be17-45ee-9a84-556c5a2107a7','type':'article','pageNumber':'" + pageNumber + "', 'pageSize':'" + pageSize + "', 'parentId':" + parent_id + "}",
+beforeSend: function () {
+$j(rootClass + '#mainLoader').show();
+},
+success: function (data) {
+$j.each(data, function (index) {
+data[index].CommentId;
+rootComments.prepend(BuildComment(data[index])); //Prepend root comments
+if (pageNumber == 1 && index == 0) {
+$j(rootClass + '#TotalComments').text(data[index].TotalComments); //set total comments only once.
+$j('#spanComments').text($j(rootClass + '#TotalComments').text()); //Manages Header Comment Count
+}
+items = parseFloat(items) + 1; //track for number of comments to show
+ManageAlternateColor();
+});
+//Manage paging
+{
+items = (parseFloat(pageNumber) - 1) * parseFloat(pageSize) + parseFloat(items);
+if (items != 0) {
+$j(rootClass + '#CommentCount').text(items);
+}
+else {
+$j(rootClass + '#Paging').hide();
+}
+if (parseFloat(items) >= parseFloat($j(rootClass + '#TotalComments').text()) || items == 0)
+$j(rootClass + '#ViewPreviousComments').hide();
+else
+$j(rootClass + '#ViewPreviousComments').show();
+}
+$j(rootClass + '#mainLoader').hide();
+}
+});
+},
+//Like Comment
+LikeComment: function (id) {
+VerifyUser();
+var status;
+$j.ajax({
+url: "/Handlers/CommentsHandler.ashx?method=like_comment&id=" + id + "&type=article",
+type: "POST",
+async: false,
+beforeSend: function () {
+$j(rootClass + '#ajaxLoader_' + id).show(); //Show Ajax Loader
+},
+success: function (response) {
+status = response;
+$j(rootClass + '#ajaxLoader_' + id).hide(); //Hide Ajax Loader
+},
+Error: ShowError
+});
+if (status == '1') {
+var likes = $j(rootClass + '#Likes_' + id).text();
+$j(rootClass + '#Likes_' + id).text(parseFloat(likes) + 1);
+}
+else if (status == '2') {
+}
+},
+//Delete Comment
+DeleteComment: function (id, parent_id) {
+VerifyUser();
+var status;
+$j.ajax({
+url: "/Handlers/CommentsHandler.ashx?method=delte_comment&id=" + id + "&type=article",
+type: "POST",
+async: false,
+success: function (response) {
+status = response;
+},
+Error: ShowError
+});
+if (status == '1') {
+$j(rootClass + '#comment_' + id).remove();
+if (parent_id == 0) {
+if (ManageAlternateColor() == 0) {
+$j('#HiddenPageNumber_article').val('1');
+Comments_article.GetComments(0);
+}
+ManagePaging('d');
+}
+else {
+var replies = $j(rootClass + '#Replies_' + parent_id).text();
+$j(rootClass + '#Replies_' + parent_id).text(parseFloat(replies) - 1);
+}
+}
+},
+//Post Comment
+PostComment: function (parent_id, e) {
+if (e.keyCode == 13) {
+var rootComments = $j(rootClass + '#RootComments');
+var totalComments = $j(rootClass + '#TotalComments');
+var commentCount = $j(rootClass + '#CommentCount');
+var comment = FormatTextToInsert($j(rootClass + '#InputCommentText_' + parent_id).val());
+if (comment != '') {
+VerifyUser();
+$j.ajax({
+url: "/WebServices/Comments.asmx/InsertComment",
+data: "{'user_id':'','content_id':'ff4fcbec-be17-45ee-9a84-556c5a2107a7','type':'article','parent_id':'" + parent_id + "', 'description':'" + comment + "'}",
+type: "POST",
+contentType: "application/json; charset=utf-8",
+async: false,
+beforeSend: function () {
+$j(rootClass + '#PostLoader').show(); //Show Ajax Loader
+},
+success: function (response) {
+var data = response[0];
+rootComments.append(BuildComment(data));
+$j(rootClass + '#InputCommentText_' + parent_id).val('').trigger('autosize.resize');
+if (!(parseFloat(totalComments.text()) == parseFloat(commentCount.text()) && parseFloat($j('#HiddenPageNumber_article').val()) > 1))
+if (parseFloat(ManageAlternateColor()) > parseFloat(pageSize))
+rootComments.find('div').first().remove();
+ManagePaging('i');
+SendMail(comment, '0', data.ParentUserId);
+$j(rootClass + '#PostLoader').hide(); //Hide Ajax Loader
+PreventDefault(e);
+},
+Error: ShowError
+});
+}
+else { PreventDefault(e); }
+}
+},
+//Show Replies
+ShowReplies: function (id) {
+var element = $j(rootClass + '#CommentReplies_' + id);
+element.toggle();
+if (element.is(":visible") && element.html() == '') {
+var pageSize = 50;
+if ($j(rootClass + '#Replies_' + id).text() != '0') {
+$j.ajax({
+type: "POST",
+contentType: "application/json; charset=utf-8",
+url: "/WebServices/Comments.asmx/GetComments",
+data: "{'id':'ff4fcbec-be17-45ee-9a84-556c5a2107a7','type':'article','pageNumber':'1', 'pageSize':'" + pageSize + "', 'parentId':" + id + "}",
+beforeSend: function () {
+$j(rootClass + '#ajaxLoader_' + id).show(); //Show Ajax Loader
+},
+success: function (data) {
+$j.each(data, function (index) {
+data[index].CommentId;
+element.prepend(BulildCommentReply(data[index])); //Prepend root comments
+});
+$j(rootClass + '#ajaxLoader_' + id).hide(); //Hide Ajax Loader
+}
+});
+}
+if ('True' == 'True') {
+var postReply = '<div id="ReplyContainer_' + id + '" class="ReplyComment borderNone" style="padding-bottom:0px; width:614px;">\
+<div class="image level1"><img src="http://www.c-sharpcorner.com/UploadFile/AuthorImage/DefaultAuthorImage.gif" alt=""></div>\
+<div class="commentcontent">\
+<textarea id="ReplyComment_' + id + '" onkeypress="Comments_article.PostCommentReply(' + id + ',event);" class="inputText"  onfocus="if(this.value==this.defaultValue)this.value=\'\';" onblur="if(this.value==\'\')this.value=this.defaultValue;" style="width:97%; height:14px; font-size:12px; font-family:Calibri;" spellcheck="true" > Type your comment here and press Enter Key.... </textarea>\
+</div>\
+<img id="PostLoader_' + id + '" src="/Images/csharp/ajax-loader_12x9.gif"\
+style="margin: 5px 7px 0px 0px; clear:both; float:right; display:none;" />\
+</div>';
+element.append(postReply);
+$j(rootClass + 'textarea#ReplyComment_' + id).autosize();
+}
+}
+if ('True' == 'True') {
+$j(rootClass + '#ReplyComment_' + id).focus();
+}
+},
+//Post Comment Reply
+PostCommentReply: function (parent_id, e) {
+if (e.keyCode == 13) {
+var replyContainer = $j(rootClass + '#ReplyContainer_' + parent_id);
+var comment = FormatTextToInsert($j(rootClass + '#ReplyComment_' + parent_id).val());
+if (comment != '') {
+VerifyUser();
+$j.ajax({
+url: "/WebServices/Comments.asmx/InsertComment",
+data: "{'user_id':'','content_id':'ff4fcbec-be17-45ee-9a84-556c5a2107a7','type':'article','parent_id':'" + parent_id + "', 'description':'" + comment + "'}",
+type: "POST",
+contentType: "application/json; charset=utf-8",
+async: false,
+beforeSend: function () {
+$j(rootClass + '#PostLoader_' + parent_id).show(); //Show Ajax Loader
+},
+success: function (response) {
+var data = response[0];
+replyContainer.before(BulildCommentReply(data));
+$j(rootClass + '#ReplyComment_' + parent_id).val('').trigger('autosize.resize');
+var replies = $j(rootClass + '#Replies_' + parent_id).text();
+$j(rootClass + '#Replies_' + parent_id).text(parseFloat(replies) + 1);
+SendMail(comment, '1', data.ParentUserId); //SendMail(comment, is_child_comment, parent_user_id)
+$j(rootClass + '#PostLoader_' + parent_id).hide(); //Hide Ajax Loader
+PreventDefault(e);
+},
+Error: ShowError
+});
+}
+else { PreventDefault(e); }
+}
+},
+//Show Edit Panel
+ShowEditView: function (commentId) {
+var content = $j(rootClass + '#comment_' + commentId + ' .commentcontent div:eq(0)');
+var editButton = $j(rootClass + '#comment_' + commentId + ' div:eq(0) img:eq(0)');
+var editView = '<textarea id="CommentToEdit_' + commentId + '" onkeypress="Comments_article.EditComment(' + commentId + ',event);" class="inputText" style="width:95%;  height:16px; font-size:12px; margin: 5px 0px;" spellcheck="true"  ></textarea>\
+<img id="ajaxLoaderEdit_' + commentId + '" src=\'/Images/csharp/ajax-loader_12x9.gif\' style="margin:4px 0px 0px 5px; display:none;" />';
+editButton.hide();
+content.after(editView);
+$j(rootClass + '#CommentToEdit_' + commentId).val(content.text());
+$j(rootClass + '#CommentToEdit_' + commentId).focus();
+content.hide();
+$j(rootClass + 'textarea#CommentToEdit_' + commentId).autosize();
+},
+//Edit Comment
+EditComment: function (commentId, e) {
+if (e.keyCode == 13) {
+var content = $j(rootClass + '#comment_' + commentId + ' .commentcontent div:eq(0)');
+var textBox = $j(rootClass + '#CommentToEdit_' + commentId);
+textBox.val(textBox.val().replace('\n', ''));
+var comment = $j(rootClass + '#CommentToEdit_' + commentId).val().trim();
+if (comment == content.text() || comment == '') {
+RemoveEditView(commentId);
+PreventDefault(e);
+}
+else {
+VerifyUser();
+var status;
+$j.ajax({
+url: "/Handlers/CommentsHandler.ashx?method=edit_comment&id=" + commentId + "&type=article",
+type: "POST",
+async: false,
+data: { description: FormatTextToInsert(comment) },
+beforeSend: function () {
+$j(rootClass + '#ajaxLoaderEdit_' + commentId).show(); //Show Ajax Loader
+},
+success: function (response) {
+status = response;
+PreventDefault(e);
+},
+Error: ShowError
+});
+if (status == '1') {
+content.text(comment);
+RemoveEditView(commentId);
+}
+}
+}
+else if (e.keyCode == 27) {
+RemoveEditView(commentId);
+}
+},
+//View Previous Comments
+ViewPreviousComments: function () {
+var pageNumber = $j('#HiddenPageNumber_article').val();
+var totalComment = $j(rootClass + '#TotalComments').text();
+if (parseFloat(totalComment) > (parseFloat(pageNumber) * pageSize)) {
+$j('#HiddenPageNumber_article').val(parseFloat(pageNumber) + 1);
+}
+else {
+$j(rootClass + '#RootComments').text('');
+$j('#HiddenPageNumber_article').val('1');
+}
+Comments_article.GetComments(0);
+}
+}// End of return
+function PreventDefault(e)//Function to prevent Default Events. Working in IE8
+{
+if (e.preventDefault)
+e.preventDefault();
+else
+e.returnValue = false;
+}
+function BuildComment(obj) {
+var authorUrl = obj.AuthorUrl;
+var commentHtml;
+commentHtml = '<div id="comment_' + obj.CommentId + '" class="pulsecomment">';
+if ('' == obj.UserId || '' == 'E' || '' == 'A') {
+commentHtml += '<div class="pulseDelete">';
+commentHtml += '<img onclick="Comments_article.ShowEditView(' + obj.CommentId + ')" alt="" src="/images/csharp/EditIcon.png" style="margin-right:10px;" title="Edit">';
+if ('' == obj.UserId || '' == 'A')
+commentHtml += '<img onclick="Comments_article.DeleteComment(' + obj.CommentId + ',' + obj.ParentId + ')" alt="" src="/images/csharp/pulseCommentDelete.png" title="Delete">';
+commentHtml += '</div>';
+}
+commentHtml += '<div class="image level0"><a href="' + authorUrl + '"><img alt="" src="' + obj.PhotoUrl + '" /></a></div>';
+commentHtml += '<div class="commentcontent">'; //Start of CommentContent div
+commentHtml += '<a class="LinkNormalBlue" href="' + authorUrl + '">' + obj.FullName + '</a>';
+commentHtml += '<div>' + unescape(obj.Description) + '</div>';
+commentHtml += '<div>';
+commentHtml += '<span class="floatRight"  style="font-size: 11px;"><span class="watchICon"></span>' + obj.CreatedDate + '</span>';
+commentHtml += '<a class="commnetLinkSecondStep" onclick="Comments_article.LikeComment(' + obj.CommentId + ')"><span id="Likes_' + obj.CommentId + '">' + obj.Likes + '</span> Like</a><a class="commnetLinkSecondStep" onclick="Comments_article.ShowReplies(' + obj.CommentId + ')"><span id="Replies_' + obj.CommentId + '">' + obj.Replies + '</span> Reply</a>';
+commentHtml += '<img id="ajaxLoader_' + obj.CommentId + '" src=\'/Images/csharp/ajax-loader_12x9.gif\' style="margin:4px 0px 0px 5px; display:none;" />';
+commentHtml += '</div>';
+commentHtml += '<div class="clear"></div>';
+commentHtml += '<div id="CommentReplies_' + obj.CommentId + '" style="display:none;"></div>'; //This div contains child comments
+commentHtml += '</div>'; //End of CommentContent div
+commentHtml += '</div>';
+return commentHtml;
+}
+function BulildCommentReply(obj) {
+var authorUrl = obj.AuthorUrl;
+var commentHtml = '<div id="comment_' + obj.CommentId + '" class="ReplyComment" style="width:612px;">';
+if ('' == obj.UserId || '' == 'E' || '' == 'A') {
+commentHtml += '<div class="pulseDeleteReply">';
+commentHtml += '<img onclick="Comments_article.ShowEditView(' + obj.CommentId + ')" src="/images/csharp/EditIcon.png" alt="" style="margin-right:10px;" title="Edit">';
+if ('' == obj.UserId || '' == 'A')
+commentHtml += '<img onclick="Comments_article.DeleteComment(' + obj.CommentId + ',' + obj.ParentId + ')" src="/images/csharp/pulseCommentDelete.png" alt="" title="Delete">';
+commentHtml += '</div>';
+}
+commentHtml += '<div class="image level1"><a href="' + authorUrl + '"><img src="' + obj.PhotoUrl + '" alt="" /></a></div>\
+<div class="commentcontent"><a href="' + authorUrl + '" class="LinkNormalBlue">' + obj.FullName + '</a>\
+<div>' + unescape(obj.Description) + '</div>\
+<div><span class="floatRight"  style="font-size: 11px;"><span class="watchICon"></span>' + obj.CreatedDate + '</span><a onclick="Comments_article.LikeComment(' + obj.CommentId + ')" class="commnetLinkSecondStep"> <span id="Likes_' + obj.CommentId + '">' + obj.Likes + '</span> Like</a>\
+<img id="ajaxLoader_' + obj.CommentId + '" src=\'/Images/csharp/ajax-loader_12x9.gif\' style="margin:4px 0px 0px 5px; display:none;" />\
+</div>\
+</div>\
+</div>';
+return commentHtml;
+}
+function ManageAlternateColor() {
+var count = 0;
+$j(rootClass + '#RootComments > div').each(function () {
+$j('#' + this.id).removeClass("BackgroundWhite");
+if (count % 2 != 0)
+$j('#' + this.id).addClass("BackgroundWhite");
+count = count + 1;
+});
+return count;
+}
+function FormatTextToInsert(text) {
+return escape(($j.trim(text)).replace('<', '&lt;').replace('>', '&gt;').replace('/', '&#47;').replace('"', '&quot;').replace('\n', ''));
+}
+function SendMail(comment, is_child_comment, parent_user_id) {
+$j('#ctl00_Comments1_HiddenFieldEmailComment').val(unescape(comment));
+$j('#ctl00_Comments1_HiddenFieldIsChildComment').val(is_child_comment);
+$j('#ctl00_Comments1_HiddenFieldParentUserId').val(parent_user_id);
+$j('#ctl00_Comments1_ButtonSendEmail').click();
+}
+function VerifyUser() {
+var data;
+$j.ajax({
+url: "/Handlers/CommentsHandler.ashx?method=current_user",
+type: "GET",
+async: false,
+success: function (response) {
+data = $j.parseJSON(response)[0].user_name;
+}
+});
+if (data == null || data == '') {
+var url = 'http://www.c-sharpcorner.com/UserRegistration/Logincheck.aspx?ReturnURL=/uploadfile/yougerthen/integrate-the-web-webcam-functionality-using-C-Sharp-net-and-com-part-viii/Default.aspx';
+window.location = url;
+}
+}
+function ManagePaging(action) {
+var totalComments = $j(rootClass + '#TotalComments');
+var commentCount = $j(rootClass + '#CommentCount');
+var previousComments = $j(rootClass + '#ViewPreviousComments');
+var total_comments = $j.trim(totalComments.text());
+switch (action) {
+case 'i': //increase
+if (total_comments == '') {
+totalComments.text('1');
+commentCount.text('1');
+}
+else {
+if (parseFloat(commentCount.text()) < pageSize || (parseFloat(totalComments.text()) == parseFloat(commentCount.text()) && parseFloat($j('#HiddenPageNumber_article').val()) > 1))
+commentCount.text(parseFloat(commentCount.text()) + 1);
+totalComments.text(parseFloat(total_comments) + 1);
+}
+$j(rootClass + '#Paging').show();
+if (parseFloat(totalComments.text()) > pageSize && parseFloat($j('#HiddenPageNumber_article').val()) == 1) {
+previousComments.show();
+}
+else if (parseFloat(totalComments.text()) == parseFloat(commentCount.text()))
+previousComments.hide();
+break;
+case 'd': //decrease
+if (parseFloat(total_comments) <= 0) {
+totalComments.text('');
+commentCount.text('');
+$j(rootClass + '#Paging').hide();
+}
+else {
+totalComments.text(parseFloat(total_comments) - 1);
+commentCount.text(parseFloat(commentCount.text()) - 1);
+}
+break;
+}
+$j('#spanComments').text($j(rootClass + '#TotalComments').text()); //Manages Header Comment Count
+}
+function RemoveEditView(commentId) {
+var content = $j(rootClass + '#comment_' + commentId + ' .commentcontent div:eq(0)');
+var editButton = $j(rootClass + '#comment_' + commentId + ' div:eq(0) img:eq(0)');
+var textBox = $j(rootClass + '#CommentToEdit_' + commentId);
+var ajaxLoader = $j(rootClass + '#ajaxLoaderEdit_' + commentId);
+editButton.show();
+textBox.val('');
+textBox.remove();
+ajaxLoader.remove();
+content.show();
+}
+function ShowError() {
+alert('There is some error processing your request');
+}
+}());
+$j(document).ready(function () {
+$j.ajaxSetup({ cache: false });
+if ('True' == 'False') {
+$j('#RootPostComment').remove();
+}
+Comments_article.GetComments(0);
+$j('.pulseMainComment textarea').autosize();
+});
+</script> <div class="clear"> </div> <div style="position: relative;" class="article"> <a name="ReadAndPostComment"></a> <div class="postHeader"> <span class="post_C">comments</span> <img id="mainLoader" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ajax-loader_12x9.gif" style="position: absolute; left: 315px; top: 26px; display: none;"> <div id="Paging" style="position: absolute; right: 1px; top: 16px;"> <div style="background: #f3f3f3; height: 15px; padding: 7px; float: right;"> <label id="TotalComments" class="floatRight" style="margin-right: 3px;">61</label> <label class="floatRight" style="margin-right: 3px;">
+of
+</label> <label id="CommentCount" class="floatRight" style="margin-right: 3px;">10</label> <input id="HiddenPageNumber_article" value="1" type="hidden"> </div> <a id="ViewPreviousComments" class="previousComments" style="margin-right: 10px; margin-top: 7px; float: right;" onclick="Comments_article.ViewPreviousComments();return false;">
+View Previous Comments &gt;&gt;</a> </div> </div> <div class="clear"> </div> <div id="ctl00_Comments1_Panel1" class="pulseMainComment" onkeypress="javascript:return WebForm_FireDefaultButton(event, 'ctl00_Comments1_Button1')"> <div class="pulseCommentSectionMain" style="padding: 0px;"> <div class="pulseCommentSection"> <div id="RootComments"><div id="comment_28576" class="pulsecomment"><div class="image level0"><a href="http://www.c-sharpcorner.com/authors/k_a_lakshmanaku/lakshmanakumar-krishnasamy.aspx"><img alt="" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/DefaultAuthorImage.gif"></a></div><div class="commentcontent"><a class="LinkNormalBlue" href="http://www.c-sharpcorner.com/authors/k_a_lakshmanaku/lakshmanakumar-krishnasamy.aspx">Lakshmanakumar Krishnasamy</a><div>when
+ i activate a webcam first time working but second time it's not 
+working.it will show "select video devices".each and every time we want 
+to restart then only it's work otherwise shows error"select video 
+devices" how can i clear it please help me</div><div><span class="floatRight" style="font-size: 11px;"><span class="watchICon"></span>Jun 26, 2012</span><a class="commnetLinkSecondStep" onclick="Comments_article.LikeComment(28576)"><span id="Likes_28576">0</span> Like</a><a class="commnetLinkSecondStep" onclick="Comments_article.ShowReplies(28576)"><span id="Replies_28576">0</span> Reply</a><img id="ajaxLoader_28576" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ajax-loader_12x9.gif" style="margin:4px 0px 0px 5px; display:none;"></div><div class="clear"></div><div id="CommentReplies_28576" style="display:none;"></div></div></div><div id="comment_31375" class="pulsecomment BackgroundWhite"><div class="image level0"><a href="http://www.c-sharpcorner.com/authors/7c0908/justin-darmanovich.aspx"><img alt="" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/DefaultAuthorImage.gif"></a></div><div class="commentcontent"><a class="LinkNormalBlue" href="http://www.c-sharpcorner.com/authors/7c0908/justin-darmanovich.aspx">Justin Darmanovich</a><div>Hey,
+ when i use the code and select an integrated webcam the deviceindex 
+stays zero. I am using a dell e6520 latitude. any information would help
+</div><div><span class="floatRight" style="font-size: 11px;"><span class="watchICon"></span>Oct 24, 2012</span><a class="commnetLinkSecondStep" onclick="Comments_article.LikeComment(31375)"><span id="Likes_31375">0</span> Like</a><a class="commnetLinkSecondStep" onclick="Comments_article.ShowReplies(31375)"><span id="Replies_31375">0</span> Reply</a><img id="ajaxLoader_31375" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ajax-loader_12x9.gif" style="margin:4px 0px 0px 5px; display:none;"></div><div class="clear"></div><div id="CommentReplies_31375" style="display:none;"></div></div></div><div id="comment_32559" class="pulsecomment"><div class="image level0"><a href="http://www.c-sharpcorner.com/authors/7c3759/ashish-rathod.aspx"><img alt="" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/DefaultAuthorImage.gif"></a></div><div class="commentcontent"><a class="LinkNormalBlue" href="http://www.c-sharpcorner.com/authors/7c3759/ashish-rathod.aspx">ashish rathod</a><div>Please any other web application related example for webcam image capture and store into database.</div><div><span class="floatRight" style="font-size: 11px;"><span class="watchICon"></span>Dec 15, 2012</span><a class="commnetLinkSecondStep" onclick="Comments_article.LikeComment(32559)"><span id="Likes_32559">0</span> Like</a><a class="commnetLinkSecondStep" onclick="Comments_article.ShowReplies(32559)"><span id="Replies_32559">0</span> Reply</a><img id="ajaxLoader_32559" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ajax-loader_12x9.gif" style="margin:4px 0px 0px 5px; display:none;"></div><div class="clear"></div><div id="CommentReplies_32559" style="display:none;"></div></div></div><div id="comment_32738" class="pulsecomment BackgroundWhite"><div class="image level0"><a href="http://www.c-sharpcorner.com/authors/sabyasachi123/ss-mohanty.aspx"><img alt="" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/DefaultAuthorImage.gif"></a></div><div class="commentcontent"><a class="LinkNormalBlue" href="http://www.c-sharpcorner.com/authors/sabyasachi123/ss-mohanty.aspx">ss mohanty</a><div>how to get the names of the webcam devices</div><div><span class="floatRight" style="font-size: 11px;"><span class="watchICon"></span>Dec 24, 2012</span><a class="commnetLinkSecondStep" onclick="Comments_article.LikeComment(32738)"><span id="Likes_32738">0</span> Like</a><a class="commnetLinkSecondStep" onclick="Comments_article.ShowReplies(32738)"><span id="Replies_32738">0</span> Reply</a><img id="ajaxLoader_32738" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ajax-loader_12x9.gif" style="margin:4px 0px 0px 5px; display:none;"></div><div class="clear"></div><div id="CommentReplies_32738" style="display:none;"></div></div></div><div id="comment_32739" class="pulsecomment"><div class="image level0"><a href="http://www.c-sharpcorner.com/authors/sabyasachi123/ss-mohanty.aspx"><img alt="" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/DefaultAuthorImage.gif"></a></div><div class="commentcontent"><a class="LinkNormalBlue" href="http://www.c-sharpcorner.com/authors/sabyasachi123/ss-mohanty.aspx">ss mohanty</a><div>
+how to get the names of the webcam devices to fill in the combobox or listbox
+</div><div><span class="floatRight" style="font-size: 11px;"><span class="watchICon"></span>Dec 24, 2012</span><a class="commnetLinkSecondStep" onclick="Comments_article.LikeComment(32739)"><span id="Likes_32739">0</span> Like</a><a class="commnetLinkSecondStep" onclick="Comments_article.ShowReplies(32739)"><span id="Replies_32739">0</span> Reply</a><img id="ajaxLoader_32739" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ajax-loader_12x9.gif" style="margin:4px 0px 0px 5px; display:none;"></div><div class="clear"></div><div id="CommentReplies_32739" style="display:none;"></div></div></div><div id="comment_33329" class="pulsecomment BackgroundWhite"><div class="image level0"><a href="http://www.c-sharpcorner.com/authors/apprabhu/prabhu-karthik.aspx"><img alt="" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/DefaultAuthorImage.gif"></a></div><div class="commentcontent"><a class="LinkNormalBlue" href="http://www.c-sharpcorner.com/authors/apprabhu/prabhu-karthik.aspx">Prabhu Karthik</a><div>Hi I'm also facing the same problem as Lakshamkumar, anyone knows the solution..</div><div><span class="floatRight" style="font-size: 11px;"><span class="watchICon"></span>Jan 23, 2013</span><a class="commnetLinkSecondStep" onclick="Comments_article.LikeComment(33329)"><span id="Likes_33329">0</span> Like</a><a class="commnetLinkSecondStep" onclick="Comments_article.ShowReplies(33329)"><span id="Replies_33329">0</span> Reply</a><img id="ajaxLoader_33329" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ajax-loader_12x9.gif" style="margin:4px 0px 0px 5px; display:none;"></div><div class="clear"></div><div id="CommentReplies_33329" style="display:none;"></div></div></div><div id="comment_37625" class="pulsecomment"><div class="image level0"><a href="http://www.c-sharpcorner.com/authors/ed3523/jirattawut-domrong.aspx"><img alt="" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/DefaultAuthorImage.gif"></a></div><div class="commentcontent"><a class="LinkNormalBlue" href="http://www.c-sharpcorner.com/authors/ed3523/jirattawut-domrong.aspx">jirattawut Domrong</a><div>Can you help me?</div><div><span class="floatRight" style="font-size: 11px;"><span class="watchICon"></span>Jul 09, 2013</span><a class="commnetLinkSecondStep" onclick="Comments_article.LikeComment(37625)"><span id="Likes_37625">0</span> Like</a><a class="commnetLinkSecondStep" onclick="Comments_article.ShowReplies(37625)"><span id="Replies_37625">0</span> Reply</a><img id="ajaxLoader_37625" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ajax-loader_12x9.gif" style="margin:4px 0px 0px 5px; display:none;"></div><div class="clear"></div><div id="CommentReplies_37625" style="display:none;"></div></div></div><div id="comment_37626" class="pulsecomment BackgroundWhite"><div class="image level0"><a href="http://www.c-sharpcorner.com/authors/ed3523/jirattawut-domrong.aspx"><img alt="" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/DefaultAuthorImage.gif"></a></div><div class="commentcontent"><a class="LinkNormalBlue" href="http://www.c-sharpcorner.com/authors/ed3523/jirattawut-domrong.aspx">jirattawut Domrong</a><div>I want to use picture on each Frame from webcam</div><div><span class="floatRight" style="font-size: 11px;"><span class="watchICon"></span>Jul 09, 2013</span><a class="commnetLinkSecondStep" onclick="Comments_article.LikeComment(37626)"><span id="Likes_37626">0</span> Like</a><a class="commnetLinkSecondStep" onclick="Comments_article.ShowReplies(37626)"><span id="Replies_37626">0</span> Reply</a><img id="ajaxLoader_37626" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ajax-loader_12x9.gif" style="margin:4px 0px 0px 5px; display:none;"></div><div class="clear"></div><div id="CommentReplies_37626" style="display:none;"></div></div></div><div id="comment_37825" class="pulsecomment"><div class="image level0"><a href="http://www.c-sharpcorner.com/authors/d406a8/deepak-sharma.aspx"><img alt="" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/DefaultAuthorImage.gif"></a></div><div class="commentcontent"><a class="LinkNormalBlue" href="http://www.c-sharpcorner.com/authors/d406a8/deepak-sharma.aspx">Deepak Sharma</a><div>it runs only onetimes and after execute it shows error...</div><div><span class="floatRight" style="font-size: 11px;"><span class="watchICon"></span>Jul 18, 2013</span><a class="commnetLinkSecondStep" onclick="Comments_article.LikeComment(37825)"><span id="Likes_37825">0</span> Like</a><a class="commnetLinkSecondStep" onclick="Comments_article.ShowReplies(37825)"><span id="Replies_37825">0</span> Reply</a><img id="ajaxLoader_37825" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ajax-loader_12x9.gif" style="margin:4px 0px 0px 5px; display:none;"></div><div class="clear"></div><div id="CommentReplies_37825" style="display:none;"></div></div></div><div id="comment_37831" class="pulsecomment BackgroundWhite"><div class="image level0"><a href="http://www.c-sharpcorner.com/authors/d406a8/deepak-sharma.aspx"><img alt="" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/DefaultAuthorImage.gif"></a></div><div class="commentcontent"><a class="LinkNormalBlue" href="http://www.c-sharpcorner.com/authors/d406a8/deepak-sharma.aspx">Deepak Sharma</a><div>how to hide select a device form ? plz tell me urgently....</div><div><span class="floatRight" style="font-size: 11px;"><span class="watchICon"></span>Jul 18, 2013</span><a class="commnetLinkSecondStep" onclick="Comments_article.LikeComment(37831)"><span id="Likes_37831">0</span> Like</a><a class="commnetLinkSecondStep" onclick="Comments_article.ShowReplies(37831)"><span id="Replies_37831">0</span> Reply</a><img id="ajaxLoader_37831" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ajax-loader_12x9.gif" style="margin:4px 0px 0px 5px; display:none;"></div><div class="clear"></div><div id="CommentReplies_37831" style="display:none;"></div></div></div> </div> <div class="pulsecomment borderNone" id="RootPostComment"> <div class="image level0"> <img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/DefaultAuthorImage.gif" alt=""> </div> <div id="ctl00_Comments1_PanelPostComment" class="commentcontent" onkeypress="javascript:return WebForm_FireDefaultButton(event, 'ctl00_Comments1_ButtonPost')"> <textarea id="InputCommentText_0" onkeypress="Comments_article.PostComment('0',event);" class="inputText" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;" style="width: 97%; font-size: 12px; height: 14px; font-family: Calibri; overflow: hidden; word-wrap: break-word; resize: none;" spellcheck="true"> Type your comment here and press Enter Key.... </textarea> <input name="ctl00$Comments1$ButtonPost" value="" id="ctl00_Comments1_ButtonPost" style="display: none;" type="submit"> </div> <img id="PostLoader" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/ajax-loader_12x9.gif" style="clear: both; margin: 10px 5px 0px 0px; float: right; display: none;"> </div> </div> </div> <input name="ctl00$Comments1$Button1" value="" onclick="return false;" id="ctl00_Comments1_Button1" style="display: none;" type="submit"> <div id="ctl00_Comments1_UpdatePanelEmail"> <input name="ctl00$Comments1$HiddenFieldEmailComment" id="ctl00_Comments1_HiddenFieldEmailComment" type="hidden"> <input name="ctl00$Comments1$HiddenFieldIsChildComment" id="ctl00_Comments1_HiddenFieldIsChildComment" type="hidden"> <input name="ctl00$Comments1$HiddenFieldParentUserId" id="ctl00_Comments1_HiddenFieldParentUserId" type="hidden"> <input name="ctl00$Comments1$ButtonSendEmail" value="" id="ctl00_Comments1_ButtonSendEmail" style="display: none;" type="submit"> </div> </div> <div class="clear"> </div> <div id="ctl00_Comments1_SocialComments"> <div class="headerGray marginTop"> <span class="HeaderSpanFirstBlue"></span><span class="HeaderSpanSecond">COMMENT USING
+</span> <img style="margin: 3px 0px 0px 18px;" alt="" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/facebook_Icon.png"> </div> <div fb-xfbml-state="rendered" class="fb-comments fb_iframe_widget" data-href="http://www.c-sharpcorner.com/uploadfile/yougerthen/integrate-the-web-webcam-functionality-using-C-Sharp-net-and-com-part-viii/Default.aspx" data-width="675" data-num-posts="5"><span style="height: 572px; width: 675px;"><iframe src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/comments.htm" class="fb_ltr" title="Facebook Social Plugin" style="border: medium none; overflow: hidden; height: 572px; width: 675px;" name="f3c727867fb324e" id="f3df8230069596e" scrolling="no"></iframe></span></div> </div> </div> </div> <div class="rightCntr"> <div class="clear"> </div> <div class="outerBox"> <div class="headerGray"> <span class="HeaderSpanFirstBlue"></span><span class="HeaderSpanSecond">PREMIUM SPONSORS</span> <span style="margin-left: 71px; margin-top: 1px; margin-right: 0px;"></span><span style="float: right; margin-top: 3px; margin-right: 5px;"></span> </div> <div style="width: 336px; color: #e4e4e4; margin-bottom: 5px;"> <div style="width: 326px; height: auto; position: relative; float: left; margin-left: 10px;"> <div style="position: relative; float: left; top: 0px; left: 0px; width: 100px; height: 110px;
+margin-top: 8px;"> <a id="ctl00_PremiumSponsors1_LogoUrl" href="http://www.nevron.com/Campaign?key=CSharpCorner_13_6_Chart_75x90&amp;url=http://www.nevron.com/" target="_blank"><img id="ctl00_PremiumSponsors1_Logo" class="image90" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/072150AM.jpg" style="border-width:0px;padding: 5px; border-width: 1px;"></a> </div> <div style="position: relative; margin-left: 5px; float: left; top: 0px; right: 0px;
+width: 221px; height: auto;"> <div style="margin-top: 5px; margin-left: 5px;"> <a id="ctl00_PremiumSponsors1_Name" class="MemberoftheMonth" href="http://www.nevron.com/Campaign?key=CSharpCorner_13_6_Chart_75x90&amp;url=http://www.nevron.com/" target="_blank">Nevron</a> </div> <div style="width: 215px; height: 1px; background-color: #d7d7d7; margin-top: 5px;
+margin-left: 5px; margin-bottom: 5px;"> </div> <div id="ctl00_PremiumSponsors1_Description" style="width: 215px; margin-top: 5px; margin-left: 5px;
+color: #787878;">Nevron Software is a global leader in component based 
+data visualization technology for a diverse range of Microsoft centric 
+platforms. Nevron Data Visualization components are used by many 
+companies, educational and government organizations around the world.</div> </div> </div> </div> </div> <div class="clear"> </div> <div style="width: 336px; margin-bottom: 10px;"> <span id="ctl00_RightBar_ArticleDetailRightBar1_NewsArticleAd1_LabelArticleScript"><script language="JavaScript"> <!-- hide from non-JavaScript browsers
+var axel = Math.random() + "";
+var num = axel * 1000000000000000000;
+document.write('<IFRAME SRC="http://ad.doubleclick.net/adi/N5621.124662.7163663382421/B7978417.105809675;sz=300x250;click=;ord='+ num +'?" WIDTH=300 HEIGHT=250 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no BORDERCOLOR="#000000">');
+document.write('<SCR'+'IPT language="JavaScript1.1" SRC="http://ad.doubleclick.net/adj/N5621.124662.7163663382421/B7247196;abr=!ie;sz=300x250;click=;ord='+ num +'?"></SCR'+'IPT></IFRAME>');
+// end hide from browsers --> </script><iframe src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/B7978417.htm" marginwidth="0" marginheight="0" hspace="0" vspace="0" bordercolor="#000000" frameborder="0" height="250" scrolling="no" width="300">&lt;SCRIPT
+ language="JavaScript1.1" 
+SRC="http://ad.doubleclick.net/adj/N5621.124662.7163663382421/B7247196;abr=!ie;sz=300x250;click=;ord=560302480526812400?"&gt;&lt;/SCRIPT&gt;</iframe> <noscript> <A HREF="http://ad.doubleclick.net/jump/N5621.124662.7163663382421/B7978417.105809675;abr=!ie4;abr=!ie5;sz=300x250;ord=[timestamp]?"> <IMG SRC="http://ad.doubleclick.net/ad/N5621.124662.7163663382421/B7978417.105809675;abr=!ie4;abr=!ie5;sz=300x250;ord=[timestamp]?" BORDER=0 WIDTH=300 HEIGHT=250 ALT="Advertisement"></A> </noscript></span> </div> <div class="outerBox"> <div class="headerGray"> <span class="HeaderSpanFirstBlue"></span><span class="HeaderSpanSecond">TRENDING UP</span> <span id="ctl00_RightBar_ArticleDetailRightBar1_TrendingUp1_OnOffEnabledImageButton"></span><a href="http://www.c-sharpcorner.com/RSS/TopArticles.aspx" id="ctl00_RightBar_ArticleDetailRightBar1_TrendingUp1_RssEnabledImageButton" class="headerRss"></a> </div> <ul class="treading"> <li> <a href="http://www.c-sharpcorner.com/UploadFile/ankurmalik123/C-Sharp-coding-standards/" class="LinkNormalStyle">
+C# Coding Standards</a> <a href="http://www.c-sharpcorner.com/UploadFile/84c85b/must-know-sql-functions-for-all-net-developers/" class="LinkNormalStyle">
+Must-Know SQL Functions For All .NET Developers</a> <a href="http://www.c-sharpcorner.com/UploadFile/4ccaab/a-beginners-guide-to-scrum/" class="LinkNormalStyle">
+A Beginner's Guide to Scrum</a> <a href="http://www.c-sharpcorner.com/UploadFile/4aac15/using-flickr-data-source-in-windows-phone-app-studio/" class="LinkNormalStyle">
+Using Flickr Data Source in Windows Phone App Studio</a> <a href="http://www.c-sharpcorner.com/UploadFile/4aac15/introduction-to-windows-phone-app-studio/" class="LinkNormalStyle">
+Introduction to Windows Phone App Studio</a> <a href="http://www.c-sharpcorner.com/UploadFile/4aac15/working-with-html-data-source-in-windows-phone-app-studio/" class="LinkNormalStyle">
+Working With HTML Data Source in Windows Phone App Studio</a> <a href="http://www.c-sharpcorner.com/UploadFile/mahesh/most-popular-programming-language/" class="LinkNormalStyle">
+Most Popular Programming Language</a> <a href="http://www.c-sharpcorner.com/UploadFile/4aac15/creating-youtube-based-application-using-windows-phone-app-s/" class="LinkNormalStyle">
+Creating YouTube Based Application Using Windows Phone App Studio</a> <a href="http://www.c-sharpcorner.com/UploadFile/1492b1/complete-crud-operations-in-mvc-4-using-entity-framework-5-w/" class="LinkNormalStyle">
+Complete CRUD Operations in MVC 4 Using Entity Framework 5 Without Writing Code</a> <a href="http://www.c-sharpcorner.com/UploadFile/1492b1/learning-knockout-part-1-introduction-to-knockout-js-and-cr/" class="LinkNormalStyle">
+Introduction to Knockout.js and CRUD Operations in ASP.Net Web Forms Using Knockout.JS</a> </li> </ul> <div class="FooterLineForArticlesJobs"> <div style="padding-top: 10px;"> <span style="margin-left: 3px;"> <a id="ctl00_RightBar_ArticleDetailRightBar1_TrendingUp1_HyperLinkFooter" class="LinkNormalStyleOrange ViewAll" href="http://www.c-sharpcorner.com/Articles/TopArticles.aspx" style="float: right; margin-right: 10px;">View All</a></span></div> </div> </div> <div class="outerBox"> <div class="headerGray"> <span class="HeaderSpanFirst"></span><span class="HeaderSpanSecond">MOST LIKED ARTICLE</span> <span id="ctl00_RightBar_ArticleDetailRightBar1_ArticleMostLiked1_OnOffEnabledImageButton"></span> </div> <ul class="treading"> <li> <a href="http://www.c-sharpcorner.com/UploadFile/db2972/wcf-introduction-and-contracts-day-1/" class="LinkNormalStyle">
+WCF Introduction and Contracts - Day 1
+</a> <a href="http://www.c-sharpcorner.com/UploadFile/db2972/create-ssrs-report-using-report-wizard/" class="LinkNormalStyle">
+Create SSRS Report Using Report Wizard
+</a> <a href="http://www.c-sharpcorner.com/UploadFile/db2972/factory-design-pattern/" class="LinkNormalStyle">
+Factory Design Pattern
+</a> <a href="http://www.c-sharpcorner.com/UploadFile/67b45a/how-to-generate-a-create-table-script-for-an-existing-table/" class="LinkNormalStyle">
+How to Generate a CREATE TABLE Script For an Existing Table: Part 1
+</a> <a href="http://www.c-sharpcorner.com/UploadFile/db2972/create-read-update-and-delete-crud-operation-using-linq-to/" class="LinkNormalStyle">
+CREATE READ UPDATE and DELETE - CRUD Operation Using LINQ to SQL
+</a> </li> </ul> </div> <script type="text/javascript" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/widgets.js" async="true"></script> <div style="padding-bottom: 10px;"> <iframe style="width: 100%; height: 20px;" data-twttr-rendered="true" title="Twitter Follow Button" class="twitter-follow-button twitter-follow-button" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/follow_button.htm" allowtransparency="true" id="twitter-widget-1" frameborder="0" scrolling="no"></iframe> </div> <div id="fb-root"> </div> <script type="text/javascript">    (function(d, s, id) {
+var js, fjs = d.getElementsByTagName(s)[0];
+if (d.getElementById(id)) return;
+js = d.createElement(s); js.id = id;
+js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+fjs.parentNode.insertBefore(js, fjs);
+} (document, 'script', 'facebook-jssdk'));</script> <div fb-iframe-plugin-query="app_id=440531902678919&amp;header=true&amp;href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FC-Corner%2F194086953935286&amp;locale=en_US&amp;sdk=joey&amp;show_faces=true&amp;stream=false&amp;width=336" fb-xfbml-state="rendered" class="fb-like-box fb_iframe_widget" data-href="https://www.facebook.com/pages/C-Corner/194086953935286" data-width="336px" data-show-faces="true" data-stream="false" data-header="true" data-border-color="#c6c6c6" data-max-rows="2" style="padding-bottom: 10px;
+border: none 0px" async="false"><span style="vertical-align: bottom; width: 336px; height: 271px;"><iframe class="" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/like_box.htm" style="border: medium none; visibility: visible; width: 336px; height: 271px;" title="fb:like_box Facebook Social Plugin" allowtransparency="true" name="f2c188a3f3de728" frameborder="0" height="1000px" scrolling="no" width="336px"></iframe></span></div> <div class="clear"> </div> <div class="TagHeaderStyle">
+Tags</div> <div style="margin: 0px 0px 15px 10px"> <a href="http://www.c-sharpcorner.com/tags/.NET-COM-Interoperability" class="HeaderTagCloud">.NET COM Interoperability</a> <a href="http://www.c-sharpcorner.com/tags/.NET-component" class="HeaderTagCloudBlue">.NET component</a> <a href="http://www.c-sharpcorner.com/tags/ActiveX-DLL" class="HeaderTagCloud">ActiveX DLL</a> <a href="http://www.c-sharpcorner.com/tags/Adobe--ActiveX-COM-.show-pdf" class="HeaderTagCloud">Adobe  ActiveX COM .show pdf</a> <a href="http://www.c-sharpcorner.com/tags/AutoCAD" class="HeaderTagCloud">AutoCAD</a> <a href="http://www.c-sharpcorner.com/tags/COM-components" class="HeaderTagCloudBlue">COM components</a> <a href="http://www.c-sharpcorner.com/tags/COM-DLL" class="HeaderTagCloud">COM DLL</a> <a href="http://www.c-sharpcorner.com/tags/COM-Interoperability" class="HeaderTagCloud">COM Interoperability</a> <a href="http://www.c-sharpcorner.com/tags/Component-Object-Model" class="HeaderTagCloud">Component Object Model</a> <a href="http://www.c-sharpcorner.com/tags/Custom-Wrappers" class="HeaderTagCloud">Custom Wrappers</a> <a href="http://www.c-sharpcorner.com/tags/DotNet" class="HeaderTagCloud">DotNet</a> <a href="http://www.c-sharpcorner.com/tags/Early-Binding" class="HeaderTagCloud">Early Binding</a> <a href="http://www.c-sharpcorner.com/tags/Import-data-from-Excel-to-Access-using-ADO.net" class="HeaderTagCloud">Import data from Excel to Access using ADO.net</a> <a href="http://www.c-sharpcorner.com/tags/Imports-System.Data.OleDb" class="HeaderTagCloud">Imports System.Data.OleDb</a> <a href="http://www.c-sharpcorner.com/tags/interoperability" class="HeaderTagCloudOrange">interoperability</a> <a href="http://www.c-sharpcorner.com/tags/Language-Interoperability" class="HeaderTagCloud">Language Interoperability</a> <a href="http://www.c-sharpcorner.com/tags/Late-Binding" class="HeaderTagCloudBlue">Late Binding</a> <a href="http://www.c-sharpcorner.com/tags/programming-languages" class="HeaderTagCloud">programming languages</a> <a href="http://www.c-sharpcorner.com/tags/runtime-callable-wrapper-%28RCW%29" class="HeaderTagCloud">runtime callable wrapper (RCW)</a> <a href="http://www.c-sharpcorner.com/tags/System.CodeDom" class="HeaderTagCloudBlue">System.CodeDom</a> <a href="http://www.c-sharpcorner.com/tags/System.Reflection.Emit" class="HeaderTagCloud">System.Reflection.Emit</a> <a href="http://www.c-sharpcorner.com/tags/Type-Library" class="HeaderTagCloud">Type Library</a> <a href="http://www.c-sharpcorner.com/tags/Type-Library-Importer" class="HeaderTagCloud">Type Library Importer</a> <a href="http://www.c-sharpcorner.com/tags/TypeLibConverter-Class" class="HeaderTagCloud">TypeLibConverter Class</a> <a href="http://www.c-sharpcorner.com/tags/Visual-Basic-6.0" class="HeaderTagCloud">Visual Basic 6.0</a> </div> <div id="ctl00_RightBar_ArticleDetailRightBar1_PremiumSponsorsTextAd1_UpdatePanelSponsorWithImage"> <div id="ctl00_RightBar_ArticleDetailRightBar1_PremiumSponsorsTextAd1_SponsorAdWithImage" class="outerBox"> <div class="headerGray"> <span class="HeaderSpanFirst Blue"></span><span class="HeaderSpanSecond">SPONSORED BY</span> <span style="margin-left: 71px; margin-top: 1px; margin-right: 0px;"></span><span style="float: right; margin-top: 3px; margin-right: 5px;"></span> </div> <ul class="treadingnew" style="margin-left: 12px;"> <li class="marginTop"> <div style="float: left; margin: 0px 5px 5px 0px;"> <a href="http://www.c-sharpcorner.com/AdRedirector.aspx?AdId=83&amp;target=http://www.nevron.com/Campaign?key=CSharpCorner_13_6_Diagram_75x90&amp;url=http://www.nevron.com/" id="ctl00_RightBar_ArticleDetailRightBar1_PremiumSponsorsTextAd1_HrefSponsorLinkImage" rel="nofollow" target="_blank"> <img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/011802AM.png" id="ctl00_RightBar_ArticleDetailRightBar1_PremiumSponsorsTextAd1_imgSponsor" height="90" width="75"> </a> </div> <div style="width: 238px; font-weight: bold; font-size: 14px; color: Black; margin-bottom: 0px;
+float: left;"> <a href="http://www.c-sharpcorner.com/AdRedirector.aspx?AdId=83&amp;target=http://www.nevron.com/Campaign?key=CSharpCorner_13_6_Diagram_75x90&amp;url=http://www.nevron.com/" id="ctl00_RightBar_ArticleDetailRightBar1_PremiumSponsorsTextAd1_HrefSponsorLink" target="_blank">Get the industry leading .NET Diagramming component</a> </div> <div id="ctl00_RightBar_ArticleDetailRightBar1_PremiumSponsorsTextAd1_divSponsorDetail" style="margin-top: 5;
+float: left; width: 238px; margin-bottom: 10">.NET Diagramming framework designed for creating advanced solutions</div> </li> </ul> </div> </div> <div id="FacebookFriendsControl" class="outerBox" style="display: none;"> <div class="headerGray"> <span class="HeaderSpanFirstBlue"></span><span class="HeaderSpanSecond">My Facebook
+Friends </span> </div> <div id="facebookFriends"> </div> </div> <div class="clear"> </div> <div style="width: 336px; margin-bottom: 10px;"> <span id="ctl00_RightBar_ArticleDetailRightBar1_NewsArticleAdMiddle1_LabelArticleScript"><script language="JavaScript"> <!-- hide from non-JavaScript browsers
+var axel = Math.random() + "";
+var num = axel * 1000000000000000000;
+document.write('<IFRAME SRC="http://ad.doubleclick.net/adi/N5621.124662.7163663382421/B7978417.105809675;sz=300x250;click=;ord='+ num +'?" WIDTH=300 HEIGHT=250 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no BORDERCOLOR="#000000">');
+document.write('<SCR'+'IPT language="JavaScript1.1" SRC="http://ad.doubleclick.net/adj/N5621.124662.7163663382421/B7247196;abr=!ie;sz=300x250;click=;ord='+ num +'?"></SCR'+'IPT></IFRAME>');
+// end hide from browsers --> </script><iframe src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/B7978417_002.htm" marginwidth="0" marginheight="0" hspace="0" vspace="0" bordercolor="#000000" frameborder="0" height="250" scrolling="no" width="300">&lt;SCRIPT
+ language="JavaScript1.1" 
+SRC="http://ad.doubleclick.net/adj/N5621.124662.7163663382421/B7247196;abr=!ie;sz=300x250;click=;ord=880084254128914800?"&gt;&lt;/SCRIPT&gt;</iframe> <noscript> <A HREF="http://ad.doubleclick.net/jump/N5621.124662.7163663382421/B7978417.105809675;abr=!ie4;abr=!ie5;sz=300x250;ord=[timestamp]?"> <IMG SRC="http://ad.doubleclick.net/ad/N5621.124662.7163663382421/B7978417.105809675;abr=!ie4;abr=!ie5;sz=300x250;ord=[timestamp]?" BORDER=0 WIDTH=300 HEIGHT=250 ALT="Advertisement"></A> </noscript></span> </div> <div class="outerBox"> <div class="headerGray"> <span class="HeaderSpanFirstBlue"></span><span class="HeaderSpanSecond">WHITEPAPERS
+AND BOOKS</span> <a id="RssEnabledImageButton" href="http://www.c-sharpcorner.com/RSS/FreeBook.aspx" class="headerRss"></a> </div> <ul class="treading"> <li> <a href="http://www.c-sharpcorner.com/ebooks/free/84/silverlight-application-development-with-C-Sharp-and-xaml.aspx" class="LinkNormalStyle">
+Silverlight Application Development with C# and XAML</a> <a href="http://www.c-sharpcorner.com/ebooks/free/83/C-Sharp-language-specification-5-0.aspx" class="LinkNormalStyle">
+C# Language Specification 5.0</a> <a href="http://www.c-sharpcorner.com/ebooks/free/82/guide-to-microsoft-enterprise-library.aspx" class="LinkNormalStyle">
+Guide to Microsoft Enterprise Library</a> <a href="http://www.c-sharpcorner.com/ebooks/free/80/programming-Asp-Net-mvc-5.aspx" class="LinkNormalStyle">
+Programming ASP.NET MVC 5</a> <a href="http://www.c-sharpcorner.com/ebooks/free/79/sql-server-2012-functions-recipes.aspx" class="LinkNormalStyle">
+SQL Server 2012 Functions Recipes</a> <a href="http://www.c-sharpcorner.com/ebooks/free/78/linq-quick-reference-with-C-Sharp.aspx" class="LinkNormalStyle">
+LINQ Quick Reference with C#</a> <a href="http://www.c-sharpcorner.com/ebooks/free/77/hands-on-Asp-Net-gridview.aspx" class="LinkNormalStyle">
+Hands on ASP.NET GridView </a> <a href="http://www.c-sharpcorner.com/ebooks/free/76/essential-wcf-practical-implementation.aspx" class="LinkNormalStyle">
+Essential WCF Practical Implementation</a> <a href="http://www.c-sharpcorner.com/ebooks/free/75/exploring-design-pattern-for-dummies.aspx" class="LinkNormalStyle">
+Exploring Design Pattern for Dummies</a> <a href="http://www.c-sharpcorner.com/ebooks/free/74/object-oriented-programming-using-C-Sharp.aspx" class="LinkNormalStyle">
+Object Oriented Programming Using C#</a> </li> </ul> <div class="FooterLineForArticlesJobs"> <div style="padding-top: 10px;"> <span style="margin-left: 3px;"><a href="http://www.c-sharpcorner.com/FreeBook/Default.aspx" class="LinkNormalStyleOrange ViewAll" style="float: right; margin-right: 10px;">View All
+</a></span> </div> </div> </div> <div class="clear"> </div> <script type="text/javascript" language="Javascript">
+function show_confirm() {
+window.location = document.getElementById('ctl00_PollForHome1_HiddenField1').value;
+}
+</script> <div id="ctl00_PollForHome1_Updatepanel1"> <div id="ctl00_PollForHome1_TabContainerSection" class="PollTheme ajax__tab_container ajax__tab_default" style="width: 100%; visibility: visible;"> <div class="ajax__tab_header" id="ctl00_PollForHome1_TabContainerSection_header"> <span class="ajax__tab_active" id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_tab"><span class="ajax__tab_outer"><span class="ajax__tab_inner"><span class="ajax__tab_tab" id="__tab_ctl00_PollForHome1_TabContainerSection_TabPanelInProgress"> Poll </span></span></span></span><span id="ctl00_PollForHome1_TabContainerSection_TabPanelSection_tab"><span class="ajax__tab_outer"><span class="ajax__tab_inner"><span class="ajax__tab_tab" id="__tab_ctl00_PollForHome1_TabContainerSection_TabPanelSection"> Result </span></span></span></span><span id="ctl00_PollForHome1_TabContainerSection_TabPanel1_tab"><span class="ajax__tab_outer"><span class="ajax__tab_inner"><span class="ajax__tab_tab" id="__tab_ctl00_PollForHome1_TabContainerSection_TabPanel1">All Polls</span></span></span></span> </div><div class="ajax__tab_body" id="ctl00_PollForHome1_TabContainerSection_body"> <div style="visibility: visible;" class="ajax__tab_panel" id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress"> <table id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_TablePollContainer" border="0" cellpadding="0" cellspacing="0" width="318"> <tbody><tr> <td colspan="2"> </td> </tr> <tr> <td colspan="2"> <a id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_HyperlinkTItle" class="PollTitle" href="http://www.c-sharpcorner.com/Polls/Default.aspx?pollid=380" style="display:inline-block;text-decoration:none;width:100%;">Your Job</a> </td> </tr> <tr> <td colspan="2"> </td> </tr> <tr> <td class="PollQuestion" colspan="2"> <span id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_LabelPollQuestion">What is your new year's wish list?</span> </td> </tr> <tr> <td colspan="2"> </td> </tr> <tr> <td colspan="2" style="color: #7F8080;"> <table id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_RadioButtonListPolls" border="0"> <tbody><tr> <td><input id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_RadioButtonListPolls_0" name="ctl00$PollForHome1$TabContainerSection$TabPanelInProgress$RadioButtonListPolls" value="1603" type="radio"><label for="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_RadioButtonListPolls_0">Upgrade my mobile phone</label></td> </tr><tr> <td><input id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_RadioButtonListPolls_1" name="ctl00$PollForHome1$TabContainerSection$TabPanelInProgress$RadioButtonListPolls" value="1604" type="radio"><label for="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_RadioButtonListPolls_1">Buy a new laptop or computer</label></td> </tr><tr> <td><input id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_RadioButtonListPolls_2" name="ctl00$PollForHome1$TabContainerSection$TabPanelInProgress$RadioButtonListPolls" value="1605" type="radio"><label for="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_RadioButtonListPolls_2">Get a better job</label></td> </tr><tr> <td><input id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_RadioButtonListPolls_3" name="ctl00$PollForHome1$TabContainerSection$TabPanelInProgress$RadioButtonListPolls" value="1606" type="radio"><label for="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_RadioButtonListPolls_3">Help my family</label></td> </tr><tr> <td><input id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_RadioButtonListPolls_4" name="ctl00$PollForHome1$TabContainerSection$TabPanelInProgress$RadioButtonListPolls" value="1607" type="radio"><label for="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_RadioButtonListPolls_4">More community involvement</label></td> </tr><tr> <td><input id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_RadioButtonListPolls_5" name="ctl00$PollForHome1$TabContainerSection$TabPanelInProgress$RadioButtonListPolls" value="1608" type="radio"><label for="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_RadioButtonListPolls_5">Something else</label></td> </tr> </tbody></table> </td> </tr> <tr> <td> </td> <td align="right"> <span id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_LabelMessage" style="color:Red;"></span> <input name="ctl00$PollForHome1$TabContainerSection$TabPanelInProgress$ButtonVote" value="Vote" id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_ButtonVote" class="CommonButtonStyle" style="width:90px;" type="submit">&nbsp;
+</td> </tr> <tr class="Separator"> <td colspan="2"> </td> </tr> <tr> <td align="left"> <input name="ctl00$PollForHome1$TabContainerSection$TabPanelInProgress$imageButtonPrevious" id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_imageButtonPrevious" disabled="disabled" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/prevBtn.gif" style="border-width:0px;height: 16px" type="image"> </td> <td align="right"> <input name="ctl00$PollForHome1$TabContainerSection$TabPanelInProgress$imageButtonNext" id="ctl00_PollForHome1_TabContainerSection_TabPanelInProgress_imageButtonNext" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/nextBtn.gif" style="border-width:0px;" type="image"> </td> </tr> </tbody></table> </div><div class="ajax__tab_panel" id="ctl00_PollForHome1_TabContainerSection_TabPanelSection" style="display:none;visibility:hidden;"> <div id="Table2" class="PollQuestion" style="width: 100%; margin-top: 2px;"> <span id="ctl00_PollForHome1_TabContainerSection_TabPanelSection_LabelPollQuestion1">What is your new year's wish list?</span> <table class="TablePollResult" style="color:#7F8080;" border="0" cellpadding="3" cellspacing="0" width="100%"><tbody><tr class="TablePollResultHead"><td width="50%">&nbsp;Options</td><td class="PollCenterAllignmentWithWidth"> Votes </td><td class="PollCenterAllignmentWithWidth"> % </td></tr><tr><td>&nbsp;Upgrade my mobile phone</td><td class="PollRightAllignment">0</td><td class="PollRightAllignmentWithFont">0.00</td></tr><tr><td>&nbsp;Buy a new laptop or computer</td><td class="PollRightAllignment">3</td><td class="PollRightAllignmentWithFont">13.64</td></tr><tr><td>&nbsp;Get a better job</td><td class="PollRightAllignment">11</td><td class="PollRightAllignmentWithFont">50.00</td></tr><tr><td>&nbsp;Help my family</td><td class="PollRightAllignment">3</td><td class="PollRightAllignmentWithFont">13.64</td></tr><tr><td>&nbsp;More community involvement</td><td class="PollRightAllignment">0</td><td class="PollRightAllignmentWithFont">0.00</td></tr><tr><td>&nbsp;Something else</td><td class="PollRightAllignment">5</td><td class="PollRightAllignmentWithFont">22.73</td></tr><tr class="TablePollResultFoot"><td>&nbsp;Total</td><td class="PollRightAllignment">22</td><td class="PollRightAllignment">100%</td></tr></tbody></table> </div> </div><div class="ajax__tab_panel" id="ctl00_PollForHome1_TabContainerSection_TabPanel1" style="display:none;visibility:hidden;"> <img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/Loading.GIF"> </div> </div> </div> </div> <input name="ctl00$PollForHome1$HiddenField1" id="ctl00_PollForHome1_HiddenField1" value="http://www.c-sharpcorner.com/Polls" type="hidden"> </div> </div> </div> <div class="footer"> <div class="menuStripGray"> <div class="page"> <span class="menuLinkGray" style="float: right;"><span class="menuLinkTextGray" style="font-size: 14px;">
+Hosted By <a href="http://www.cbeyond.net/" target="_blank"><span style="color: #982929">
+CBeyond Cloud Services</span></a></span></span> <a href="http://www.c-sharpcorner.com/Members/mvps/" class="menuLinkGray"><span class="menuFirstGray"><span class="menuLinkTextGray">MVPs
+</span></span></a><a href="http://www.c-sharpcorner.com/Articles/mostviewed.aspx" class="menuLinkGray"><span class="menuCommonGray"><span class="menuLinkTextGray">MOST
+VIEWED</span></span></a><a href="http://www.c-sharpcorner.com/Members/legend/" class="menuLinkGray"><span class="menuCommonGray"><span class="menuLinkTextGray">LEGENDS</span></span></a><a href="http://www.c-sharpcorner.com/articles/" class="menuLinkGray"><span class="menuCommonGray"><span class="menuLinkTextGray">NOW</span></span></a><a href="http://www.c-sharpcorner.com/prizes/" class="menuLinkGray"><span class="menuCommonGray"><span class="menuLinkTextGray"> PRIZES</span></span></a><a href="http://www.c-sharpcorner.com/prizes/" class="menuLinkGray"><span class="menuCommonGray"><span class="menuLinkTextGray">AWARDS</span></span></a><a href="http://www.c-sharpcorner.com/reviews/?type=book" class="menuLinkGray"><span class="menuCommonGray"><span class="menuLinkTextGray">REVIEWS</span></span></a><a href="http://www.c-sharpcorner.com/survey/" class="menuLinkGray"><span class="menuCommonGray"><span class="menuLinkTextGray">SURVEY</span></span></a><a href="http://www.c-sharpcorner.com/exam/" class="menuLinkGray"><span class="menuCommonGray"><span class="menuLinkTextGray">CERTIFICATIONS</span></span></a><a href="http://www.c-sharpcorner.com/downloads/" class="menuLinkGray"><span class="menuLastGray"><span class="menuLinkTextGray">DOWNLOADS</span></span></a> </div> </div> <div class="menuStripBlue" style="z-index: 0;"> <div class="page"> <div class="menu footerMenu"> <ul> <li class="first"><a href="http://www.c-sharpcorner.com/photos/">
+PHOTOS</a></li> <li><a href="http://www.c-sharpcorner.com/tips/">TIPS</a> </li> <li><a href="http://www.c-sharpcorner.com/consulting/">CONSULTING</a> </li> <li><a href="http://www.c-sharpcorner.com/training/">TRAINING</a> </li> <li><a href="http://www.c-sharpcorner.com/beginners/">STUDENTS</a> </li> <li><a href="http://www.c-sharpcorner.com/Members/">MEMBERS</a> </li> <li><a href="http://www.c-sharpcorner.com/media/ContactUs.aspx">MEDIA KIT</a> </li> <li><a href="http://www.c-sharpcorner.com/ideas/">SUGGEST AN IDEA</a> </li> </ul> </div> </div> </div> <div class="footerBottom"> <div class="page"> <div style="float: left; margin-left: 7px;"> <span style="float: left; margin-left: 2px; width: 510px; padding: 20px 0px 0px;"><a href="http://www.c-sharpcorner.com/privacypolicy.aspx"><span class="whiteLink">
+PRIVACY POLICY</span></a> <span style="color: #424242">|</span> <a href="http://www.c-sharpcorner.com/termsconditions.aspx"> <span class="whiteLink">TERMS &amp; CONDITIONS</span></a> <span style="color: #424242">|</span> <a href="http://www.c-sharpcorner.com/sitemap/"><span class="whiteLink">SITEMAP</span></a> <span style="color: #424242">|</span> <a href="http://www.c-sharpcorner.com/contactus.aspx"> <span class="whiteLink">CONTACT US</span></a> <span style="color: #424242">|</span> <a href="http://www.c-sharpcorner.com/resources/aboutus.aspx"><span class="whiteLink">
+ABOUT US</span></a> <span style="color: #424242">|</span> <a href="http://www.c-sharpcorner.com/contactus.aspx?Type=6"> <span class="whiteLink">REPORT ABUSE</span></a> </span> <div style="float: right; color: Gray; margin-top: 5px; width: 500px;"> <div class="socialBox"> <ul> <li><a target="_blank" href="http://www.facebook.com/pages/C-Corner/194086953935286"> <img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/facebook.png" alt=""></a></li> <li><a target="_blank" href="http://twitter.com/csharpcorner"> <img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/twitter.png"></a></li> <li><a target="_blank" href="https://plus.google.com/u/0/114221266846457741050/posts"> <img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/google.png"> </a></li> <li><a target="_blank" href="http://www.youtube.com/user/CsharpCornerVideos/videos"> <img src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/youTubeChannel.png"></a> </li> </ul> </div> <div style="width: 100%; float: left; text-align: right;">
+©2014 C# Corner.&nbsp;All contents are copyright of their authors.&nbsp;&nbsp;</div> </div> </div> </div> </div> </div> </div> <input name="ctl00$hiddenFieldNext" id="ctl00_hiddenFieldNext" value="3b8493c1-f275-49bb-814b-b1269c0a3178" type="hidden"> <input name="ctl00$hiddenFieldPrevious" id="ctl00_hiddenFieldPrevious" value="34aada4f-a050-4b80-a290-e3db7dab2e9f" type="hidden"> <script type="text/javascript">
+//<![CDATA[
+var Page_Validators =  new Array(document.getElementById("ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorUserId"), document.getElementById("ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorPassword"));
+//]]> </script> <script type="text/javascript">
+//<![CDATA[
+var ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorUserId = document.all ? document.all["ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorUserId"] : document.getElementById("ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorUserId");
+ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorUserId.controltovalidate = "ctl00_HeaderNewDesign1_Login1_TextBoxUserId";
+ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorUserId.focusOnError = "t";
+ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorUserId.errormessage = "*";
+ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorUserId.display = "Dynamic";
+ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorUserId.validationGroup = "LeftLogin";
+ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorUserId.evaluationfunction = "RequiredFieldValidatorEvaluateIsValid";
+ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorUserId.initialvalue = "";
+var ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorPassword = document.all ? document.all["ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorPassword"] : document.getElementById("ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorPassword");
+ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorPassword.controltovalidate = "ctl00_HeaderNewDesign1_Login1_TextBoxPassword";
+ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorPassword.focusOnError = "t";
+ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorPassword.errormessage = "*";
+ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorPassword.display = "Dynamic";
+ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorPassword.validationGroup = "LeftLogin";
+ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorPassword.evaluationfunction = "RequiredFieldValidatorEvaluateIsValid";
+ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorPassword.initialvalue = "";
+//]]> </script> <div> <input name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0" type="hidden"> <input name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0" type="hidden"> <input name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWKwKcqLzhDwKK36+/DgKu4/PIAgLH/pHNDAKLiqGwAgLq5a/JDwL8lbizDgLW9cryDQKl/JHhAwLh6vOqDwKLjb6QDwLa+pH8DQK7iZ6MDALP0rqtBAKTxvebBQL6mL6/DQLnjZPFDwKyvo/zAQK6mby0DQKM08bkCAK/zYnfBQLDt+HBBwKhlc2JCQLdz83JCgLpwuC/CwLrua7/DwKsyaD8BwLdoKjrDQKmldaNCQLei4GMDwLNkJDwAwLNkIyfCwLNkLi6AgLNkNThDQLNkMCMBQLNkLzlAwLkvumFBgKB2rW1BwLP0qXTBwKKuJmPCgKNv/LRAwKc3rDeDAKayJrtBa5/D1hOxDsd9VaajRPfe75Ufcob" type="hidden"> </div> <script type="text/javascript">
+//<![CDATA[
+var Page_ValidationActive = false;
+if (typeof(ValidatorOnLoad) == "function") {
+ValidatorOnLoad();
+}
+function ValidatorOnSubmit() {
+if (Page_ValidationActive) {
+return ValidatorCommonOnSubmit();
+}
+else {
+return true;
+}
+}
+theForm.oldSubmit = theForm.submit;
+theForm.submit = WebForm_SaveScrollPositionSubmit;
+theForm.oldOnSubmit = theForm.onsubmit;
+theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
+WebForm_AutoFocus('ctl00_HeaderNewDesign1_Login1_TextBoxUserId');Sys.Application.initialize();
+document.getElementById('ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorUserId').dispose = function() {
+Array.remove(Page_Validators, document.getElementById('ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorUserId'));
+}
+Sys.Application.add_init(function() {
+$create(AjaxControlToolkit.TextBoxWatermarkBehavior, {"ClientStateFieldID":"ctl00_HeaderNewDesign1_Login1_TBWEUserID_ClientState","WatermarkText":"Enter User ID or Email","id":"ctl00_HeaderNewDesign1_Login1_TBWEUserID"}, null, null, $get("ctl00_HeaderNewDesign1_Login1_TextBoxUserId"));
+});
+document.getElementById('ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorPassword').dispose = function() {
+Array.remove(Page_Validators, document.getElementById('ctl00_HeaderNewDesign1_Login1_RequiredFieldValidatorPassword'));
+}
+Sys.Application.add_init(function() {
+$create(AjaxControlToolkit.TextBoxWatermarkBehavior, {"ClientStateFieldID":"ctl00_HeaderNewDesign1_Login1_TBWEPassword_ClientState","WatermarkText":"**************","id":"ctl00_HeaderNewDesign1_Login1_TBWEPassword"}, null, null, $get("ctl00_HeaderNewDesign1_Login1_TextBoxPassword"));
+});
+Sys.Application.add_init(function() {
+$create(Sys.UI._UpdateProgress, {"associatedUpdatePanelId":null,"displayAfter":10,"dynamicLayout":true}, null, null, $get("ctl00_HeaderNewDesign1_UpdateProgress1"));
+});
+Sys.Application.add_init(function() {
+$create(AjaxControlToolkit.AlwaysVisibleControlBehavior, {"HorizontalOffset":60,"HorizontalSide":2,"id":"ctl00_HeaderNewDesign1_AlwaysVisibleLoading"}, null, null, $get("ctl00_HeaderNewDesign1_UpdateProgress1"));
+});
+Sys.Application.add_init(function() {
+$create(AjaxControlToolkit.TextBoxWatermarkBehavior, {"ClientStateFieldID":"ctl00_TrendingNow1_TBWESearch_ClientState","WatermarkText":"C# Corner Search","id":"ctl00_TrendingNow1_TBWESearch"}, null, null, $get("ctl00_TrendingNow1_searchTextBox"));
+});
+Sys.Application.add_init(function() {
+$create(AjaxControlToolkit.TabPanel, {"headerTab":$get("__tab_ctl00_PollForHome1_TabContainerSection_TabPanelInProgress")}, null, {"owner":"ctl00_PollForHome1_TabContainerSection"}, $get("ctl00_PollForHome1_TabContainerSection_TabPanelInProgress"));
+});
+Sys.Application.add_init(function() {
+$create(AjaxControlToolkit.TabPanel, {"headerTab":$get("__tab_ctl00_PollForHome1_TabContainerSection_TabPanelSection")}, null, {"owner":"ctl00_PollForHome1_TabContainerSection"}, $get("ctl00_PollForHome1_TabContainerSection_TabPanelSection"));
+});
+Sys.Application.add_init(function() {
+$create(AjaxControlToolkit.TabPanel, {"headerTab":$get("__tab_ctl00_PollForHome1_TabContainerSection_TabPanel1")}, {"click":show_confirm}, {"owner":"ctl00_PollForHome1_TabContainerSection"}, $get("ctl00_PollForHome1_TabContainerSection_TabPanel1"));
+});
+Sys.Application.add_init(function() {
+$create(AjaxControlToolkit.TabContainer, {"activeTabIndex":0,"clientStateField":$get("ctl00_PollForHome1_TabContainerSection_ClientState")}, null, null, $get("ctl00_PollForHome1_TabContainerSection"));
+});
+//]]> </script> </form>  <textarea tabindex="-1" style="position: absolute; top: -999px; left: 0px; right: auto; bottom: auto; border: 0px none; padding: 0px; -moz-box-sizing: content-box; word-wrap: break-word; height: 0px ! important; min-height: 0px ! important; overflow: hidden; transition: none 0s ease 0s ;"></textarea><iframe style="width: 1px; height: 1px; position: absolute; top: -100px;" src="Integrate%20the%20web%20Webcam%20functionality%20using%20C%23-.Net%20and%20COM%20part%20VIII_pliki/postmessageRelay.htm" id="oauth2relay437796824" name="oauth2relay437796824"></iframe></body></html>

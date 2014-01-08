@@ -1158,6 +1158,52 @@ namespace Komin
 
         public void RequestAudioCall(uint contact_id) //request an audio call from contact
         {
+            if (userdata.contact_id == 0)
+                return;
+            if (contact_id == userdata.contact_id)
+                return;
+
+            KominNetworkJob job = jobs.AddJob(contact_id, false);
+            bool finished = false;
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id;
+            packet.target = contact_id;
+            packet.target_is_group = false;
+            packet.job_id = job.JobID;
+            packet.command = (uint)KominProtocolCommands.RequestAudioCall;
+            packet.DeleteContent();
+            InsertPacketForSending(packet);
+
+            do
+            {
+                job.WaitForNewArrival();
+                packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
+                switch ((KominProtocolCommands)packet.command)
+                {
+                    case KominProtocolCommands.Accept:
+                        finished = true;
+                        break;
+                    case KominProtocolCommands.Error:
+                        finished = true;
+                        jobs.FinishJob(job);
+                        if (onError != null)
+                        {
+                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
+                            return;
+                        }
+                        else
+                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                }
+            } while (!finished);
+
+            jobs.FinishJob(job);
         }
 
         public void RequestVideoCall(uint contact_id) //request a video call from contact
@@ -1166,6 +1212,50 @@ namespace Komin
 
         public void CloseCall(uint contact_id) //request closing of a call
         {
+            if (userdata.contact_id == 0)
+                return;
+
+            KominNetworkJob job = jobs.AddJob(contact_id, false);
+            bool finished = false;
+
+            KominNetworkPacket packet = new KominNetworkPacket();
+            packet.sender = userdata.contact_id;
+            packet.target = contact_id;
+            packet.target_is_group = false;
+            packet.job_id = job.JobID;
+            packet.command = (uint)KominProtocolCommands.RequestAudioCall;
+            packet.DeleteContent();
+            InsertPacketForSending(packet);
+
+            do
+            {
+                job.WaitForNewArrival();
+                packet = job.Packet;
+                if (packet == null) //job cancelled
+                {
+                    jobs.FinishJob(job);
+                    //information would be nice
+                    return;
+                }
+                switch ((KominProtocolCommands)packet.command)
+                {
+                    case KominProtocolCommands.Accept:
+                        finished = true;
+                        break;
+                    case KominProtocolCommands.Error:
+                        finished = true;
+                        jobs.FinishJob(job);
+                        if (onError != null)
+                        {
+                            onError((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0], packet);
+                            return;
+                        }
+                        else
+                            throw new KominClientErrorException((string)packet.GetContent(KominProtocolContentTypes.ErrorTextData)[0]);
+                }
+            } while (!finished);
+
+            jobs.FinishJob(job);
         }
 
         public void SwitchToAudioCall(uint contact_id) //request change to audio call
