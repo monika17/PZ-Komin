@@ -18,6 +18,7 @@ namespace Komin
         private bool on_inserting;
         private string text_insert;
         private KominClientForm CallingForm;
+        public WebBrowser textMessageContainer;
 
         public TextMessagingPanel()
         {
@@ -49,7 +50,10 @@ namespace Komin
             while (on_inserting) ;
             on_inserting = true;
             if (text_insert != null)
-                textMessageContainer.Text += text_insert;
+            {
+                textMessageContainer.Document.Write(text_insert);
+                textMessageContainer.Document.Window.ScrollTo(0, textMessageContainer.Document.Body.ScrollRectangle.Height);
+            }
 
             text_insert = null;
             on_inserting = false;
@@ -58,11 +62,14 @@ namespace Komin
 
         public void InsertText(string text)
         {
+            while (on_inserting) ;
+            on_inserting = true;
             AddToArchive(text);
             if (text_insert == null)
                 text_insert = text;
             else
                 text_insert += text;
+            on_inserting = false;
         }
 
         private void AddToArchive(string text)
@@ -100,7 +107,16 @@ namespace Komin
                 return;
             //insert loopback
             if (!receiver_is_group)
-                InsertText("[" + tmsg.send_date + "]  " + conn.userdata.contact_name + ":\r\n" + tmsg.message + "\r\n");
+                InsertText(HtmlText(tmsg.send_date, conn.userdata.contact_name, tmsg.message));
+        }
+
+        private string HtmlText(DateTime sendDate, string contactName, string message)
+        {
+            return "<div class='myMessage'>" +
+                   "<span class='dateFormat'>" + String.Format("{0:HH:mm:ss}", sendDate) + "</span>  " +
+                   "<span class='name'>" + contactName + "</span>" +
+                   "<span class='message'>: " + message + "</span><br>" +
+                   "</div>";
         }
 
         private void onError(string err_text, KominNetworkPacket packet)
@@ -127,12 +143,6 @@ namespace Komin
         {
             Location = new Point(Location.X, Location.Y - height);
             Size = new Size(Size.Width, Size.Height + height);
-        }
-
-        private void textMessageContainer_TextChanged(object sender, EventArgs e)
-        {
-            textMessageContainer.SelectionStart = textMessageContainer.Text.Length;
-            textMessageContainer.ScrollToCaret();
         }
     }
 }

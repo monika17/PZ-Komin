@@ -175,7 +175,7 @@ namespace Komin
 
             while (!commune.CancellationPending)
             {
-                while ((server.Available <= 0) && (!commune.CancellationPending))
+                while ((!commune.CancellationPending) && (server.Available <= 0))
                 {
                     if (packets_to_send.Count > 0)
                         SendPacketToServer();

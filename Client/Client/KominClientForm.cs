@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.Linq.Expressions;
 using System.Windows.Forms;
 
 namespace Komin
@@ -33,6 +35,7 @@ namespace Komin
         private bool server_lost;
         private bool server_kick;
         private bool server_disconnect;
+        private List<TabPage> added_text_tabs; 
 
         public KominClientForm()
         {
@@ -48,6 +51,7 @@ namespace Komin
             server_lost = false;
             server_kick = false;
             server_disconnect = false;
+            added_text_tabs = new List<TabPage>();
 
             InitializeComponent();
             MainTabPanel.TabPages.Clear();
@@ -152,6 +156,30 @@ namespace Komin
                 try { MainTabPanel.SelectedTab = next_page; }
                 catch (Exception) { }
             next_page = null;
+            foreach(TabPage tp in added_text_tabs)
+                try
+                {
+                    WebBrowser wb = new WebBrowser();
+
+                    wb.Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)| AnchorStyles.Left)| AnchorStyles.Right;
+                    wb.Location = new System.Drawing.Point(3, 3);
+                    wb.MinimumSize = new System.Drawing.Size(20, 20);
+                    wb.Name = "textMessageContainer";
+                    wb.ScriptErrorsSuppressed = true;
+                    wb.Size = new System.Drawing.Size(475, 300);
+                    wb.TabIndex = 5;
+                    wb.DocumentText = "";
+                    wb.Margin = new Padding(0, 0, 0, 0);
+                    tp.Controls["TextMessagingPanel"].Controls["panel1"].Controls.Add(wb);
+                    ((TextMessagingPanel)tp.Controls["TextMessagingPanel"]).textMessageContainer = wb;
+
+                    var cssFileContent = System.IO.File.ReadAllText("style.css");
+                    wb.Document.Write("<style>" + cssFileContent + " </style>");
+                }
+                catch (Exception)
+                {
+                }
+            added_text_tabs.Clear();
             foreach (GroupData gd in changed_groups)
                 onGroupChange(gd);
             changed_groups.Clear();
@@ -286,7 +314,8 @@ namespace Komin
                     }
             }
             tpage.Controls.Add(tmp);
-
+            added_text_tabs.Add(tpage);
+            
             add_page.Add(tpage);
             next_page = tpage;
             MainTabPanel.ContextMenuStrip = contactTabContextMenu;
@@ -330,7 +359,7 @@ namespace Komin
                             OpenTabForContact(tn);
                             WaitForTabUpdate();
                             //insert message
-                            ((TextMessagingPanel)MainTabPanel.TabPages["C" + sender_id].Controls["TextMessagingPanel"]).InsertText("[" + msg.send_date + "]  " + cd.contact_name + ":\r\n" + msg.message + "\r\n");
+                            ((TextMessagingPanel)MainTabPanel.TabPages["C" + sender_id].Controls["TextMessagingPanel"]).InsertText(ReceiverHtmlText(msg.send_date, cd.contact_name, msg.message));
                             return;
                         }
                     //discard
@@ -362,12 +391,21 @@ namespace Komin
                         OpenTabForContact(tn);
                         WaitForTabUpdate();
                         //insert message
-                        ((TextMessagingPanel)MainTabPanel.TabPages["G" + receiver_id].Controls["TextMessagingPanel"]).InsertText("[" + msg.send_date + "]  " + cd.contact_name + ":\r\n" + msg.message + "\r\n");
+                        ((TextMessagingPanel)MainTabPanel.TabPages["G" + receiver_id].Controls["TextMessagingPanel"]).InsertText(ReceiverHtmlText(msg.send_date, cd.contact_name, msg.message));
                         return;
                     }
                 //discard
                 return;
             }
+        }
+
+        private string ReceiverHtmlText(DateTime sendDate, string contactName, string message)
+        {
+            return "<div class='receiveMessage'>" +
+                   "<span class='dateFormat'>" + String.Format("{0:HH:mm:ss}", sendDate) + "</span>  " +
+                   "<span class='name'>" + contactName + "</span>" +
+                   "<span class='message'>: " + message + "</span><br>" +
+                   "</div>";
         }
 
         private void onNewAudioMessage(uint sender, uint receiver, bool receiver_is_group, byte[] msg)
@@ -805,7 +843,7 @@ namespace Komin
             ContextMenuStrip menu = (ContextMenuStrip)sender;
             ContactTreeTag contact_tag = (ContactTreeTag)clickedContactNode.Tag;
             menu.Items["zaprośDoGrupyToolStripMenuItem1"].Enabled = (treeView1.Nodes["Grupy"].Nodes.Count > 0) && (contact_tag.id != connection.userdata.contact_id);
-            menu.Items["txtMessageToolStripMenuItem"].Enabled = (contact_tag.id != connection.userdata.contact_id);
+            //menu.Items["txtMessageToolStripMenuItem"].Enabled = (contact_tag.id != connection.userdata.contact_id);
             //menu.Items["audioMessageToolStripMenuItem"].Enabled = (contact_tag.id != connection.userdata.contact_id) && (clickedContactNode.SelectedImageIndex != 0);
             //menu.Items["videoMessageToolStripMenuItem"].Enabled = (contact_tag.id != connection.userdata.contact_id) && (clickedContactNode.SelectedImageIndex != 0);
         }

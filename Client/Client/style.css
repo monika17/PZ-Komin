@@ -1,0 +1,40 @@
+﻿*{
+	margin: 0;
+	padding: 0;
+}
+
+.myMessage
+{
+	width: 100%;
+	background-color: #EEEEEE;
+	border-bottom:1px dashed #AAAAAA;
+	font-family: Verdana, Tahoma, Arial;
+	font-size: 8pt;
+	margin-left: 0px;
+}
+
+.receiveMessage
+{
+	width: 100%;
+	background-color: #fff;
+	border-bottom:1px dashed #AAAAAA;
+	font-family: Verdana, Tahoma, Arial;
+	font-size: 8pt;
+	margin-left: 0px;
+}
+
+.dateFormat
+{
+	font-size: 6pt
+}
+
+.message
+{
+	font-size: 7.5pt
+}
+
+.name
+{
+	font-size: 7pt;
+	font-weight:bold;
+}
